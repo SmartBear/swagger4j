@@ -6,9 +6,9 @@ constructs yet. Apache 2.0 licensed.
 
 ## Getting started
 
-Download the prebuilt jar of the latest version from sourceforge ([https://sourceforge.net/projects/swagger4j/files][])
+Download the prebuilt jar of the latest version from sourceforge ([https://sourceforge.net/projects/swagger4j/files](https://sourceforge.net/projects/swagger4j/files))
 or check it out from GitHub and build it yourself with maven (with "mvn install"). Swagger4j has a runtime dependency
-on jsonp ([https://java.net/projects/jsonp/][]) which you can add to your maven pom with.
+on jsonp ([https://java.net/projects/jsonp/](https://java.net/projects/jsonp/)) which you can add to your maven pom with.
 
 ```xml
 <dependency>
@@ -50,8 +50,8 @@ Swagger.writerSwagger( rl, "api-docs" );
 ```
 
 The API is closely modeled after the Swagger specification, if you are familiar with that it should be a breeze to use.
-If you aren't familiar with Swagger and its spec head right over to the swagger website at [https://github.com/wordnik/swagger-core/wiki][]
-to learn all about it.
+If you aren't familiar with Swagger and its spec head right over to the swagger website at 
+[https://github.com/wordnik/swagger-core/wiki](https://github.com/wordnik/swagger-core/wiki) to learn all about it.
 
 Javadoc is available in the zip at sourceforge.
 
