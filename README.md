@@ -1,26 +1,26 @@
 # Swagger4j
 
-A simple library for reading and writing swagger definitions. Supports both json and xml formats. The current version is
+A simple library for reading and writing Swagger definitions. Supports both JSON and XML formats. The current version is
 reasonably in line with the latest swagger core release except that it doesn't support any of the JSON Schema/Data Model
 constructs yet. Apache 2.0 licensed.
 
 ## Getting started
 
-Download the prebuilt jar of the latest version from sourceforge ([https://sourceforge.net/projects/swagger4j/files])
+Download the prebuilt jar of the latest version from sourceforge ([https://sourceforge.net/projects/swagger4j/files][])
 or check it out from GitHub and build it yourself with maven (with "mvn install"). Swagger4j has a runtime dependency
-on jsonp ([https://java.net/projects/jsonp/]) which you can add to your maven pom with.
+on jsonp ([https://java.net/projects/jsonp/][]) which you can add to your maven pom with.
 
-'''xml
+```xml
 <dependency>
     <groupId>org.glassfish</groupId>
     <artifactId>javax.json</artifactId>
     <version>1.0-b06</version>
 </dependency>
-'''
+```
 
 Once added to your classpath you can start reading swagger definitions, for example
 
-'''java
+```java
 ResourceListing resourceListing = Swagger.readSwagger( "http://petstore.swagger.wordnik.com/api/api-docs.json" )
 for( ResourceListingApi apiRef : resourceListing.getApis() )
 {
@@ -30,11 +30,11 @@ for( ResourceListingApi apiRef : resourceListing.getApis() )
        ...
    }
 }
-'''
+```
 
 and of course you can write them as well
 
-'''java
+```java
 SwaggerFactory factory = Swagger.createSwaggerFactory();
 
 ApiDeclaration apiDeclaration = factory.createApiDeclaration( "http://api.mycompany.com/apis", "/user" );
@@ -47,10 +47,10 @@ rl.setApiVersion( "1.0" );
 rl.addApi( apiDeclaration, "user-doc.{format}" );
 
 Swagger.writerSwagger( rl, "api-docs" );
-'''
+```
 
 The API is closely modeled after the Swagger specification, if you are familiar with that it should be a breeze to use.
-If you aren't familiar with Swagger and its spec head right over to the swagger website at https://github.com/wordnik/swagger-core/wiki
+If you aren't familiar with Swagger and its spec head right over to the swagger website at [https://github.com/wordnik/swagger-core/wiki][]
 to learn all about it.
 
 Javadoc is available in the zip at sourceforge.
