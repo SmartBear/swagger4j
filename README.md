@@ -1,10 +1,10 @@
-# Swagger4j
+## swagger4j
 
 A simple library for reading and writing Swagger definitions. Supports both JSON and XML formats. The current version is
 reasonably in line with the latest swagger core release except that it doesn't support any of the JSON Schema/Data Model
 constructs yet. Apache 2.0 licensed.
 
-## Getting started
+### Getting started
 
 Download the prebuilt jar of the latest version from sourceforge ([https://sourceforge.net/projects/swagger4j/files](https://sourceforge.net/projects/swagger4j/files))
 or check it out from GitHub and build it yourself with maven (with "mvn install"). Swagger4j has a runtime dependency
@@ -55,7 +55,7 @@ If you aren't familiar with Swagger and its spec head right over to the swagger 
 
 Javadoc is available in the zip at sourceforge.
 
-## Library Design
+### Library Design
 
 Swagger4j uses a standard Factory/Builder approach with interfaces defining the entire Swagger object model and a
 default implementation implementing them. If you have any suggestions on how to improve the actual API please don't
@@ -67,16 +67,16 @@ Please note the following:
 in the resourceListing. If the basePath is relative - it is resolved relatively to the host/root of the ResourceListing
 URI.
 
-## Usages
+### Usages
 
-* The SoapUI-Swagger-Plugin currently uses swagger4j to parse and generate Swagger definitions.
+* Version 0.2+ of the SoapUI-Swagger-Plugin use swagger4j to parse and generate Swagger definitions.
 
-## Future improvements
+### Future improvements
 
 * Support for DataModels / DataTypes
 * Support for sending API requests based on Swagger Operations
 * Anything else you might come up with
 
-## Release History
+### Release History
 
 * 20130527 - Initial beta1 release
