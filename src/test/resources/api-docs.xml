@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ApiDocumentation>
+    <apiVersion>0.2</apiVersion>
+    <apis>
+        <description></description>
+        <path>/user.{format}</path>
+    </apis>
+    <apis>
+        <description></description>
+        <path>/pet.{format}</path>
+    </apis>
+    <basePath>.</basePath>
+    <swaggerVersion>1.1</swaggerVersion>
+</ApiDocumentation>

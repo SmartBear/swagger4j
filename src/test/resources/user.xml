@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ApiDocumentation>
+    <apiVersion>0.2</apiVersion>
+    <apis>
+        <description>Operations about user</description>
+        <operations>
+            <httpMethod>POST</httpMethod>
+            <nickname>createUsersWithArrayInput</nickname>
+            <parameters>
+                <allowMultiple>false</allowMultiple>
+                <dataType>Array[User]</dataType>
+                <description>List of user object</description>
+                <paramType>body</paramType>
+                <required>true</required>
+            </parameters>
+            <responseClass>void</responseClass>
+            <summary>Creates list of users with given input array</summary>
+        </operations>
+        <path>/user.{format}/createWithArray</path>
+    </apis>
+    <apis>
+        <description>Operations about user</description>
+        <operations>
+            <httpMethod>POST</httpMethod>
+            <nickname>createUser</nickname>
+            <notes>This can only be done by the logged in user.</notes>
+            <parameters>
+                <allowMultiple>false</allowMultiple>
+                <dataType>User</dataType>
+                <description>Created user object</description>
+                <paramType>body</paramType>
+                <required>true</required>
+            </parameters>
+            <responseClass>void</responseClass>
+            <summary>Create user</summary>
+        </operations>
+        <path>/user.{format}</path>
+    </apis>
+    <apis>
+        <description>Operations about user</description>
+        <operations>
+            <httpMethod>POST</httpMethod>
+            <nickname>createUsersWithListInput</nickname>
+            <parameters>
+                <allowMultiple>false</allowMultiple>
+                <dataType>List[User]</dataType>
+                <description>List of user object</description>
+                <paramType>body</paramType>
+                <required>true</required>
+            </parameters>
+            <responseClass>void</responseClass>
+            <summary>Creates list of users with given list input</summary>
+        </operations>
+        <path>/user.{format}/createWithList</path>
+    </apis>
+    <apis>
+        <description>Operations about user</description>
+        <operations>
+            <errorResponses>
+                <code>400</code>
+                <reason>Invalid username supplied</reason>
+            </errorResponses>
+            <errorResponses>
+                <code>404</code>
+                <reason>User not found</reason>
+            </errorResponses>
+            <httpMethod>GET</httpMethod>
+            <nickname>getUserByName</nickname>
+            <parameters>
+                <allowMultiple>false</allowMultiple>
+                <dataType>string</dataType>
+                <description>The name that needs to be fetched. Use user1 for testing.</description>
+                <name>username</name>
+                <paramType>path</paramType>
+                <required>true</required>
+            </parameters>
+            <responseClass>User</responseClass>
+            <summary>Get user by user name</summary>
+        </operations>
+        <path>/user.{format}/{username}</path>
+    </apis>
+    <apis>
+        <description>Operations about user</description>
+        <operations>
+            <errorResponses>
+                <code>400</code>
+                <reason>Invalid username and password combination</reason>
+            </errorResponses>
+            <httpMethod>GET</httpMethod>
+            <nickname>loginUser</nickname>
+            <parameters>
+                <allowMultiple>false</allowMultiple>
+                <dataType>string</dataType>
+                <description>The user name for login</description>
+                <name>username</name>
+                <paramType>query</paramType>
+                <required>true</required>
+            </parameters>
+            <parameters>
+                <allowMultiple>false</allowMultiple>
+                <dataType>string</dataType>
+                <description>The password for login in clear text</description>
+                <name>password</name>
+                <paramType>query</paramType>
+                <required>true</required>
+            </parameters>
+            <responseClass>string</responseClass>
+            <summary>Logs user into the system</summary>
+        </operations>
+        <path>/user.{format}/login</path>
+    </apis>
+    <apis>
+        <description>Operations about user</description>
+        <operations>
+            <httpMethod>GET</httpMethod>
+            <nickname>logoutUser</nickname>
+            <responseClass>void</responseClass>
+            <summary>Logs out current logged in user session</summary>
+        </operations>
+        <path>/user.{format}/logout</path>
+    </apis>
+    <basePath>http://petstore.swagger.wordnik.com/api</basePath>
+    <models/>
+    <resourcePath>/user</resourcePath>
+    <swaggerVersion>1.1</swaggerVersion>
+</ApiDocumentation>

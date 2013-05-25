@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ApiDocumentation>
+    <apiVersion>0.2</apiVersion>
+    <apis>
+        <description>Operations about pets</description>
+        <operations>
+            <errorResponses>
+                <code>400</code>
+                <reason>Invalid ID supplied</reason>
+            </errorResponses>
+            <errorResponses>
+                <code>404</code>
+                <reason>Pet not found</reason>
+            </errorResponses>
+            <httpMethod>GET</httpMethod>
+            <nickname>getPetById</nickname>
+            <notes>Returns a pet based on ID</notes>
+            <parameters>
+                <allowMultiple>false</allowMultiple>
+                <dataType>string</dataType>
+                <description>ID of pet that needs to be fetched</description>
+                <name>petId</name>
+                <paramType>path</paramType>
+                <required>true</required>
+            </parameters>
+            <responseClass>Pet</responseClass>
+            <summary>Find pet by ID</summary>
+        </operations>
+        <path>/pet.{format}/{petId}</path>
+    </apis>
+    <apis>
+        <description>Operations about pets</description>
+        <operations>
+            <errorResponses>
+                <code>400</code>
+                <reason>Invalid status value</reason>
+            </errorResponses>
+            <httpMethod>GET</httpMethod>
+            <nickname>findPetsByStatus</nickname>
+            <notes>Multiple status values can be provided with comma seperated strings</notes>
+            <parameters>
+                <allowMultiple>true</allowMultiple>
+                <allowableValues xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                 xsi:type="documentationAllowableListValues">
+                    <valueType>LIST</valueType>
+                    <values>available</values>
+                    <values>pending</values>
+                    <values>sold</values>
+                </allowableValues>
+                <dataType>string</dataType>
+                <defaultValue>available</defaultValue>
+                <description>Status values that need to be considered for filter</description>
+                <name>status</name>
+                <paramType>query</paramType>
+                <required>true</required>
+            </parameters>
+            <responseClass>List[Pet]</responseClass>
+            <summary>Finds Pets by status</summary>
+        </operations>
+        <path>/pet.{format}/findByStatus</path>
+    </apis>
+    <apis>
+        <description>Operations about pets</description>
+        <operations>
+            <deprecated>true</deprecated>
+            <errorResponses>
+                <code>400</code>
+                <reason>Invalid tag value</reason>
+            </errorResponses>
+            <httpMethod>GET</httpMethod>
+            <nickname>findPetsByTags</nickname>
+            <notes>Muliple tags can be provided with comma seperated strings. Use tag1, tag2, tag3 for testing.</notes>
+            <parameters>
+                <allowMultiple>true</allowMultiple>
+                <dataType>string</dataType>
+                <description>Tags to filter by</description>
+                <name>tags</name>
+                <paramType>query</paramType>
+                <required>true</required>
+            </parameters>
+            <responseClass>List[Pet]</responseClass>
+            <summary>Finds Pets by tags</summary>
+        </operations>
+        <path>/pet.{format}/findByTags</path>
+    </apis>
+    <basePath>http://petstore.swagger.wordnik.com/api</basePath>
+    <models/>
+    <resourcePath>/pet</resourcePath>
+    <swaggerVersion>1.1</swaggerVersion>
+</ApiDocumentation>
