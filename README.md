@@ -7,7 +7,30 @@ constructs yet. Apache 2.0 licensed.
 ### Getting started
 
 Download the prebuilt jar of the latest version from sourceforge ([https://sourceforge.net/projects/swagger4j/files](https://sourceforge.net/projects/swagger4j/files))
-or check it out from GitHub and build it yourself with maven (with "mvn install"). Swagger4j has a runtime dependency
+or check it out from GitHub and build it yourself with maven (with "mvn install"). 
+
+The latest version is also available in the SmartBear maven respository at soapui.org, add this to your pom with
+
+```xml
+<repositories>
+    <repository>
+        <id>soapUI Repository</id>
+        <url>http://www.soapui.org/repository/maven2</url>
+    </repository>
+</repositories>
+```
+
+and add the corresponding dependency:
+
+```xml
+<dependency>
+    <groupId>com.smartbear</groupId>
+    <artifactId>swagger4j</artifactId>
+    <version>1.0-beta1</version>
+</dependency>
+```
+
+swagger4j has a runtime dependency
 on jsonp ([https://java.net/projects/jsonp/](https://java.net/projects/jsonp/)) which you can add to your maven pom with.
 
 ```xml
