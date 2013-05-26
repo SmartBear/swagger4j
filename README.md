@@ -98,7 +98,8 @@ URI.
 
 * Support for DataModels / DataTypes
 * Support for sending API requests based on Swagger Operations
-* Anything else you might come up with
+* Format detection based on file content instead of extension
+* Anything else you might come up with!
 
 ### Release History
 
