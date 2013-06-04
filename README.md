@@ -1,6 +1,6 @@
 ## swagger4j
 
-A simple library for reading and writing [Swagger definitions](https://github.com/wordnik/swagger-core/wiki). Supports both JSON and XML formats. The current version is
+A simple java library for reading and writing [Swagger definitions](https://github.com/wordnik/swagger-core/wiki). Supports both JSON and XML formats. The current version is
 reasonably in line with the latest swagger core release except that it doesn't support any of the JSON Schema/Data Model
 constructs yet. Apache 2.0 licensed.
 
