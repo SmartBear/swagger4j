@@ -69,7 +69,7 @@ public class OperationImpl implements Operation {
 
     @Override
     public String getResponseClass() {
-        return responseClass;
+        return responseClass == null ? "void" : responseClass;
     }
 
     @Override
@@ -79,7 +79,7 @@ public class OperationImpl implements Operation {
 
     @Override
     public String getSummary() {
-        return summary;
+        return summary == null ? "" : summary;
     }
 
     @Override

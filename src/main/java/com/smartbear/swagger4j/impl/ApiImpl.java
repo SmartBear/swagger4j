@@ -49,7 +49,7 @@ public class ApiImpl implements Api {
 
     @Override
     public String getDescription() {
-        return description;
+        return description == null ? "" : description;
     }
 
     @Override
