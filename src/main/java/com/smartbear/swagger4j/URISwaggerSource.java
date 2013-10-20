@@ -29,13 +29,13 @@ import java.net.URISyntaxException;
 
 public class URISwaggerSource implements SwaggerSource {
 
-    private URI uri;
+    private final URI uri;
 
     public URISwaggerSource(URI uri) {
         this.uri = uri;
     }
 
-    public static URI buildUri(URI uri, String path, Constants.Format format) {
+    public static URI buildUri(URI uri, String path, SwaggerFormat format) {
         assert uri != null && path != null && format != null;
 
         String base = uri.toString();
@@ -59,16 +59,16 @@ public class URISwaggerSource implements SwaggerSource {
         return URI.create(base + path);
     }
 
-    public static Constants.Format extractFormat(URI uri) {
+    public static SwaggerFormat extractFormat(URI uri) {
         String path = uri.getPath() == null ? uri.toString() : uri.getPath().toLowerCase();
-        Constants.Format format = Constants.Format.json;
+        SwaggerFormat format = SwaggerFormat.json;
 
         if (path.endsWith(".xml"))
-            format = Constants.Format.xml;
+            format = SwaggerFormat.xml;
         else if (path.endsWith(".json"))
-            format = Constants.Format.json;
+            format = SwaggerFormat.json;
         else if (path.contains(".xml/"))
-            format = Constants.Format.xml;
+            format = SwaggerFormat.xml;
 
         return format;
     }
@@ -109,7 +109,7 @@ public class URISwaggerSource implements SwaggerSource {
     }
 
     @Override
-    public Constants.Format getFormat() {
+    public SwaggerFormat getFormat() {
         return extractFormat(uri);
     }
 }

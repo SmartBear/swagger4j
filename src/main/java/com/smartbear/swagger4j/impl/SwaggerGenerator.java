@@ -16,7 +16,7 @@
 
 package com.smartbear.swagger4j.impl;
 
-import com.smartbear.swagger4j.Constants;
+import com.smartbear.swagger4j.SwaggerFormat;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -78,7 +78,7 @@ public abstract class SwaggerGenerator {
      * @throws IOException
      */
 
-    public static SwaggerGenerator newGenerator(Writer writer, Constants.Format format) throws IOException {
+    public static SwaggerGenerator newGenerator(Writer writer, SwaggerFormat format) throws IOException {
 
         switch (format) {
             case xml:

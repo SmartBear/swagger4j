@@ -16,7 +16,7 @@
 
 package com.smartbear.swagger4j.impl;
 
-import com.smartbear.swagger4j.Constants;
+import com.smartbear.swagger4j.SwaggerFormat;
 import com.smartbear.swagger4j.SwaggerStore;
 
 import java.io.IOException;
@@ -70,7 +70,7 @@ public class Utils {
      * @return the created fileName
      */
 
-    public static String createFileNameFromPath(String path, Constants.Format format) {
+    public static String createFileNameFromPath(String path, SwaggerFormat format) {
         assert path != null && format != null : "Path and format must not be null";
 
         String name = path.replaceAll("\\{format\\}", format.getExtension());
@@ -88,7 +88,7 @@ public class Utils {
 
     public static class MapSwaggerStore implements SwaggerStore
     {
-        Map<String,StringWriter> files = new HashMap<String, StringWriter>();
+        final Map<String,StringWriter> files = new HashMap<String, StringWriter>();
 
         @Override
         public Writer createResource(String path) throws IOException {

@@ -18,14 +18,9 @@ package com.smartbear.swagger4j.impl;
 
 import com.smartbear.swagger4j.*;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Default implementation of the ApiDeclaration interface
@@ -34,13 +29,12 @@ import java.util.logging.Logger;
  */
 
 public class ApiDeclarationImpl implements ApiDeclaration {
-    private static Logger log = Logger.getLogger(ApiDeclarationImpl.class.getName());
 
-    private String apiVersion = Constants.DEFAULT_API_VERSION;
+    private String apiVersion = DEFAULT_API_VERSION;
     private String basePath;
-    private String swaggerVersion = Constants.SWAGGER_VERSION;
+    private SwaggerVersion swaggerVersion = SwaggerVersion.DEFAULT_VERSION;
     private String resourcePath;
-    private ArrayList<Api> apiList = new ArrayList<Api>();
+    private final List<Api> apiList = new ArrayList<Api>();
 
     ApiDeclarationImpl( String basePath, String resourcePath ) {
         assert basePath != null && resourcePath != null : "basePath and resourcePath must not be null";
@@ -50,12 +44,12 @@ public class ApiDeclarationImpl implements ApiDeclaration {
     }
 
     @Override
-    public String getSwaggerVersion() {
+    public SwaggerVersion getSwaggerVersion() {
         return swaggerVersion;
     }
 
     @Override
-    public void setSwaggerVersion(String swaggerVersion) {
+    public void setSwaggerVersion(SwaggerVersion swaggerVersion) {
         assert swaggerVersion != null : "swaggerVersion can not be null";
 
         this.swaggerVersion = swaggerVersion;

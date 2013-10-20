@@ -42,7 +42,7 @@ public class SwaggerFactoryImpl implements SwaggerFactory {
     }
 
     @Override
-    public SwaggerWriter createSwaggerWriter(Constants.Format format) {
+    public SwaggerWriter createSwaggerWriter(SwaggerFormat format) {
         return new SwaggerWriterImpl(format);
     }
 }

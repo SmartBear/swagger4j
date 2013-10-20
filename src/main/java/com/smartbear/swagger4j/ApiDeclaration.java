@@ -24,9 +24,12 @@ import java.util.List;
  */
 
 public interface ApiDeclaration {
-    public String getSwaggerVersion();
 
-    public void setSwaggerVersion(String swaggerVersion);
+    public final static String DEFAULT_API_VERSION = "1.0";
+
+    public SwaggerVersion getSwaggerVersion();
+
+    public void setSwaggerVersion(SwaggerVersion swaggerVersion);
 
     public String getApiVersion();
 

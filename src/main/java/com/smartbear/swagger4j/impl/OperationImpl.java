@@ -34,10 +34,10 @@ public class OperationImpl implements Operation {
     private String responseClass;
     private String summary;
     private String notes;
-    private HashSet<String> produces = new HashSet<String>();
-    private HashSet<String> consumes = new HashSet<String>();
-    private List<Parameter> parameterList = new ArrayList<Parameter>();
-    private List<ErrorResponse> errorResponses = new ArrayList<ErrorResponse>();
+    private final Set<String> produces = new HashSet<String>();
+    private final Set<String> consumes = new HashSet<String>();
+    private final List<Parameter> parameterList = new ArrayList<Parameter>();
+    private final List<ErrorResponse> errorResponses = new ArrayList<ErrorResponse>();
 
     OperationImpl(String nickName, Method method ) {
 

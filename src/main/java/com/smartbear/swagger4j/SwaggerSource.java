@@ -55,5 +55,5 @@ public interface SwaggerSource {
      * @return the format of the Swagger objects returned by this Source
      */
 
-    public Constants.Format getFormat();
+    public SwaggerFormat getFormat();
 }

@@ -56,5 +56,5 @@ public interface SwaggerFactory {
      * @return a SwaggerWriter
      */
 
-    public SwaggerWriter createSwaggerWriter(Constants.Format format);
+    public SwaggerWriter createSwaggerWriter(SwaggerFormat format);
 }

@@ -16,7 +16,7 @@
 
 package com.smartbear.swagger4j.impl;
 
-import com.smartbear.swagger4j.Constants;
+import com.smartbear.swagger4j.SwaggerFormat;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -45,7 +45,7 @@ public abstract class SwaggerParser {
 
     public abstract String getString();
 
-    public abstract Constants.Format getFormat();
+    public abstract SwaggerFormat getFormat();
 
     public abstract int getInteger(String name);
 
@@ -71,7 +71,7 @@ public abstract class SwaggerParser {
      * Builder for a SwaggerParser for one of the supported formats
      */
 
-    public static SwaggerParser newParser(Reader reader, Constants.Format format) throws IOException {
+    public static SwaggerParser newParser(Reader reader, SwaggerFormat format) throws IOException {
         switch (format) {
 
             case json:
@@ -136,8 +136,8 @@ public abstract class SwaggerParser {
         }
 
         @Override
-        public Constants.Format getFormat() {
-            return Constants.Format.xml;
+        public SwaggerFormat getFormat() {
+            return SwaggerFormat.xml;
         }
 
         @Override
@@ -202,8 +202,8 @@ public abstract class SwaggerParser {
         }
 
         @Override
-        public Constants.Format getFormat() {
-            return Constants.Format.json;
+        public SwaggerFormat getFormat() {
+            return SwaggerFormat.json;
         }
 
         @Override

@@ -30,7 +30,7 @@ import java.util.*;
 public class ApiImpl implements Api {
     private String path;
     private String description;
-    private List<Operation> operations = new ArrayList<Operation>();
+    private final List<Operation> operations = new ArrayList<Operation>();
 
     ApiImpl(String path) {
         setPath( path );
@@ -80,7 +80,7 @@ public class ApiImpl implements Api {
     public void removeOperation(Operation operation) {
         assert operation != null && operation.getNickName() != null : "operation can not be null and must have a nickname";
         synchronized (operations) {
-            operations.remove(operation.getNickName());
+            operations.remove(operation);
         }
     }
 

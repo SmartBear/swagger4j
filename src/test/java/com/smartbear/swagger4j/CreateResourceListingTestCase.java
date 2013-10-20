@@ -25,7 +25,7 @@ public class CreateResourceListingTestCase extends TestCase {
         SwaggerFactory factory = Swagger.createSwaggerFactory();
         ResourceListing resourceListing = factory.createResourceListing(PATH);
 
-        assertEquals(resourceListing.getSwaggerVersion(), Constants.SWAGGER_VERSION);
+        assertEquals(resourceListing.getSwaggerVersion(),SwaggerVersion.DEFAULT_VERSION);
         assertEquals(PATH, resourceListing.getBasePath());
         assertNull(resourceListing.getApiVersion());
         assertTrue(resourceListing.getApis().isEmpty());

@@ -18,18 +18,27 @@ package com.smartbear.swagger4j;
 
 public class TestUtils {
 
-    public final static String ONLINE_XML_RESOURCE_LISTING_URL = "http://petstore.swagger.wordnik.com/api/api-docs.xml";
-    public final static String ONLINE_JSON_RESOURCE_LISTING_URL = "http://petstore.swagger.wordnik.com/api/api-docs.json";
-    public final static String OFFLINE_XML_RESOURCE_LISTING_URL = "file:src/test/resources/api-docs.xml";
-    public final static String OFFLINE_JSON_RESOURCE_LISTING_URL = "file:src/test/resources/api-docs.json";
+    public final static String V1_1_XML_RESOURCE_LISTING_URL = "file:src/test/resources/v1_1/api-docs.xml";
+    public final static String V1_1_JSON_RESOURCE_LISTING_URL = "file:src/test/resources/v1_1/api-docs.json";
+    public final static String V1_2_JSON_RESOURCE_LISTING_URL = "file:src/test/resources/v1_2/api-docs.json";
 
-    public static String getTestJsonResourceListingUrl() {
-        return System.getProperties().containsKey("com.smartbear.swagger4j.offline") ?
-                OFFLINE_JSON_RESOURCE_LISTING_URL : ONLINE_JSON_RESOURCE_LISTING_URL;
+    public static String getTestJsonResourceListingUrl( SwaggerVersion swaggerVersion ) {
+        switch ( swaggerVersion )
+        {
+            case V1_1: return V1_1_JSON_RESOURCE_LISTING_URL;
+            case V1_2: return V1_2_JSON_RESOURCE_LISTING_URL;
+        }
+
+        throw new RuntimeException( "Unknown swagger version: " + swaggerVersion.toString());
     }
 
-    public static String getTestXmlResourceListingUrl() {
-        return System.getProperties().containsKey("com.smartbear.swagger4j.offline") ?
-                OFFLINE_XML_RESOURCE_LISTING_URL : ONLINE_XML_RESOURCE_LISTING_URL;
+    public static String getTestXmlResourceListingUrl( SwaggerVersion swaggerVersion ) {
+        switch ( swaggerVersion )
+        {
+            case V1_1: return V1_1_JSON_RESOURCE_LISTING_URL;
+            case V1_2:  throw new RuntimeException( "XML not supported by Swagger version: " + swaggerVersion.toString());
+        }
+
+        throw new RuntimeException( "Unknown Swagger version: " + swaggerVersion.toString());
     }
 }

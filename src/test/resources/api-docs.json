@@ -1,1 +1,0 @@
-{"apiVersion":"0.2","swaggerVersion":"1.1","basePath":".","apis":[{"path":"/user.{format}","description":""},{"path":"/pet.{format}","description":""}]}

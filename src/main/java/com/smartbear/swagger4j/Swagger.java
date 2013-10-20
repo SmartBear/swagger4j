@@ -90,7 +90,7 @@ public class Swagger {
      */
 
     public static void writeSwagger( ResourceListing resourceListing, String path ) throws IOException {
-        writeSwagger( resourceListing, path, Constants.Format.json );
+        writeSwagger( resourceListing, path, SwaggerFormat.json );
     }
 
     /**
@@ -103,7 +103,7 @@ public class Swagger {
      * @throws IOException
      */
 
-    public static void writeSwagger( ResourceListing resourceListing, String path, Constants.Format format ) throws IOException {
+    public static void writeSwagger( ResourceListing resourceListing, String path, SwaggerFormat format ) throws IOException {
         createWriter( format ).writeSwagger( new FileSwaggerStore( path ), resourceListing );
     }
 
@@ -114,7 +114,7 @@ public class Swagger {
      * @return the created SwaggerWriter
      */
 
-    public static SwaggerWriter createWriter(Constants.Format format) {
+    public static SwaggerWriter createWriter(SwaggerFormat format) {
         return createSwaggerFactory().createSwaggerWriter(format);
     }
 

@@ -25,9 +25,9 @@ import java.util.List;
 
 public interface ResourceListing {
 
-    public String getSwaggerVersion();
+    public SwaggerVersion getSwaggerVersion();
 
-    public void setSwaggerVersion(String swaggerVersion);
+    public void setSwaggerVersion(SwaggerVersion swaggerVersion);
 
     public String getApiVersion();
 

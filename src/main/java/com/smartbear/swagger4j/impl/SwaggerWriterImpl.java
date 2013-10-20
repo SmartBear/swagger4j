@@ -30,9 +30,9 @@ import java.util.Collection;
 
 public class SwaggerWriterImpl implements SwaggerWriter {
 
-    private Constants.Format format;
+    private final SwaggerFormat format;
 
-    public SwaggerWriterImpl(Constants.Format format) {
+    public SwaggerWriterImpl(SwaggerFormat format) {
         this.format = format;
     }
 
@@ -40,7 +40,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
     public void writeApiDeclaration(ApiDeclaration declaration, Writer writer) throws IOException {
         SwaggerGenerator w = SwaggerGenerator.newGenerator( writer, format );
 
-        w.addString(Utils.SWAGGER_VERSION, declaration.getSwaggerVersion());
+        w.addString(Utils.SWAGGER_VERSION, declaration.getSwaggerVersion().getIdentifier());
         w.addString(Utils.API_VERSION, declaration.getApiVersion());
         w.addString(Utils.BASE_PATH, declaration.getBasePath());
         w.addString(Utils.RESOURCE_PATH, declaration.getResourcePath());
@@ -92,7 +92,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
         SwaggerGenerator w = SwaggerGenerator.newGenerator( writer, format );
 
         w.addString(Utils.API_VERSION, listing.getApiVersion());
-        w.addString(Utils.SWAGGER_VERSION, listing.getSwaggerVersion());
+        w.addString(Utils.SWAGGER_VERSION, listing.getSwaggerVersion().getIdentifier());
         w.addString(Utils.BASE_PATH, listing.getBasePath());
 
         for (ResourceListing.ResourceListingApi api : listing.getApis()) {
@@ -105,7 +105,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
     }
 
     @Override
-    public Constants.Format getFormat() {
+    public SwaggerFormat getFormat() {
         return format;
     }
 

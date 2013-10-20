@@ -27,26 +27,28 @@ import java.io.Writer;
  */
 
 public class FileSwaggerStore implements SwaggerStore {
-    private String path;
+    private final String path;
     private String apiDocsPath;
 
-    public FileSwaggerStore(String path) {
+    public FileSwaggerStore(String path) throws IOException {
         this.path = path;
 
         File file = new File(path);
         if (!file.exists())
-            file.mkdirs();
+            if( !file.mkdirs())
+                throw new IOException( "Failed to create path [" + path + "] for file storage");
     }
 
     @Override
     public Writer createResource(String path) throws IOException {
 
         // make sure directory exists
-        if (path.indexOf("/") > 0) {
-            String nm = path.substring(0, path.lastIndexOf("/"));
+        if (path.indexOf('/') > 0) {
+            String nm = path.substring(0, path.lastIndexOf('/'));
             File f = new File(nm, this.path);
             if (!f.exists() || !f.isDirectory())
-                f.mkdirs();
+                if( !f.mkdirs())
+                    throw new IOException( "Failed to create path [" + path + "] for file storage");
         }
 
         File file = new File(this.path, path);
@@ -66,7 +68,7 @@ public class FileSwaggerStore implements SwaggerStore {
         return apiDocsPath;
     }
 
-    public static String writeSwagger( String path, ResourceListing resourceListing, Constants.Format format ) throws IOException {
+    public static String writeSwagger( String path, ResourceListing resourceListing, SwaggerFormat format ) throws IOException {
         FileSwaggerStore store = new FileSwaggerStore(path);
         Swagger.createWriter( format ).writeSwagger( store, resourceListing );
         return store.getApiDocsPath();

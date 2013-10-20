@@ -51,7 +51,7 @@ public interface SwaggerWriter {
      * @return the format used by this writer when writing Swagger definitions
      */
 
-    public Constants.Format getFormat();
+    public SwaggerFormat getFormat();
 
     /**
      * Writes an entire Swagger definition (both ResourceListing and referred ApiDeclarations) to a generic

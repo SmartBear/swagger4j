@@ -42,6 +42,7 @@ public class ErrorResponseImpl implements ErrorResponse {
     @Override
     public void setCode(int code) {
         assert code > 0 : "Error code can not be 0";
+        this.code = code;
     }
 
     @Override

@@ -23,23 +23,23 @@ import java.util.List;
 
 public class ReadResourceListingTestCase extends TestCase {
 
-    public void testReadJsonResourceListing() throws Exception {
-        String resourceListingUlr = TestUtils.getTestJsonResourceListingUrl();
+    public void testReadV1_1JsonResourceListing() throws Exception {
+        String resourceListingUlr = TestUtils.getTestJsonResourceListingUrl( SwaggerVersion.V1_1);
 
         ResourceListing resourceListing = Swagger.createReader().readResourceListing(URI.create(resourceListingUlr));
-        checkResourceListing(resourceListing);
+        checkResourceListing(resourceListing, SwaggerVersion.V1_1);
     }
 
-    public void testReadXmlResourceListing() throws Exception {
-        String resourceListingUlr = TestUtils.getTestXmlResourceListingUrl();
+    public void testReadV1_1XmlResourceListing() throws Exception {
+        String resourceListingUlr = TestUtils.getTestXmlResourceListingUrl(SwaggerVersion.V1_1);
 
         ResourceListing resourceListing = Swagger.createReader().readResourceListing(URI.create(resourceListingUlr));
-        checkResourceListing(resourceListing);
+        checkResourceListing(resourceListing, SwaggerVersion.V1_1);
     }
 
-    private void checkResourceListing(ResourceListing resourceListing) throws Exception {
+    private void checkResourceListing(ResourceListing resourceListing, SwaggerVersion version ) throws Exception {
         assertEquals("0.2", resourceListing.getApiVersion());
-        assertEquals("1.1", resourceListing.getSwaggerVersion());
+        assertEquals(version, resourceListing.getSwaggerVersion());
 
         List<ResourceListing.ResourceListingApi> apiList = resourceListing.getApis();
         assertEquals(2, apiList.size());
@@ -83,11 +83,11 @@ public class ReadResourceListingTestCase extends TestCase {
     {
       //  validateApiDeclarationCount( "https://api.groupdocs.com/v2.0/spec/spec-files/resources.json", 13 );
       //  validateApiDeclarationCount("http://composer.nprstations.org/api/api-docs", 11);
-        validateApiDeclarationCount("http://developers.subtledata.com/swagger/api-docs.json", 4);
-
-
-        validateApiCount("http://www.apihub.com/apihub/swagger-api/19201/Folders", 4);
-        validateApiCount("http://www.apihub.com/apihub/swagger-api/9528/commits", 3 );
+//        validateApiDeclarationCount("http://developers.subtledata.com/swagger/api-docs.json", 4);
+//
+//
+//        validateApiCount("http://www.apihub.com/apihub/swagger-api/19201/Folders", 4);
+//        validateApiCount("http://www.apihub.com/apihub/swagger-api/9528/commits", 3 );
     }
 
     private void validateApiCount(String path, int expectedCount) throws Exception

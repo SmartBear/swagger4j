@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 
 public class SwaggerReaderImpl implements SwaggerReader {
 
-    private static Logger logger = Logger.getLogger( SwaggerReaderImpl.class.getName() );
+    private final static Logger logger = Logger.getLogger( SwaggerReaderImpl.class.getName() );
 
     @Override
     public ResourceListing readResourceListing(URI uri) throws IOException {
@@ -52,7 +52,7 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
         ResourceListingImpl resourceListing = new ResourceListingImpl(basePath);
         resourceListing.setApiVersion(parser.getString(Utils.API_VERSION));
-        resourceListing.setSwaggerVersion(parser.getString(Utils.SWAGGER_VERSION));
+        resourceListing.setSwaggerVersion( SwaggerVersion.fromIdentifier( parser.getString(Utils.SWAGGER_VERSION)));
 
         for (SwaggerParser node  :parser.getChildren(Utils.APIS))
         {
@@ -72,20 +72,20 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
         assert uri != null : "uri can not be null";
 
-        Constants.Format format = URISwaggerSource.extractFormat(uri);
+        SwaggerFormat format = URISwaggerSource.extractFormat(uri);
         Reader reader = new InputStreamReader(uri.toURL().openStream());
 
         return readApiDeclaration(reader, format);
     }
 
-    public ApiDeclaration readApiDeclaration(Reader reader, Constants.Format format) throws IOException {
+    public ApiDeclaration readApiDeclaration(Reader reader, SwaggerFormat format) throws IOException {
         SwaggerParser parser = SwaggerParser.newParser(reader, format);
 
         String basePath = parser.getString(Utils.BASE_PATH);
         String resourcePath = parser.getString(Utils.RESOURCE_PATH);
 
         ApiDeclaration apiDeclaration = new ApiDeclarationImpl(basePath, resourcePath);
-        apiDeclaration.setSwaggerVersion(parser.getString(Utils.SWAGGER_VERSION));
+        apiDeclaration.setSwaggerVersion(SwaggerVersion.fromIdentifier(parser.getString(Utils.SWAGGER_VERSION)));
         apiDeclaration.setApiVersion(parser.getString(Utils.API_VERSION));
 
         for (SwaggerParser apiNode : parser.getChildren(Utils.APIS)) {

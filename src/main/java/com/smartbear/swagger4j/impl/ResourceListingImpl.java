@@ -17,13 +17,12 @@
 package com.smartbear.swagger4j.impl;
 
 import com.smartbear.swagger4j.ApiDeclaration;
-import com.smartbear.swagger4j.Constants;
 import com.smartbear.swagger4j.ResourceListing;
+import com.smartbear.swagger4j.SwaggerVersion;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Default implementation of the ResourceListing interface
@@ -34,10 +33,10 @@ import java.util.logging.Logger;
 public class ResourceListingImpl implements ResourceListing {
 
     private String apiVersion;
-    private String swaggerVersion = Constants.SWAGGER_VERSION;
+    private SwaggerVersion swaggerVersion = SwaggerVersion.DEFAULT_VERSION;
     private String basePath;
 
-    private ArrayList<ResourceListingApi> apiList = new ArrayList<ResourceListingApi>();
+    private final List<ResourceListingApi> apiList = new ArrayList<ResourceListingApi>();
 
     ResourceListingImpl(String basePath) {
         this.basePath = basePath;
@@ -51,11 +50,11 @@ public class ResourceListingImpl implements ResourceListing {
         this.apiVersion = apiVersion;
     }
 
-    public String getSwaggerVersion() {
+    public SwaggerVersion getSwaggerVersion() {
         return swaggerVersion;
     }
 
-    public void setSwaggerVersion(String swaggerVersion) {
+    public void setSwaggerVersion(SwaggerVersion swaggerVersion) {
         this.swaggerVersion = swaggerVersion;
     }
 
@@ -103,9 +102,9 @@ public class ResourceListingImpl implements ResourceListing {
         }
     }
 
-    public class ResourceListingApiImpl implements ResourceListingApi {
+    public static class ResourceListingApiImpl implements ResourceListingApi {
         private String description;
-        private ApiDeclaration apiDeclaration;
+        private final ApiDeclaration apiDeclaration;
         private String path;
 
         ResourceListingApiImpl(ApiDeclaration apiDeclaration, String path) {
