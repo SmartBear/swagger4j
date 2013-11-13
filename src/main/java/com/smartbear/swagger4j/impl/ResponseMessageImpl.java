@@ -16,22 +16,23 @@
 
 package com.smartbear.swagger4j.impl;
 
-import com.smartbear.swagger4j.ErrorResponse;
+import com.smartbear.swagger4j.ResponseMessage;
 
 /**
  * Default implementation of the ErrorResponse interface
  *
- * @see ErrorResponse
+ * @see ResponseMessage
  */
 
-public class ErrorResponseImpl implements ErrorResponse {
+public class ResponseMessageImpl implements ResponseMessage {
 
     private int code;
-    private String reason;
+    private String message;
+    private String responseModel;
 
-    public ErrorResponseImpl(int code, String reason) {
+    public ResponseMessageImpl(int code, String message) {
         this.code = code;
-        this.reason = reason;
+        this.message = message;
     }
 
     @Override
@@ -46,12 +47,20 @@ public class ErrorResponseImpl implements ErrorResponse {
     }
 
     @Override
-    public String getReason() {
-        return reason;
+    public String getMessage() {
+        return message;
     }
 
     @Override
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getResponseModel() {
+        return responseModel;
+    }
+
+    public void setResponseModel(String responseModel) {
+        this.responseModel = responseModel;
     }
 }

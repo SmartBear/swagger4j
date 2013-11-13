@@ -29,7 +29,7 @@ public class ParameterImpl implements Parameter {
     private String name;
     private String description;
     private boolean required;
-    private String dataType;
+    private String type;
     private boolean allowMultiple;
 
     ParameterImpl(String name, ParamType type) {
@@ -81,13 +81,13 @@ public class ParameterImpl implements Parameter {
     }
 
     @Override
-    public String getDataType() {
-        return dataType;
+    public String getType() {
+        return type;
     }
 
     @Override
-    public void setDataType(String dataType) {
-        this.dataType = dataType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

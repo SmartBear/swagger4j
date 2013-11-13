@@ -17,6 +17,7 @@
 package com.smartbear.swagger4j.impl;
 
 import com.smartbear.swagger4j.ApiDeclaration;
+import com.smartbear.swagger4j.Info;
 import com.smartbear.swagger4j.ResourceListing;
 import com.smartbear.swagger4j.SwaggerVersion;
 
@@ -37,9 +38,10 @@ public class ResourceListingImpl implements ResourceListing {
     private String basePath;
 
     private final List<ResourceListingApi> apiList = new ArrayList<ResourceListingApi>();
+    private InfoImpl info;
 
-    ResourceListingImpl(String basePath) {
-        this.basePath = basePath;
+    ResourceListingImpl(SwaggerVersion swaggerVersion) {
+        this.swaggerVersion = swaggerVersion;
     }
 
     public String getApiVersion() {
@@ -89,6 +91,14 @@ public class ResourceListingImpl implements ResourceListing {
             apiList.add(api);
             return api;
         }
+    }
+
+    @Override
+    public Info getInfo() {
+        if( info == null )
+            info = new InfoImpl();
+
+        return info;
     }
 
     private ResourceListingApi getApi(String path) {

@@ -84,7 +84,11 @@ public class URISwaggerSource implements SwaggerSource {
         try {
             path = path.replaceAll("\\{format\\}", getFormat().getExtension());
 
-            if( !basePath.toLowerCase().startsWith("file:") && basePath.indexOf("://") == - 1)
+            if( basePath == null )
+            {
+               basePath = uri.toString();
+            }
+            else if( !basePath.toLowerCase().startsWith("file:") && !basePath.contains("://"))
             {
                 String uriString = uri.toString();
                 if( basePath.equals("."))

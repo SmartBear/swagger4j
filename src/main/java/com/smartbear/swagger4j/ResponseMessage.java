@@ -21,13 +21,18 @@ package com.smartbear.swagger4j;
  * <a href="https://github.com/wordnik/swagger-core/wiki/Errors" target="_new">https://github.com/wordnik/swagger-core/wiki/Errors</a>
  */
 
-public interface ErrorResponse {
+public interface ResponseMessage {
 
     public int getCode();
 
     public void setCode(int code);
 
-    public String getReason();
+    public String getMessage();
 
-    public void setReason(String reason);
+    public void setMessage(String message);
+
+    public String getResponseModel();
+
+    public void setResponseModel(String responseModel);
+
 }

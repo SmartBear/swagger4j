@@ -18,9 +18,7 @@ package com.smartbear.swagger4j.impl;
 
 import com.smartbear.swagger4j.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Default implementation of the ApiDeclaration interface
@@ -35,6 +33,9 @@ public class ApiDeclarationImpl implements ApiDeclaration {
     private SwaggerVersion swaggerVersion = SwaggerVersion.DEFAULT_VERSION;
     private String resourcePath;
     private final List<Api> apiList = new ArrayList<Api>();
+    private final Set<String> produces = new HashSet<String>();
+    private final Set<String> consumes = new HashSet<String>();
+
 
     ApiDeclarationImpl( String basePath, String resourcePath ) {
         assert basePath != null && resourcePath != null : "basePath and resourcePath must not be null";
@@ -109,7 +110,7 @@ public class ApiDeclarationImpl implements ApiDeclaration {
         assert getApi(path) == null : "Api already exists at path [" + path + "]";
 
         synchronized (apiList) {
-            ApiImpl api = new ApiImpl(path);
+            ApiImpl api = new ApiImpl(this,path);
             apiList.add(api);
             return api;
         }
@@ -126,5 +127,38 @@ public class ApiDeclarationImpl implements ApiDeclaration {
 
             return null;
         }
+    }
+
+    @Override
+    public Collection<String> getProduces() {
+        return Collections.unmodifiableCollection(produces);
+    }
+
+    @Override
+    public void removeProduces(String produces) {
+        this.produces.remove(produces);
+    }
+
+    @Override
+    public void addProduces(String produces) {
+        assert produces != null : "produces can not be null";
+
+        this.produces.add(produces);
+    }
+
+    @Override
+    public Collection<String> getConsumes() {
+        return Collections.unmodifiableCollection(consumes);
+    }
+
+    @Override
+    public void removeConsumes(String consumes) {
+        this.produces.remove(consumes);
+    }
+
+    @Override
+    public void addConsumes(String consumes) {
+        assert consumes != null : "consumes can not be null";
+        this.consumes.add(consumes);
     }
 }

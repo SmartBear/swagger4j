@@ -38,9 +38,9 @@ public interface Parameter {
 
     public void setRequired(boolean required);
 
-    public String getDataType();
+    public String getType();
 
-    public void setDataType(String dataType);
+    public void setType(String type);
 
     public boolean isAllowMultiple();
 

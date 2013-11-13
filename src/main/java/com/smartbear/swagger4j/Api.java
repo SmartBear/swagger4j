@@ -16,6 +16,7 @@
 
 package com.smartbear.swagger4j;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,13 +40,7 @@ public interface Api {
 
     public void removeOperation(Operation operation);
 
-    /**
-     * Creates a new Operation with the specified nickName and HTTP Method
-     *
-     * @param nickName the unique nickName of this operation
-     * @param method the HTTP method
-     * @return an empty Operation object
-     */
-
     public Operation addOperation(String nickName, Operation.Method method);
+
+    public ApiDeclaration getApiDeclaration();
 }

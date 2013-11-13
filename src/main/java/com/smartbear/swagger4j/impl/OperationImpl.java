@@ -16,9 +16,10 @@
 
 package com.smartbear.swagger4j.impl;
 
-import com.smartbear.swagger4j.ErrorResponse;
+import com.smartbear.swagger4j.Api;
 import com.smartbear.swagger4j.Operation;
 import com.smartbear.swagger4j.Parameter;
+import com.smartbear.swagger4j.ResponseMessage;
 
 import java.util.*;
 
@@ -37,10 +38,11 @@ public class OperationImpl implements Operation {
     private final Set<String> produces = new HashSet<String>();
     private final Set<String> consumes = new HashSet<String>();
     private final List<Parameter> parameterList = new ArrayList<Parameter>();
-    private final List<ErrorResponse> errorResponses = new ArrayList<ErrorResponse>();
+    private final List<ResponseMessage> responseMessages = new ArrayList<ResponseMessage>();
+    private Api api;
 
-    OperationImpl(String nickName, Method method ) {
-
+    OperationImpl(Api api, String nickName, Method method ) {
+        this.api = api;
         this.nickName = nickName;
         this.method = method;
     }
@@ -99,6 +101,9 @@ public class OperationImpl implements Operation {
 
     @Override
     public Collection<String> getProduces() {
+        if (produces.isEmpty() && getApi() != null && getApi().getApiDeclaration() != null )
+            return getApi().getApiDeclaration().getProduces();
+
         return Collections.unmodifiableCollection(produces);
     }
 
@@ -116,6 +121,9 @@ public class OperationImpl implements Operation {
 
     @Override
     public Collection<String> getConsumes() {
+        if( consumes.isEmpty() && getApi() != null && getApi().getApiDeclaration() != null )
+            return getApi().getApiDeclaration().getConsumes();
+
         return Collections.unmodifiableCollection(consumes);
     }
 
@@ -175,41 +183,45 @@ public class OperationImpl implements Operation {
     }
 
     @Override
-    public List<ErrorResponse> getErrorResponses() {
-        return Collections.unmodifiableList(errorResponses);
+    public List<ResponseMessage> getResponseMessages() {
+        return Collections.unmodifiableList(responseMessages);
     }
 
     @Override
-    public ErrorResponse getErrorResponse(int code) {
+    public ResponseMessage getResponseMessage(int code) {
         assert code > 0 : "code can not be 0";
 
-        synchronized (errorResponses) {
-            for (ErrorResponse errorResponse : errorResponses)
-                if (errorResponse.getCode() == code)
-                    return errorResponse;
+        synchronized (responseMessages) {
+            for (ResponseMessage responseMessage : responseMessages)
+                if (responseMessage.getCode() == code)
+                    return responseMessage;
 
             return null;
         }
     }
 
     @Override
-    public void removeErrorResponse(ErrorResponse errorResponse) {
-        assert errorResponse != null;
+    public void removeResponseMessage(ResponseMessage responseMessage) {
+        assert responseMessage != null;
 
-        synchronized (errorResponses) {
-            errorResponses.remove(errorResponse);
+        synchronized (responseMessages) {
+            responseMessages.remove(responseMessage);
         }
     }
 
     @Override
-    public ErrorResponse addErrorResponse(int errorCode, String reason) {
-        assert errorCode > 0 : "errorCode must have a value";
-        assert getErrorResponse(errorCode) == null : "Error Response for already exists for code [" + errorCode + "]";
+    public ResponseMessage addResponseMessage(int code, String message) {
+        assert code > 0 : "code must have a value";
+        assert getResponseMessage(code) == null : "Response for already exists for code [" + code + "]";
 
-        synchronized (errorResponses) {
-            ErrorResponse errorResponse = new ErrorResponseImpl(errorCode, reason);
-            errorResponses.add(errorResponse);
-            return errorResponse;
+        synchronized (responseMessages) {
+            ResponseMessage responseMessage = new ResponseMessageImpl(code, message);
+            responseMessages.add(responseMessage);
+            return responseMessage;
         }
+    }
+
+    public Api getApi() {
+        return api;
     }
 }

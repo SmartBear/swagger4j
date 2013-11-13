@@ -17,6 +17,7 @@
 package com.smartbear.swagger4j.impl;
 
 import com.smartbear.swagger4j.Api;
+import com.smartbear.swagger4j.ApiDeclaration;
 import com.smartbear.swagger4j.Operation;
 
 import java.util.*;
@@ -31,8 +32,10 @@ public class ApiImpl implements Api {
     private String path;
     private String description;
     private final List<Operation> operations = new ArrayList<Operation>();
+    private ApiDeclaration apiDeclaration;
 
-    ApiImpl(String path) {
+    ApiImpl(ApiDeclaration apiDeclaration, String path) {
+        this.apiDeclaration = apiDeclaration;
         setPath( path );
     }
 
@@ -90,9 +93,14 @@ public class ApiImpl implements Api {
         assert getOperation(nickName ) == null : "operation with nickName [" + nickName + "] already exists";
 
         synchronized (operations) {
-            OperationImpl result = new OperationImpl(nickName, method);
+            OperationImpl result = new OperationImpl(this, nickName, method);
             operations.add( result );
             return result;
         }
+    }
+
+    public ApiDeclaration getApiDeclaration()
+    {
+        return apiDeclaration;
     }
 }

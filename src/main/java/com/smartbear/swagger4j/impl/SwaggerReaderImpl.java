@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,20 +47,37 @@ public class SwaggerReaderImpl implements SwaggerReader {
         assert source != null;
 
         SwaggerParser parser = SwaggerParser.newParser(source.readResourceListing(), source.getFormat());
-        String basePath = parser.getString(Utils.BASE_PATH);
+        SwaggerVersion swaggerVersion = SwaggerVersion.fromIdentifier(parser.getString(Constants.SWAGGER_VERSION));
+        Constants constants = Constants.get(swaggerVersion);
 
-        ResourceListingImpl resourceListing = new ResourceListingImpl(basePath);
-        resourceListing.setApiVersion(parser.getString(Utils.API_VERSION));
-        resourceListing.setSwaggerVersion( SwaggerVersion.fromIdentifier( parser.getString(Utils.SWAGGER_VERSION)));
+        // basePath was mandatory in V1.1
+        String basePath = parser.getString(constants.BASE_PATH);
 
-        for (SwaggerParser node  :parser.getChildren(Utils.APIS))
+        ResourceListingImpl resourceListing = new ResourceListingImpl(swaggerVersion);
+        resourceListing.setBasePath( basePath );
+        resourceListing.setApiVersion(parser.getString(constants.API_VERSION));
+        resourceListing.setSwaggerVersion(swaggerVersion);
+
+        for (SwaggerParser node  :parser.getChildren(constants.APIS))
         {
-            String path = node.getString(Utils.PATH);
+            String path = node.getString(constants.PATH);
             Reader reader = source.readApiDeclaration( basePath, path);
 
             ApiDeclaration apiDeclaration = readApiDeclaration(reader, source.getFormat());
             ResourceListing.ResourceListingApi api = resourceListing.addApi(apiDeclaration, path);
-            api.setDescription(node.getString(Utils.DESCRIPTION));
+            api.setDescription(node.getString(constants.DESCRIPTION));
+        }
+
+        SwaggerParser child = parser.getChild(constants.INFO);
+        if( child != null )
+        {
+            Info info = resourceListing.getInfo();
+            info.setContact( child.getString( constants.INFO_CONTACT));
+            info.setDescription( child.getString( constants.INFO_DESCRIPTION ));
+            info.setLicense( child.getString( constants.INFO_LICENSE ));
+            info.setLicenseUrl( child.getString( constants.INFO_LICENSE_URL ));
+            info.setTermsOfServiceUrl( child.getString(constants.INFO_TERMSOFSERVICEURL));
+            info.setTitle( child.getString( constants.INFO_TITLE));
         }
 
         return resourceListing;
@@ -81,15 +97,26 @@ public class SwaggerReaderImpl implements SwaggerReader {
     public ApiDeclaration readApiDeclaration(Reader reader, SwaggerFormat format) throws IOException {
         SwaggerParser parser = SwaggerParser.newParser(reader, format);
 
-        String basePath = parser.getString(Utils.BASE_PATH);
-        String resourcePath = parser.getString(Utils.RESOURCE_PATH);
+        SwaggerVersion swaggerVersion = SwaggerVersion.fromIdentifier(parser.getString(Constants.SWAGGER_VERSION));
+        Constants constants = Constants.get(swaggerVersion);
+
+        String basePath = parser.getString(constants.BASE_PATH);
+        String resourcePath = parser.getString(constants.RESOURCE_PATH);
 
         ApiDeclaration apiDeclaration = new ApiDeclarationImpl(basePath, resourcePath);
-        apiDeclaration.setSwaggerVersion(SwaggerVersion.fromIdentifier(parser.getString(Utils.SWAGGER_VERSION)));
-        apiDeclaration.setApiVersion(parser.getString(Utils.API_VERSION));
+        apiDeclaration.setSwaggerVersion(swaggerVersion);
+        apiDeclaration.setApiVersion(parser.getString(constants.API_VERSION));
 
-        for (SwaggerParser apiNode : parser.getChildren(Utils.APIS)) {
-            String apiPath = apiNode.getString(Utils.PATH);
+        for (String produces : parser.getArray(constants.PRODUCES)) {
+            apiDeclaration.addProduces(produces);
+        }
+
+        for (String consumes : parser.getArray(constants.CONSUMES)) {
+            apiDeclaration.addConsumes(consumes);
+        }
+
+        for (SwaggerParser apiNode : parser.getChildren(constants.APIS)) {
+            String apiPath = apiNode.getString(constants.PATH);
 
             if( apiDeclaration.getApi( apiPath ) != null )
             {
@@ -99,11 +126,11 @@ public class SwaggerReaderImpl implements SwaggerReader {
             else
             {
                 Api api = apiDeclaration.addApi(apiPath);
-                api.setDescription(apiNode.getString(Utils.DESCRIPTION));
+                api.setDescription(apiNode.getString(constants.DESCRIPTION));
 
-                for( SwaggerParser opNode : apiNode.getChildren( Utils.OPERATIONS ))
+                for( SwaggerParser opNode : apiNode.getChildren( constants.OPERATIONS ))
                 {
-                    String nickName = opNode.getString(Utils.NICKNAME);
+                    String nickName = opNode.getString(constants.NICKNAME);
                     if( api.getOperation(nickName ) != null )
                     {
                         logger.log( Level.INFO, "Skipping duplicate Operation with nickName [" +
@@ -113,33 +140,33 @@ public class SwaggerReaderImpl implements SwaggerReader {
                     else
                     {
                         Operation operation = api.addOperation(nickName,
-                                Operation.Method.valueOf(opNode.getString(Utils.HTTP_METHOD).toUpperCase()));
+                                Operation.Method.valueOf(opNode.getString(constants.METHOD).toUpperCase()));
 
-                        operation.setSummary(opNode.getString(Utils.SUMMARY));
-                        operation.setNotes(opNode.getString(Utils.NOTES));
-                        operation.setResponseClass(opNode.getString(Utils.RESPONSE_CLASS));
+                        operation.setSummary(opNode.getString(constants.SUMMARY));
+                        operation.setNotes(opNode.getString(constants.NOTES));
+                        operation.setResponseClass(opNode.getString(constants.RESPONSE_CLASS));
 
-                        for (SwaggerParser parameterNode : opNode.getChildren(Utils.PARAMETERS)) {
-                            Parameter parameter = operation.addParameter(parameterNode.getString(Utils.NAME),
-                                    Parameter.ParamType.valueOf(parameterNode.getString(Utils.PARAM_TYPE)));
+                        for (SwaggerParser parameterNode : opNode.getChildren(constants.PARAMETERS)) {
+                            Parameter parameter = operation.addParameter(parameterNode.getString(constants.NAME),
+                                    Parameter.ParamType.valueOf(parameterNode.getString(constants.PARAM_TYPE)));
 
-                            parameter.setAllowMultiple(parameterNode.getBoolean(Utils.ALLOW_MULTIPLE));
-                            parameter.setDescription(parameterNode.getString(Utils.DESCRIPTION));
-                            parameter.setRequired(parameterNode.getBoolean(Utils.REQUIRED));
-                            parameter.setDataType(parameterNode.getString(Utils.DATA_TYPE));
+                            parameter.setAllowMultiple(parameterNode.getBoolean(constants.ALLOW_MULTIPLE));
+                            parameter.setDescription(parameterNode.getString(constants.DESCRIPTION));
+                            parameter.setRequired(parameterNode.getBoolean(constants.REQUIRED));
+                            parameter.setType(parameterNode.getString(constants.TYPE));
                         }
 
-                        for (SwaggerParser errorNode : opNode.getChildren(Utils.ERROR_RESPONSES)) {
-                            operation.addErrorResponse(
-                                    errorNode.getInteger(Utils.CODE), errorNode.getString(Utils.REASON)
-                            );
+                        for (SwaggerParser responseMessage : opNode.getChildren(constants.RESPONSE_MESSAGES)) {
+                            operation.addResponseMessage(
+                                    responseMessage.getInteger(constants.CODE), responseMessage.getString(constants.MESSAGE)
+                            ).setResponseModel(responseMessage.getString(constants.RESPONSE_MODEL));
                         }
 
-                        for (String produces : opNode.getArray(Utils.PRODUCES)) {
+                        for (String produces : opNode.getArray(constants.PRODUCES)) {
                             operation.addProduces(produces);
                         }
 
-                        for (String consumes : opNode.getArray(Utils.CONSUMES)) {
+                        for (String consumes : opNode.getArray(constants.CONSUMES)) {
                             operation.addConsumes(consumes);
                         }
                     }

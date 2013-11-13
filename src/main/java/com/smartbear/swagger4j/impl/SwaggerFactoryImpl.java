@@ -25,9 +25,9 @@ import com.smartbear.swagger4j.*;
 public class SwaggerFactoryImpl implements SwaggerFactory {
 
     @Override
-    public ResourceListing createResourceListing(String basePath) {
-        assert basePath != null : "basePath can not be null";
-        return new ResourceListingImpl(basePath);
+    public ResourceListing createResourceListing(SwaggerVersion version) {
+        assert version != null : "version can not be null";
+        return new ResourceListingImpl(version);
     }
 
     @Override

@@ -33,36 +33,6 @@ import java.util.Map;
 public class Utils {
 
     /**
-     * Constants for the names used in Swagger definitions
-     */
-
-    public static final String API_VERSION = "apiVersion";
-    public static final String SWAGGER_VERSION = "swaggerVersion";
-    public static final String BASE_PATH = "basePath";
-    public static final String API_DOCUMENTATION = "ApiDocumentation";
-    public static final String PATH = "path";
-    public static final String APIS = "apis";
-    public static final String DESCRIPTION = "description";
-    public static final String RESOURCE_PATH = "resourcePath";
-    public static final String OPERATIONS = "operations";
-    public static final String NICKNAME = "nickname";
-    public static final String HTTP_METHOD = "httpMethod";
-    public static final String SUMMARY = "summary";
-    public static final String NOTES = "notes";
-    public static final String RESPONSE_CLASS = "responseClass";
-    public static final String PARAMETERS = "parameters";
-    public static final String NAME = "name";
-    public static final String PARAM_TYPE = "paramType";
-    public static final String ALLOW_MULTIPLE = "allowMultiple";
-    public static final String REQUIRED = "required";
-    public static final String DATA_TYPE = "dataType";
-    public static final String ERROR_RESPONSES = "errorResponses";
-    public static final String CODE = "code";
-    public static final String REASON = "reason";
-    public static final String PRODUCES = "produces";
-    public static final String CONSUMES = "consumes";
-
-    /**
      * Method for creating a filename from a path - replaces format references and adds the extension.
      *
      * @param path the path to fix

@@ -23,7 +23,9 @@ public class CreateResourceListingTestCase extends TestCase {
 
     public void testCreation() throws Exception {
         SwaggerFactory factory = Swagger.createSwaggerFactory();
-        ResourceListing resourceListing = factory.createResourceListing(PATH);
+        ResourceListing resourceListing = factory.createResourceListing(SwaggerVersion.DEFAULT_VERSION);
+
+        resourceListing.setBasePath( PATH );
 
         assertEquals(resourceListing.getSwaggerVersion(),SwaggerVersion.DEFAULT_VERSION);
         assertEquals(PATH, resourceListing.getBasePath());

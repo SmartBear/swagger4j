@@ -16,7 +16,7 @@
 
 package com.smartbear.swagger4j;
 
-import com.smartbear.swagger4j.impl.Utils;
+import com.smartbear.swagger4j.impl.Constants;
 import junit.framework.TestCase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -61,31 +61,36 @@ public class SwaggerWriterTestCase extends TestCase {
         assertTrue(json.length() > 0);
 
         JsonReader reader = Json.createReader(new StringReader(json));
-        assertEquals(resourceListing.getSwaggerVersion().getIdentifier(), reader.readObject().getString(Utils.SWAGGER_VERSION));
+        SwaggerVersion swaggerVersion = resourceListing.getSwaggerVersion();
+        assertEquals(swaggerVersion.getIdentifier(), reader.readObject().getString(Constants.SWAGGER_VERSION));
+
+        System.out.println( json );
 
         json = store.getFileMap().get("/user.json").toString();
         System.out.println("Created: " + json);
         reader = Json.createReader(new StringReader(json));
         JsonObject object = reader.readObject();
-        assertEquals(resourceListing.getSwaggerVersion().getIdentifier(), object.getString(Utils.SWAGGER_VERSION));
+        assertEquals(swaggerVersion.getIdentifier(), object.getString(Constants.SWAGGER_VERSION));
 
-        JsonArray apis = object.getJsonArray(Utils.APIS);
+        Constants constants = Constants.get(swaggerVersion);
+
+        JsonArray apis = object.getJsonArray(constants.APIS);
         assertEquals(1, apis.size());
 
-        object = apis.getJsonObject(0).getJsonArray(Utils.OPERATIONS).getJsonObject(0);
-        JsonArray produces = object.getJsonArray(Utils.PRODUCES);
+        object = apis.getJsonObject(0).getJsonArray(constants.OPERATIONS).getJsonObject(0);
+        JsonArray produces = object.getJsonArray(constants.PRODUCES);
         assertEquals(1, produces.size());
         assertEquals("text/xml", produces.getString(0));
-        JsonArray consumes = object.getJsonArray(Utils.CONSUMES);
+        JsonArray consumes = object.getJsonArray(constants.CONSUMES);
         assertEquals(1, consumes.size());
         assertEquals("application/json", consumes.getString(0));
-        assertEquals("Testing summary", object.getString(Utils.SUMMARY));
+        assertEquals("Testing summary", object.getString(constants.SUMMARY));
 
         System.out.println(json);
     }
 
     private ResourceListing createResourceListingForCreationTesting(MapSwaggerStore store, SwaggerFormat format) throws IOException {
-        ResourceListing resourceListing = Swagger.createResourceListing("http://petstore.swagger.wordnik.com/api/api-docs.json");
+        ResourceListing resourceListing = Swagger.createResourceListing(SwaggerVersion.DEFAULT_VERSION);
         ApiDeclaration apiDeclaration = Swagger.createApiDeclaration("http://petstore.swagger.wordnik.com/api", "/user");
 
         Api api = apiDeclaration.addApi("/user.{format}/createWithArray");
@@ -94,10 +99,12 @@ public class SwaggerWriterTestCase extends TestCase {
         operation.setSummary("Testing summary");
         operation.addProduces("text/xml");
         operation.addConsumes("application/json");
-        operation.addErrorResponse(400, "not found");
+        operation.addResponseMessage(400, "not found");
         operation.addParameter("test", Parameter.ParamType.query).setDescription("Test parameter");
 
         resourceListing.addApi(apiDeclaration, "/user.{format}");
+
+        resourceListing.getInfo().setTitle("Testing Resource Listing");
 
         SwaggerWriter swaggerWriter = Swagger.createWriter(format);
         swaggerWriter.writeSwagger(store, resourceListing);
@@ -116,25 +123,28 @@ public class SwaggerWriterTestCase extends TestCase {
 
         Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource( new StringReader(xml)));
         Element documentElement = document.getDocumentElement();
-        assertEquals(Utils.API_DOCUMENTATION, documentElement.getNodeName());
-        Element elm = (Element) documentElement.getElementsByTagName(Utils.SWAGGER_VERSION).item(0);
-        assertEquals(resourceListing.getSwaggerVersion().getIdentifier(), elm.getTextContent());
+        assertEquals(Constants.API_DOCUMENTATION, documentElement.getNodeName());
+        Element elm = (Element) documentElement.getElementsByTagName(Constants.SWAGGER_VERSION).item(0);
+        SwaggerVersion swaggerVersion = resourceListing.getSwaggerVersion();
+        assertEquals(swaggerVersion.getIdentifier(), elm.getTextContent());
 
         xml = store.getFileMap().get("/user.xml").toString();
         document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
         documentElement = document.getDocumentElement();
-        assertEquals(Utils.API_DOCUMENTATION, documentElement.getNodeName());
+        assertEquals(Constants.API_DOCUMENTATION, documentElement.getNodeName());
 
-        elm = (Element) documentElement.getElementsByTagName(Utils.SWAGGER_VERSION).item(0);
-        assertEquals(resourceListing.getSwaggerVersion().getIdentifier(), elm.getTextContent());
+        elm = (Element) documentElement.getElementsByTagName(Constants.SWAGGER_VERSION).item(0);
+        assertEquals(swaggerVersion.getIdentifier(), elm.getTextContent());
 
-        NodeList nl = documentElement.getElementsByTagName(Utils.APIS);
+        Constants constants = Constants.get(swaggerVersion);
+
+        NodeList nl = documentElement.getElementsByTagName(constants.APIS);
         assertEquals(1, nl.getLength());
 
-        elm = (Element) ((Element) nl.item(0)).getElementsByTagName(Utils.OPERATIONS).item(0);
-        assertEquals(1, elm.getElementsByTagName(Utils.PRODUCES).getLength());
+        elm = (Element) ((Element) nl.item(0)).getElementsByTagName(constants.OPERATIONS).item(0);
+        assertEquals(1, elm.getElementsByTagName(constants.PRODUCES).getLength());
 
-        assertEquals("Testing summary", elm.getElementsByTagName(Utils.SUMMARY).item(0).getTextContent());
+        assertEquals("Testing summary", elm.getElementsByTagName(constants.SUMMARY).item(0).getTextContent());
         System.out.println(xml);
     }
 
@@ -164,7 +174,7 @@ public class SwaggerWriterTestCase extends TestCase {
         Operation op = api.addOperation( "getuserbyid", Operation.Method.GET );
         op.addParameter( "id", Parameter.ParamType.path );
 
-        ResourceListing rl = factory.createResourceListing( "http://api.mycompany.com/apis" );
+        ResourceListing rl = factory.createResourceListing(SwaggerVersion.DEFAULT_VERSION );
         rl.setApiVersion( "1.0" );
         rl.addApi( apiDeclaration, "user-doc.{format}" );
 

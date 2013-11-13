@@ -26,11 +26,11 @@ public interface SwaggerFactory {
      * Creates an empty ResourceListing with the specified basePath to use for resolving contained API declaration
      * references
      *
-     * @param basePath the basePath of the ResourceListing
+     * @param version the Swagger version to use
      * @return an empty ResourceListing object
      */
 
-    public ResourceListing createResourceListing(String basePath);
+    public ResourceListing createResourceListing(SwaggerVersion version);
 
     /**
      * Creates an empty ApiDeclaration with the specified basePath and resourcePath

@@ -1,14 +1,15 @@
 {
    "apiVersion" : "1.0.0",
    "swaggerVersion" : "1.2",
+   "basePath" : ".",
    "apis" :
       [
          {
-            "path" : "/user",
+            "path" : "/user.json",
             "description" : "Operations about user"
          },
          {
-            "path" : "/pet",
+            "path" : "/pet.json",
             "description" : "Operations about pets"
          }
       ],

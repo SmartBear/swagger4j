@@ -47,6 +47,8 @@ public abstract class SwaggerGenerator {
 
     public abstract SwaggerGenerator addObject(String name);
 
+    public abstract SwaggerGenerator addArrayObject(String name);
+
     public abstract SwaggerGenerator addBoolean(String name, boolean value);
 
     public abstract SwaggerGenerator addInt(String name, int value);
@@ -97,7 +99,8 @@ public abstract class SwaggerGenerator {
     public static class SwaggerJsonGenerator extends SwaggerGenerator {
         private final JsonObjectBuilder builder;
         private Writer writer;
-        private Map<String,List<SwaggerJsonGenerator>> objects;
+        private Map<String,SwaggerJsonGenerator> objects;
+        private Map<String,List<SwaggerJsonGenerator>> arrayObjects;
 
         public SwaggerJsonGenerator(Writer writer) {
             this.writer = writer;
@@ -125,19 +128,29 @@ public abstract class SwaggerGenerator {
 
         @Override
         public void finish() throws IOException {
-            if( objects != null )
+            if( arrayObjects != null )
             {
-                for( String name : objects.keySet() )
+                for( String name : arrayObjects.keySet() )
                 {
                     JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
-                    for( SwaggerJsonGenerator w : objects.get(name))
+                    for( SwaggerJsonGenerator w : arrayObjects.get(name))
                     {
                         w.finish();
                         arrayBuilder.add( w.getObjectBuilder() );
                     }
 
                     builder.add( name, arrayBuilder );
+                }
+            }
+
+            if( objects != null )
+            {
+                for( String name : objects.keySet())
+                {
+                    SwaggerJsonGenerator w = objects.get(name);
+                    w.finish();
+                    builder.add( name, w.getObjectBuilder());
                 }
             }
 
@@ -151,21 +164,32 @@ public abstract class SwaggerGenerator {
 
         @Override
         public SwaggerGenerator addObject(String name) {
+            if( objects == null )
+                objects = new HashMap<String, SwaggerJsonGenerator>();
+
+            SwaggerJsonGenerator result = new SwaggerJsonGenerator( Json.createObjectBuilder());
+            objects.put(name, result);
+
+            return result;
+        }
+
+        @Override
+        public SwaggerGenerator addArrayObject(String name) {
             assert name != null;
 
-            if( objects == null )
+            if( arrayObjects == null )
             {
-                objects = new HashMap<String, List<SwaggerJsonGenerator>>();
+                arrayObjects = new HashMap<String, List<SwaggerJsonGenerator>>();
             }
 
-            if( !objects.containsKey(name))
+            if( !arrayObjects.containsKey(name))
             {
-                objects.put( name, new ArrayList<SwaggerJsonGenerator>());
+                arrayObjects.put( name, new ArrayList<SwaggerJsonGenerator>());
             }
 
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             SwaggerJsonGenerator swaggerJsonGenerator = new SwaggerJsonGenerator(objectBuilder);
-            objects.get( name ).add(swaggerJsonGenerator);
+            arrayObjects.get(name).add(swaggerJsonGenerator);
 
             return swaggerJsonGenerator;
         }
@@ -208,7 +232,7 @@ public abstract class SwaggerGenerator {
 
             try {
                 Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-                elm = (Element) document.appendChild(document.createElement(Utils.API_DOCUMENTATION));
+                elm = (Element) document.appendChild(document.createElement(Constants.API_DOCUMENTATION));
             } catch (Exception e) {
                 throw new IOException(e);
             }
@@ -249,6 +273,11 @@ public abstract class SwaggerGenerator {
 
         @Override
         public SwaggerGenerator addObject(String name) {
+            return addArrayObject( name );
+        }
+
+        @Override
+        public SwaggerGenerator addArrayObject(String name) {
             Document document = elm.getOwnerDocument();
             Node node = elm.appendChild(document.createElement(name));
 

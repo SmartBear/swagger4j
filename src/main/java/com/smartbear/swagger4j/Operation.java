@@ -25,6 +25,9 @@ import java.util.List;
  */
 
 public interface Operation {
+
+    public Api getApi();
+
     public Method getMethod();
 
     public void setMethod(Method method);
@@ -65,13 +68,13 @@ public interface Operation {
 
     public Parameter addParameter(String name, Parameter.ParamType type);
 
-    public List<ErrorResponse> getErrorResponses();
+    public List<ResponseMessage> getResponseMessages();
 
-    public ErrorResponse getErrorResponse(int code);
+    public ResponseMessage getResponseMessage(int code);
 
-    public void removeErrorResponse(ErrorResponse errorResponse);
+    public void removeResponseMessage(ResponseMessage responseMessage);
 
-    public ErrorResponse addErrorResponse(int errorCode, String reason);
+    public ResponseMessage addResponseMessage(int code, String message);
 
     /**
      * These are the methods supported by Swagger 1.2 - more to come

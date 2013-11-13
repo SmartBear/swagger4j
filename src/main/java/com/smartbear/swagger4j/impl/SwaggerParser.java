@@ -51,6 +51,8 @@ public abstract class SwaggerParser {
 
     public abstract List<String> getArray(String name);
 
+    public abstract SwaggerParser getChild( String name );
+
     /**
      * Builder for a SwaggerParser that can read XML
      */
@@ -155,6 +157,15 @@ public abstract class SwaggerParser {
 
             return result;
         }
+
+        @Override
+        public SwaggerParser getChild(String name) {
+            NodeList nl = elm.getElementsByTagName(name);
+            if( nl.getLength() > 0 )
+                return new SwaggerXmlParser((Element) nl.item( 0 ));
+
+            return null;
+        }
     }
 
     /**
@@ -221,6 +232,12 @@ public abstract class SwaggerParser {
                     result.add(jsonArray.getString(c));
             }
             return result;
+        }
+
+        @Override
+        public SwaggerParser getChild(String name) {
+            JsonObject child = jsonObject.getJsonObject(name);
+            return child == null ? null : new SwaggerJsonParser( child );
         }
     }
 }

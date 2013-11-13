@@ -16,6 +16,7 @@
 
 package com.smartbear.swagger4j;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -84,4 +85,17 @@ public interface ApiDeclaration {
      */
 
     public Api getApi(String path);
+
+    public Collection<String> getProduces();
+
+    public void removeProduces(String produces);
+
+    public void addProduces(String produces);
+
+    public Collection<String> getConsumes();
+
+    public void removeConsumes(String consumes);
+
+    public void addConsumes(String consumes);
+
 }

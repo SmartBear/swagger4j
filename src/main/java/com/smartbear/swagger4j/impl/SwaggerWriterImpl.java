@@ -40,47 +40,63 @@ public class SwaggerWriterImpl implements SwaggerWriter {
     public void writeApiDeclaration(ApiDeclaration declaration, Writer writer) throws IOException {
         SwaggerGenerator w = SwaggerGenerator.newGenerator( writer, format );
 
-        w.addString(Utils.SWAGGER_VERSION, declaration.getSwaggerVersion().getIdentifier());
-        w.addString(Utils.API_VERSION, declaration.getApiVersion());
-        w.addString(Utils.BASE_PATH, declaration.getBasePath());
-        w.addString(Utils.RESOURCE_PATH, declaration.getResourcePath());
+        SwaggerVersion swaggerVersion = declaration.getSwaggerVersion();
+        Constants constants = Constants.get(swaggerVersion);
+        w.addString(Constants.SWAGGER_VERSION, swaggerVersion.getIdentifier());
+        w.addString(constants.API_VERSION, declaration.getApiVersion());
+        w.addString(constants.BASE_PATH, declaration.getBasePath());
+        w.addString(constants.RESOURCE_PATH, declaration.getResourcePath());
+
+        if( swaggerVersion != SwaggerVersion.V1_1 )
+        {
+            Collection<String> produces = declaration.getProduces();
+            if( !produces.isEmpty())
+                w.addArray(constants.PRODUCES, produces.toArray(new String[produces.size()]));
+
+            Collection<String> consumes = declaration.getConsumes();
+            if( !consumes.isEmpty())
+                w.addArray(constants.CONSUMES, consumes.toArray(new String[consumes.size()]));
+        }
 
         for (Api api : declaration.getApis()) {
-            SwaggerGenerator aw = w.addObject(Utils.APIS);
-            aw.addString(Utils.PATH, api.getPath());
-            aw.addString(Utils.DESCRIPTION, api.getDescription());
+            SwaggerGenerator aw = w.addArrayObject(constants.APIS);
+            aw.addString(constants.PATH, api.getPath());
+            aw.addString(constants.DESCRIPTION, api.getDescription());
 
             for (Operation operation : api.getOperations()) {
-                SwaggerGenerator ow = aw.addObject(Utils.OPERATIONS);
-                ow.addString(Utils.NICKNAME, operation.getNickName());
-                ow.addString(Utils.HTTP_METHOD, operation.getMethod().name());
-                ow.addString(Utils.SUMMARY, operation.getSummary());
-                ow.addString(Utils.NOTES, operation.getNotes());
-                ow.addString(Utils.RESPONSE_CLASS, operation.getResponseClass());
+                SwaggerGenerator ow = aw.addArrayObject(constants.OPERATIONS);
+                ow.addString(constants.NICKNAME, operation.getNickName());
+                ow.addString(constants.METHOD, operation.getMethod().name());
+                ow.addString(constants.SUMMARY, operation.getSummary());
+                ow.addString(constants.NOTES, operation.getNotes());
+                ow.addString(constants.RESPONSE_CLASS, operation.getResponseClass());
 
                 for (Parameter parameter : operation.getParameters()) {
-                    SwaggerGenerator pw = ow.addObject(Utils.PARAMETERS);
-                    pw.addString(Utils.NAME, parameter.getName());
-                    pw.addString(Utils.PARAM_TYPE, parameter.getParamType().name());
-                    pw.addBoolean(Utils.ALLOW_MULTIPLE, parameter.isAllowMultiple());
-                    pw.addString(Utils.DESCRIPTION, parameter.getDescription());
-                    pw.addBoolean(Utils.REQUIRED, parameter.isRequired());
-                    pw.addString(Utils.DATA_TYPE, parameter.getDataType());
+                    SwaggerGenerator pw = ow.addArrayObject(constants.PARAMETERS);
+                    pw.addString(constants.NAME, parameter.getName());
+                    pw.addString(constants.PARAM_TYPE, parameter.getParamType().name());
+                    pw.addBoolean(constants.ALLOW_MULTIPLE, parameter.isAllowMultiple());
+                    pw.addString(constants.DESCRIPTION, parameter.getDescription());
+                    pw.addBoolean(constants.REQUIRED, parameter.isRequired());
+                    pw.addString(constants.TYPE, parameter.getType());
                 }
 
-                for (ErrorResponse errorResponse : operation.getErrorResponses()) {
-                    SwaggerGenerator ew = ow.addObject(Utils.ERROR_RESPONSES);
-                    ew.addInt(Utils.CODE, errorResponse.getCode());
-                    ew.addString(Utils.REASON, errorResponse.getReason());
+                for (ResponseMessage responseMessage : operation.getResponseMessages()) {
+                    SwaggerGenerator ew = ow.addArrayObject(constants.RESPONSE_MESSAGES);
+                    ew.addInt(constants.CODE, responseMessage.getCode());
+                    ew.addString(constants.MESSAGE, responseMessage.getMessage());
+
+                    if( swaggerVersion != SwaggerVersion.V1_1)
+                        ew.addString( constants.RESPONSE_MODEL, responseMessage.getResponseModel() );
                 }
 
                 Collection<String> produces = operation.getProduces();
                 if( !produces.isEmpty())
-                    ow.addArray(Utils.PRODUCES, produces.toArray(new String[produces.size()]));
+                    ow.addArray(constants.PRODUCES, produces.toArray(new String[produces.size()]));
 
                 Collection<String> consumes = operation.getConsumes();
                 if( !consumes.isEmpty())
-                    ow.addArray(Utils.CONSUMES, consumes.toArray(new String[consumes.size()]));
+                    ow.addArray(constants.CONSUMES, consumes.toArray(new String[consumes.size()]));
             }
         }
 
@@ -91,14 +107,27 @@ public class SwaggerWriterImpl implements SwaggerWriter {
     public void writeResourceListing(ResourceListing listing, Writer writer) throws IOException {
         SwaggerGenerator w = SwaggerGenerator.newGenerator( writer, format );
 
-        w.addString(Utils.API_VERSION, listing.getApiVersion());
-        w.addString(Utils.SWAGGER_VERSION, listing.getSwaggerVersion().getIdentifier());
-        w.addString(Utils.BASE_PATH, listing.getBasePath());
+        Constants constants = Constants.get(listing.getSwaggerVersion());
+        w.addString(constants.API_VERSION, listing.getApiVersion());
+        w.addString(Constants.SWAGGER_VERSION, listing.getSwaggerVersion().getIdentifier());
+        w.addString(constants.BASE_PATH, listing.getBasePath());
 
         for (ResourceListing.ResourceListingApi api : listing.getApis()) {
-            SwaggerGenerator sw = w.addObject(Utils.APIS);
-            sw.addString(Utils.DESCRIPTION, api.getDescription());
-            sw.addString(Utils.PATH, api.getPath());
+            SwaggerGenerator sw = w.addArrayObject(constants.APIS);
+            sw.addString(constants.DESCRIPTION, api.getDescription());
+            sw.addString(constants.PATH, api.getPath());
+        }
+
+        if( listing.getSwaggerVersion() != SwaggerVersion.V1_1 )
+        {
+            Info info = listing.getInfo();
+            SwaggerGenerator sw = w.addObject(constants.INFO);
+            sw.addString( constants.INFO_TITLE, info.getTitle() );
+            sw.addString( constants.INFO_DESCRIPTION, info.getDescription() );
+            sw.addString( constants.INFO_TERMSOFSERVICEURL, info.getTermsOfServiceUrl() );
+            sw.addString( constants.INFO_CONTACT, info.getContact() );
+            sw.addString( constants.INFO_LICENSE, info.getLicense() );
+            sw.addString( constants.INFO_LICENSE_URL, info.getLicenseUrl() );
         }
 
         w.finish();

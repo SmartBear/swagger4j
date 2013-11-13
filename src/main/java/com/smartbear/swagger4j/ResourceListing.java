@@ -59,4 +59,6 @@ public interface ResourceListing {
 
         public void setPath(String path);
     }
+
+    public Info getInfo();
 }

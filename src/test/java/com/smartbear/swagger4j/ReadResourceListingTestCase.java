@@ -27,18 +27,29 @@ public class ReadResourceListingTestCase extends TestCase {
         String resourceListingUlr = TestUtils.getTestJsonResourceListingUrl( SwaggerVersion.V1_1);
 
         ResourceListing resourceListing = Swagger.createReader().readResourceListing(URI.create(resourceListingUlr));
-        checkResourceListing(resourceListing, SwaggerVersion.V1_1);
+        checkResourceListing(resourceListing, SwaggerVersion.V1_1, new TestDataHelper.V1_TestData());
+    }
+
+    public void testReadV1_2JsonResourceListing() throws Exception {
+        String resourceListingUlr = TestUtils.getTestJsonResourceListingUrl( SwaggerVersion.V1_2);
+
+        ResourceListing resourceListing = Swagger.createReader().readResourceListing(URI.create(resourceListingUlr));
+        checkResourceListing(resourceListing, SwaggerVersion.V1_2, new TestDataHelper.V2_TestData());
+
+        Info info = resourceListing.getInfo();
+        assertNotNull(info );
+        assertEquals("Swagger Sample App", info.getTitle());
     }
 
     public void testReadV1_1XmlResourceListing() throws Exception {
         String resourceListingUlr = TestUtils.getTestXmlResourceListingUrl(SwaggerVersion.V1_1);
 
         ResourceListing resourceListing = Swagger.createReader().readResourceListing(URI.create(resourceListingUlr));
-        checkResourceListing(resourceListing, SwaggerVersion.V1_1);
+        checkResourceListing(resourceListing, SwaggerVersion.V1_1, new TestDataHelper.V1_TestData());
     }
 
-    private void checkResourceListing(ResourceListing resourceListing, SwaggerVersion version ) throws Exception {
-        assertEquals("0.2", resourceListing.getApiVersion());
+    private void checkResourceListing(ResourceListing resourceListing, SwaggerVersion version, TestDataHelper testData ) throws Exception {
+        assertEquals(testData.getApiVersion(), resourceListing.getApiVersion());
         assertEquals(version, resourceListing.getSwaggerVersion());
 
         List<ResourceListing.ResourceListingApi> apiList = resourceListing.getApis();
@@ -47,61 +58,24 @@ public class ReadResourceListingTestCase extends TestCase {
         ApiDeclaration apiDeclaration = apiList.get(0).getDeclaration();
         assertNotNull(apiDeclaration);
 
-        assertEquals("0.2", apiDeclaration.getApiVersion());
+        assertEquals(testData.getApiVersion(), apiDeclaration.getApiVersion());
         assertEquals("http://petstore.swagger.wordnik.com/api", apiDeclaration.getBasePath());
         assertEquals("/user", apiDeclaration.getResourcePath());
-        assertEquals(6, apiDeclaration.getApis().size());
 
-        for (int c = 0; c < 6; c++) {
-            Api api = apiDeclaration.getApis().get(0);
-            assertNotNull(api);
-            assertEquals(1, api.getOperations().size());
-        }
-
-        assertEquals(2, apiDeclaration.getApis().get(4).getOperations().get(0).getParameters().size());
-        assertEquals(2, apiDeclaration.getApis().get(3).getOperations().get(0).getErrorResponses().size());
+        testData.validateUserApiDeclaration(apiDeclaration);
 
         apiDeclaration = apiList.get(1).getDeclaration();
         assertNotNull(apiDeclaration);
 
-        assertEquals("0.2", apiDeclaration.getApiVersion());
+        assertEquals(testData.getApiVersion(), apiDeclaration.getApiVersion());
         assertEquals("http://petstore.swagger.wordnik.com/api", apiDeclaration.getBasePath());
         assertEquals("/pet", apiDeclaration.getResourcePath());
-        assertEquals(3, apiDeclaration.getApis().size());
 
-        for (int c = 0; c < 3; c++) {
-            Api api = apiDeclaration.getApis().get(0);
-            assertNotNull(api);
-            assertEquals(1, api.getOperations().size());
-        }
-
-        assertEquals(1, apiDeclaration.getApis().get(1).getOperations().get(0).getParameters().size());
-        assertEquals(2, apiDeclaration.getApis().get(0).getOperations().get(0).getErrorResponses().size());
+        testData.validatePetApiDeclaration( apiDeclaration );
     }
 
-    public void testSwaggers() throws Exception
+    public void testOnlinePetStoreSwagger() throws Exception
     {
-      //  validateApiDeclarationCount( "https://api.groupdocs.com/v2.0/spec/spec-files/resources.json", 13 );
-      //  validateApiDeclarationCount("http://composer.nprstations.org/api/api-docs", 11);
-//        validateApiDeclarationCount("http://developers.subtledata.com/swagger/api-docs.json", 4);
-//
-//
-//        validateApiCount("http://www.apihub.com/apihub/swagger-api/19201/Folders", 4);
-//        validateApiCount("http://www.apihub.com/apihub/swagger-api/9528/commits", 3 );
-    }
-
-    private void validateApiCount(String path, int expectedCount) throws Exception
-    {
-        System.out.println( "Checking [" + path + "] for [" + expectedCount + "] apis");
-        ApiDeclaration apiDeclaration = Swagger.createReader().readApiDeclaration(new URI(path));
-        assertEquals( expectedCount, apiDeclaration.getApis().size());
-    }
-
-    public void validateApiDeclarationCount(String path, int expectedCount) throws Exception
-    {
-        System.out.println( "Checking [" + path + "] for [" + expectedCount + "] apis");
-        ResourceListing resourceListing = Swagger.readSwagger(new URI(path));
-        assertEquals( expectedCount, resourceListing.getApis().size() );
-
+//        ResourceListing rl = Swagger.createReader().readResourceListing(new URI("http://restapiv3-cur.alertsite.com/swag/api-docs"));
     }
 }

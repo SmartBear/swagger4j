@@ -40,12 +40,12 @@ public class Swagger {
     /**
      * Creates an empty ResourceListing with the specified basePath - uses the standard SwaggerFactory
      *
-     * @param basePath the basePath to use for resolving paths to the API Declaration
+     * @param swaggerVersion the Swagger version to use
      * @return an empty ResourceListing
      */
 
-    public static ResourceListing createResourceListing(String basePath) {
-        return createSwaggerFactory().createResourceListing(basePath);
+    public static ResourceListing createResourceListing(SwaggerVersion swaggerVersion) {
+        return createSwaggerFactory().createResourceListing(swaggerVersion);
     }
 
     /**
