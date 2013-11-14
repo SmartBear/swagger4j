@@ -1,5 +1,9 @@
 package com.smartbear.swagger4j;
 
+/**
+ * Enum for the Swagger Version
+ */
+
 public enum SwaggerVersion
 {
     V1_1, V1_2;

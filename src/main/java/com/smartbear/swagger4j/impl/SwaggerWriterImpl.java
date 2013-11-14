@@ -128,6 +128,62 @@ public class SwaggerWriterImpl implements SwaggerWriter {
             sw.addString( constants.INFO_CONTACT, info.getContact() );
             sw.addString( constants.INFO_LICENSE, info.getLicense() );
             sw.addString( constants.INFO_LICENSE_URL, info.getLicenseUrl() );
+
+            Authorizations authorizations = listing.getAuthorizations();
+            if( authorizations != null && authorizations.getAuthorizations() != null && !authorizations.getAuthorizations().isEmpty())
+            {
+                SwaggerGenerator sg = w.addObject(constants.AUTHORIZATIONS);
+                for( Authorizations.Authorization aut : authorizations.getAuthorizations())
+                {
+                    if( aut.getType() == Authorizations.AuthorizationType.BASIC )
+                    {
+                        sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.BASIC_AUTH_TYPE );
+                    }
+                    else if( aut.getType() == Authorizations.AuthorizationType.API_KEY )
+                    {
+                        Authorizations.ApiKeyAuthorization aka = (Authorizations.ApiKeyAuthorization) aut;
+                        if( hasContent( aka.getKeyName() ) && hasContent( aka.getPassAs() ))
+                        {
+                            sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.API_KEY_TYPE ).
+                                    addString(constants.API_KEY_KEY_NAME, aka.getKeyName()).
+                                    addString( constants.API_KEY_PASS_AS, aka.getPassAs() );
+                        }
+                    }
+                    else if( aut.getType() == Authorizations.AuthorizationType.OAUTH2 )
+                    {
+                        Authorizations.OAuth2Authorization oaa = (Authorizations.OAuth2Authorization) aut;
+                        if( oaa.getAuthorizationCodeGrant() != null || oaa.getImplicitGrant() != null)
+                        {
+                            sg = sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.API_KEY_TYPE );
+                            sg.addArray( constants.OUATH2_SCOPES, oaa.getScopes() );
+                            sg = sg.addObject( Constants.OAUTH2_GRANT_TYPES );
+                            Authorizations.OAuth2Authorization.ImplicitGrant ig = oaa.getImplicitGrant();
+                            if( ig != null )
+                            {
+                                sg.addObject( Constants.OAUTH2_IMPLICIT_GRANT ).
+                                        addString( Constants.OAUTH2_IMPLICIT_TOKEN_NAME, ig.getTokenName() ).
+                                        addObject( Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT ).
+                                            addString(Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT_URL, ig.getLoginEndpointUrl());
+                            }
+
+                            Authorizations.OAuth2Authorization.AuthorizationCodeGrant acg = oaa.getAuthorizationCodeGrant();
+                            if( acg != null )
+                            {
+                                sg = sg.addObject( Constants.OAUTH2_AUTHORIZATION_CODE_GRANT );
+
+                                sg.addObject( Constants.OAUTH2_AUTHORIZATION_GRANT_TOKEN_REQUEST_ENDPOINT ).
+                                        addString( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_URL, acg.getTokenRequestEndpointUrl() ).
+                                        addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_ID_NAME, acg.getClientIdName()).
+                                        addString( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_SECRET_NAME, acg.getClientSecretName() );
+
+                                sg.addObject( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT ).
+                                        addString( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_URL, acg.getTokenEndpointUrl() ).
+                                        addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_TOKEN_NAME, acg.getTokenName());
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         w.finish();
@@ -150,5 +206,10 @@ public class SwaggerWriterImpl implements SwaggerWriter {
             writer = store.createResource(path);
             writeApiDeclaration(declaration, writer);
         }
+    }
+
+    private static boolean hasContent( String str )
+    {
+        return str != null && str.trim().length() > 0 ;
     }
 }

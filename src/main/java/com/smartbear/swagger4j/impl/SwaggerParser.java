@@ -19,6 +19,7 @@ package com.smartbear.swagger4j.impl;
 import com.smartbear.swagger4j.SwaggerFormat;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -52,6 +53,8 @@ public abstract class SwaggerParser {
     public abstract List<String> getArray(String name);
 
     public abstract SwaggerParser getChild( String name );
+
+    public abstract String [] getChildNames();
 
     /**
      * Builder for a SwaggerParser that can read XML
@@ -166,6 +169,20 @@ public abstract class SwaggerParser {
 
             return null;
         }
+
+        @Override
+        public String[] getChildNames() {
+            List<String> names = new ArrayList<String>();
+            NodeList nl = elm.getChildNodes();
+            for( int c = 0; c < nl.getLength(); c++ )
+            {
+                Node n = nl.item(c);
+                if( n.getNodeType() == Node.ELEMENT_NODE )
+                    names.add( n.getNodeName() );
+            }
+
+            return names.toArray( new String[names.size()]);
+        }
     }
 
     /**
@@ -238,6 +255,11 @@ public abstract class SwaggerParser {
         public SwaggerParser getChild(String name) {
             JsonObject child = jsonObject.getJsonObject(name);
             return child == null ? null : new SwaggerJsonParser( child );
+        }
+
+        @Override
+        public String[] getChildNames() {
+            return jsonObject.keySet().toArray( new String[jsonObject.size()] );
         }
     }
 }

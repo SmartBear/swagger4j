@@ -8,45 +8,67 @@ import com.smartbear.swagger4j.SwaggerVersion;
 
 public class Constants {
 
-    public final static String SWAGGER_VERSION = "swaggerVersion";
-    public final static String API_DOCUMENTATION = "ApiDocumentation";
+    public static final String SWAGGER_VERSION = "swaggerVersion";
+    public static final String API_DOCUMENTATION = "ApiDocumentation";
+    public static final String AUTHORIZATIONS = "authorizations";
+    public static final String AUTHORIZATION_TYPE = "type";
+    public static final String OAUTH_2_TYPE = "oauth2";
+    public static final String API_KEY_TYPE = "apiKey";
+    public static final String API_KEY_KEY_NAME = "keyName";
+    public static final String API_KEY_PASS_AS = "passAs";
+    public static final String BASIC_AUTH_TYPE = "basicAuth";
+    public static final String OUATH2_SCOPES = "scopes";
+    public static final String OAUTH2_GRANT_TYPES = "grantTypes";
+    public static final String OAUTH2_IMPLICIT_GRANT = "implicit";
+    public static final String OAUTH2_IMPLICIT_LOGIN_ENDPOINT = "loginEndpoint";
+    public static final String OAUTH2_IMPLICIT_LOGIN_ENDPOINT_URL = "url";
+    public static final String OAUTH2_IMPLICIT_TOKEN_NAME = "tokenName";
+    public static final String OAUTH2_AUTHORIZATION_CODE_GRANT = "authorization_code";
+    public static final String OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_URL = "url";
+    public static final String OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_ID_NAME = "clientIdName";
+    public static final String OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_SECRET_NAME = "clientSecretName";
+    public static final String OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT = "tokenEndpoint";
+    public static final String OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_URL = "url";
+    public static final String OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_TOKEN_NAME = "tokenName";
+    public static final String OAUTH2_AUTHORIZATION_GRANT_TOKEN_REQUEST_ENDPOINT = "tokenRequestEndpoint";
 
     /**
      * Constants for the names used in Swagger definitions - these are not final static since they can be overridden
      * for specific versions
      */
 
-    public String API_VERSION = "apiVersion";
-    public String BASE_PATH = "basePath";
-    public String PATH = "path";
-    public String APIS = "apis";
-    public String DESCRIPTION = "description";
-    public String RESOURCE_PATH = "resourcePath";
-    public String OPERATIONS = "operations";
-    public String NICKNAME = "nickname";
+    public static final String API_VERSION = "apiVersion";
+    public static final String BASE_PATH = "basePath";
+    public static final String PATH = "path";
+    public static final String APIS = "apis";
+    public static final String DESCRIPTION = "description";
+    public static final String RESOURCE_PATH = "resourcePath";
+    public static final String OPERATIONS = "operations";
+    public static final String NICKNAME = "nickname";
+    public static final String SUMMARY = "summary";
+    public static final String NOTES = "notes";
+    public static final String RESPONSE_CLASS = "responseClass";
+    public static final String PARAMETERS = "parameters";
+    public static final String NAME = "name";
+    public static final String PARAM_TYPE = "paramType";
+    public static final String ALLOW_MULTIPLE = "allowMultiple";
+    public static final String REQUIRED = "required";
+    public static final String CODE = "code";
+    public static final String PRODUCES = "produces";
+    public static final String CONSUMES = "consumes";
+    public static final String INFO = "info";
+    public static final String INFO_CONTACT = "title";
+    public static final String INFO_DESCRIPTION = "description";
+    public static final String INFO_LICENSE = "license";
+    public static final String INFO_LICENSE_URL = "licenseUrl";
+    public static final String INFO_TERMSOFSERVICEURL = "termsOfServiceUrl";
+    public static final String INFO_TITLE = "title";
+    public static final String RESPONSE_MODEL = "responseModel";
+
     public String METHOD = "method";
-    public String SUMMARY = "summary";
-    public String NOTES = "notes";
-    public String RESPONSE_CLASS = "responseClass";
-    public String PARAMETERS = "parameters";
-    public String NAME = "name";
-    public String PARAM_TYPE = "paramType";
-    public String ALLOW_MULTIPLE = "allowMultiple";
-    public String REQUIRED = "required";
     public String TYPE = "type";
-    public String RESPONSE_MESSAGES = "responseMessages";
-    public String CODE = "code";
     public String MESSAGE = "message";
-    public String PRODUCES = "produces";
-    public String CONSUMES = "consumes";
-    public String INFO = "info";
-    public String INFO_CONTACT = "title";
-    public String INFO_DESCRIPTION = "description";
-    public String INFO_LICENSE = "license";
-    public String INFO_LICENSE_URL = "licenseUrl";
-    public String INFO_TERMSOFSERVICEURL = "termsOfServiceUrl";
-    public String INFO_TITLE = "title";
-    public String RESPONSE_MODEL = "responseModel";
+    public String RESPONSE_MESSAGES = "responseMessages";
 
     public static final Constants V1_1 = new V1_1Constants();
     public static final Constants V1_2 = new Constants();

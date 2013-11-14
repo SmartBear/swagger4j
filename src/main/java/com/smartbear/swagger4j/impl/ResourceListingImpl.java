@@ -16,10 +16,7 @@
 
 package com.smartbear.swagger4j.impl;
 
-import com.smartbear.swagger4j.ApiDeclaration;
-import com.smartbear.swagger4j.Info;
-import com.smartbear.swagger4j.ResourceListing;
-import com.smartbear.swagger4j.SwaggerVersion;
+import com.smartbear.swagger4j.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +33,7 @@ public class ResourceListingImpl implements ResourceListing {
     private String apiVersion;
     private SwaggerVersion swaggerVersion = SwaggerVersion.DEFAULT_VERSION;
     private String basePath;
+    private AuthorizationsImpl authorizations;
 
     private final List<ResourceListingApi> apiList = new ArrayList<ResourceListingApi>();
     private InfoImpl info;
@@ -99,6 +97,14 @@ public class ResourceListingImpl implements ResourceListing {
             info = new InfoImpl();
 
         return info;
+    }
+
+    public Authorizations getAuthorizations()
+    {
+        if( authorizations == null )
+            authorizations = new AuthorizationsImpl();
+
+        return authorizations;
     }
 
     private ResourceListingApi getApi(String path) {

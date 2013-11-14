@@ -61,4 +61,6 @@ public interface ResourceListing {
     }
 
     public Info getInfo();
+
+    public Authorizations getAuthorizations();
 }
