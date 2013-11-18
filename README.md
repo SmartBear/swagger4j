@@ -1,8 +1,7 @@
 ## swagger4j
 
 A simple java library for reading and writing [Swagger definitions](https://github.com/wordnik/swagger-core/wiki). Supports both JSON and XML formats. The current version is
-reasonably in line with the latest swagger core release except that it doesn't support any of the JSON Schema/Data Model
-constructs yet. Apache 2.0 licensed.
+reasonably in line with the latest swagger core release except that it doesn't support any of the JSON Schema/Data Model constructs yet. Apache 2.0 licensed.
 
 ### Getting started
 
@@ -26,7 +25,7 @@ and add the corresponding dependency:
 <dependency>
     <groupId>com.smartbear</groupId>
     <artifactId>swagger4j</artifactId>
-    <version>1.0-beta1</version>
+    <version>1.0-beta2</version>
 </dependency>
 ```
 
@@ -104,3 +103,4 @@ URI.
 ### Release History
 
 * 20130527 - Initial beta1 release
+* 20131118 - beta2 release, adds support for Swagger 1.2 and 1.0
