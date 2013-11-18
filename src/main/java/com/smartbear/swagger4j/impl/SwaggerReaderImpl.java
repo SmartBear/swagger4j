@@ -236,7 +236,7 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
         operation.setSummary(opNode.getString(constants.SUMMARY));
         operation.setNotes(opNode.getString(constants.NOTES));
-        operation.setResponseClass(opNode.getString(constants.RESPONSE_CLASS));
+        operation.setResponseClass(opNode.getString(constants.OPERATION_TYPE));
 
         for (SwaggerParser parameterNode : opNode.getChildren(constants.PARAMETERS)) {
             Parameter parameter = operation.addParameter(parameterNode.getString(constants.NAME),

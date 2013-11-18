@@ -69,7 +69,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                 ow.addString(constants.METHOD, operation.getMethod().name());
                 ow.addString(constants.SUMMARY, operation.getSummary());
                 ow.addString(constants.NOTES, operation.getNotes());
-                ow.addString(constants.RESPONSE_CLASS, operation.getResponseClass());
+                ow.addString(constants.OPERATION_TYPE, operation.getResponseClass());
 
                 for (Parameter parameter : operation.getParameters()) {
                     SwaggerGenerator pw = ow.addArrayObject(constants.PARAMETERS);

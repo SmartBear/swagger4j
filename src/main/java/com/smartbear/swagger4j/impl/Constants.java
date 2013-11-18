@@ -47,7 +47,6 @@ public class Constants {
     public static final String NICKNAME = "nickname";
     public static final String SUMMARY = "summary";
     public static final String NOTES = "notes";
-    public static final String RESPONSE_CLASS = "responseClass";
     public static final String PARAMETERS = "parameters";
     public static final String NAME = "name";
     public static final String PARAM_TYPE = "paramType";
@@ -69,6 +68,7 @@ public class Constants {
     public String TYPE = "type";
     public String MESSAGE = "message";
     public String RESPONSE_MESSAGES = "responseMessages";
+    public String OPERATION_TYPE = "type";
 
     public static final Constants V1_1 = new V1_1Constants();
     public static final Constants V1_2 = new Constants();
@@ -77,6 +77,7 @@ public class Constants {
     {
         switch (version)
         {
+            case V1_0: return V1_1;
             case V1_1: return V1_1;
             case V1_2: return V1_2;
         }
@@ -92,6 +93,7 @@ public class Constants {
             MESSAGE = "reason";
             RESPONSE_MESSAGES = "errorResponses";
             TYPE = "dataType";
+            OPERATION_TYPE = "responseClass";
         }
     }
 }

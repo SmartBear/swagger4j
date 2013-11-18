@@ -6,11 +6,12 @@ package com.smartbear.swagger4j;
 
 public enum SwaggerVersion
 {
-    V1_1, V1_2;
+    V1_0, V1_1, V1_2;
 
     public String getIdentifier() {
         switch ( this )
         {
+            case V1_0: return "1.0";
             case V1_1: return "1.1";
             case V1_2: return "1.2";
         }
@@ -21,6 +22,8 @@ public enum SwaggerVersion
     public final static SwaggerVersion DEFAULT_VERSION = V1_2;
 
     public static SwaggerVersion fromIdentifier(String string) {
+        if( V1_0.getIdentifier().equals( string ))
+            return V1_0;
         if( V1_1.getIdentifier().equals( string ))
             return V1_1;
         if( V1_2.getIdentifier().equals( string ))
