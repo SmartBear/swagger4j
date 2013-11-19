@@ -31,4 +31,8 @@ public enum SwaggerVersion
 
         throw new RuntimeException( "Unknown Swagger Version: " + string );
     }
+
+    public boolean isGreaterThan(SwaggerVersion version) {
+        return version.getIdentifier().compareTo( getIdentifier() ) < 0;
+    }
 }

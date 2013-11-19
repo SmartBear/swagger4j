@@ -46,14 +46,6 @@ public class URISwaggerSource implements SwaggerSource {
         if (path.startsWith("/"))
         {
             base = base.substring(0, base.lastIndexOf('/'));
-
-
-//            int ix = base.indexOf("://");
-//            if( ix != -1 )
-//            {
-//                ix = base.indexOf( "/", ix+3 );
-//                base = base.substring(0, ix );
-//            }
         }
 
         return URI.create(base + path);

@@ -47,7 +47,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
         w.addString(constants.BASE_PATH, declaration.getBasePath());
         w.addString(constants.RESOURCE_PATH, declaration.getResourcePath());
 
-        if( swaggerVersion != SwaggerVersion.V1_1 )
+        if( swaggerVersion.isGreaterThan( SwaggerVersion.V1_1 ) )
         {
             Collection<String> produces = declaration.getProduces();
             if( !produces.isEmpty())
@@ -86,7 +86,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                     ew.addInt(constants.CODE, responseMessage.getCode());
                     ew.addString(constants.MESSAGE, responseMessage.getMessage());
 
-                    if( swaggerVersion != SwaggerVersion.V1_1)
+                    if( swaggerVersion.isGreaterThan( SwaggerVersion.V1_1 ))
                         ew.addString( constants.RESPONSE_MODEL, responseMessage.getResponseModel() );
                 }
 
@@ -118,7 +118,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
             sw.addString(constants.PATH, api.getPath());
         }
 
-        if( listing.getSwaggerVersion() != SwaggerVersion.V1_1 )
+        if( listing.getSwaggerVersion().isGreaterThan( SwaggerVersion.V1_1 ))
         {
             Info info = listing.getInfo();
             SwaggerGenerator sw = w.addObject(constants.INFO);
@@ -132,61 +132,65 @@ public class SwaggerWriterImpl implements SwaggerWriter {
             Authorizations authorizations = listing.getAuthorizations();
             if( authorizations != null && authorizations.getAuthorizations() != null && !authorizations.getAuthorizations().isEmpty())
             {
-                SwaggerGenerator sg = w.addObject(constants.AUTHORIZATIONS);
-                for( Authorizations.Authorization aut : authorizations.getAuthorizations())
-                {
-                    if( aut.getType() == Authorizations.AuthorizationType.BASIC )
-                    {
-                        sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.BASIC_AUTH_TYPE );
-                    }
-                    else if( aut.getType() == Authorizations.AuthorizationType.API_KEY )
-                    {
-                        Authorizations.ApiKeyAuthorization aka = (Authorizations.ApiKeyAuthorization) aut;
-                        if( hasContent( aka.getKeyName() ) && hasContent( aka.getPassAs() ))
-                        {
-                            sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.API_KEY_TYPE ).
-                                    addString(constants.API_KEY_KEY_NAME, aka.getKeyName()).
-                                    addString( constants.API_KEY_PASS_AS, aka.getPassAs() );
-                        }
-                    }
-                    else if( aut.getType() == Authorizations.AuthorizationType.OAUTH2 )
-                    {
-                        Authorizations.OAuth2Authorization oaa = (Authorizations.OAuth2Authorization) aut;
-                        if( oaa.getAuthorizationCodeGrant() != null || oaa.getImplicitGrant() != null)
-                        {
-                            sg = sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.API_KEY_TYPE );
-                            sg.addArray( constants.OUATH2_SCOPES, oaa.getScopes() );
-                            sg = sg.addObject( Constants.OAUTH2_GRANT_TYPES );
-                            Authorizations.OAuth2Authorization.ImplicitGrant ig = oaa.getImplicitGrant();
-                            if( ig != null )
-                            {
-                                sg.addObject( Constants.OAUTH2_IMPLICIT_GRANT ).
-                                        addString( Constants.OAUTH2_IMPLICIT_TOKEN_NAME, ig.getTokenName() ).
-                                        addObject( Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT ).
-                                            addString(Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT_URL, ig.getLoginEndpointUrl());
-                            }
-
-                            Authorizations.OAuth2Authorization.AuthorizationCodeGrant acg = oaa.getAuthorizationCodeGrant();
-                            if( acg != null )
-                            {
-                                sg = sg.addObject( Constants.OAUTH2_AUTHORIZATION_CODE_GRANT );
-
-                                sg.addObject( Constants.OAUTH2_AUTHORIZATION_GRANT_TOKEN_REQUEST_ENDPOINT ).
-                                        addString( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_URL, acg.getTokenRequestEndpointUrl() ).
-                                        addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_ID_NAME, acg.getClientIdName()).
-                                        addString( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_SECRET_NAME, acg.getClientSecretName() );
-
-                                sg.addObject( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT ).
-                                        addString( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_URL, acg.getTokenEndpointUrl() ).
-                                        addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_TOKEN_NAME, acg.getTokenName());
-                            }
-                        }
-                    }
-                }
+                writeAuthorizations(w, constants, authorizations);
             }
         }
 
         w.finish();
+    }
+
+    private void writeAuthorizations(SwaggerGenerator w, Constants constants, Authorizations authorizations) {
+        SwaggerGenerator sg = w.addObject(constants.AUTHORIZATIONS);
+        for( Authorizations.Authorization aut : authorizations.getAuthorizations())
+        {
+            if( aut.getType() == Authorizations.AuthorizationType.BASIC )
+            {
+                sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.BASIC_AUTH_TYPE );
+            }
+            else if( aut.getType() == Authorizations.AuthorizationType.API_KEY )
+            {
+                Authorizations.ApiKeyAuthorization aka = (Authorizations.ApiKeyAuthorization) aut;
+                if( hasContent( aka.getKeyName() ) && hasContent( aka.getPassAs() ))
+                {
+                    sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.API_KEY_TYPE ).
+                            addString(constants.API_KEY_KEY_NAME, aka.getKeyName()).
+                            addString( constants.API_KEY_PASS_AS, aka.getPassAs() );
+                }
+            }
+            else if( aut.getType() == Authorizations.AuthorizationType.OAUTH2 )
+            {
+                Authorizations.OAuth2Authorization oaa = (Authorizations.OAuth2Authorization) aut;
+                if( oaa.getAuthorizationCodeGrant() != null || oaa.getImplicitGrant() != null)
+                {
+                    sg = sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.API_KEY_TYPE );
+                    sg.addArray( constants.OUATH2_SCOPES, oaa.getScopes() );
+                    sg = sg.addObject( Constants.OAUTH2_GRANT_TYPES );
+                    Authorizations.OAuth2Authorization.ImplicitGrant ig = oaa.getImplicitGrant();
+                    if( ig != null )
+                    {
+                        sg.addObject( Constants.OAUTH2_IMPLICIT_GRANT ).
+                                addString( Constants.OAUTH2_IMPLICIT_TOKEN_NAME, ig.getTokenName() ).
+                                addObject( Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT ).
+                                    addString(Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT_URL, ig.getLoginEndpointUrl());
+                    }
+
+                    Authorizations.OAuth2Authorization.AuthorizationCodeGrant acg = oaa.getAuthorizationCodeGrant();
+                    if( acg != null )
+                    {
+                        sg = sg.addObject( Constants.OAUTH2_AUTHORIZATION_CODE_GRANT );
+
+                        sg.addObject( Constants.OAUTH2_AUTHORIZATION_GRANT_TOKEN_REQUEST_ENDPOINT ).
+                                addString( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_URL, acg.getTokenRequestEndpointUrl() ).
+                                addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_ID_NAME, acg.getClientIdName()).
+                                addString( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_SECRET_NAME, acg.getClientSecretName() );
+
+                        sg.addObject( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT ).
+                                addString( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_URL, acg.getTokenEndpointUrl() ).
+                                addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_TOKEN_NAME, acg.getTokenName());
+                    }
+                }
+            }
+        }
     }
 
     @Override
