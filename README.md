@@ -8,7 +8,7 @@ reasonably in line with the latest swagger core release except that it doesn't s
 Download the prebuilt jar of the latest version from sourceforge ([https://sourceforge.net/projects/swagger4j/files](https://sourceforge.net/projects/swagger4j/files))
 or check it out from GitHub and build it yourself with maven (with "mvn install"). 
 
-The latest version is also available in the SmartBear maven respository at soapui.org, add this to your pom with
+The latest version is also available in the SmartBear maven repository at soapui.org, add this to your pom with
 
 ```xml
 <repositories>
@@ -103,4 +103,4 @@ URI.
 ### Release History
 
 * 20130527 - Initial beta1 release
-* 20131118 - beta2 release, adds support for Swagger 1.2 and 1.0
+* 20131119 - beta2 release, adds support for Swagger 1.2 and 1.0
