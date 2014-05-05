@@ -16,12 +16,20 @@
 
 package com.smartbear.swagger4j;
 
+import com.smartbear.swagger4j.impl.Constants;
 import junit.framework.TestCase;
 
+import java.io.File;
 import java.net.URI;
 import java.util.List;
 
 public class ReadResourceListingTestCase extends TestCase {
+
+    public void testReadV1_0JsonResourceListing() throws Exception
+    {
+        String url = "file:src/test/resources/v1_0/api-docs";
+        Swagger.createReader().readResourceListing( URI.create( url ));
+    }
 
     public void testReadV1_1JsonResourceListing() throws Exception {
         String resourceListingUlr = TestUtils.getTestJsonResourceListingUrl( SwaggerVersion.V1_1);
@@ -39,6 +47,14 @@ public class ReadResourceListingTestCase extends TestCase {
         Info info = resourceListing.getInfo();
         assertNotNull(info );
         assertEquals("Swagger Sample App", info.getTitle());
+
+        List<Authorizations.Authorization> oas = resourceListing.getAuthorizations().getAuthorizationsByType(Authorizations.AuthorizationType.OAUTH2);
+        assertEquals( 1, oas.size() );
+
+        Authorizations.OAuth2Authorization.Scope[] scopes = ((Authorizations.OAuth2Authorization) oas.get(0)).getScopes();
+        assertEquals(1, scopes.length);
+        assertEquals( "user", scopes[0].getName());
+        assertEquals( "Grants read-only access to public information (includes public user profile info, public repository info, and gists)", scopes[0].getDescription());
     }
 
     public void testReadV1_1XmlResourceListing() throws Exception {
@@ -76,6 +92,12 @@ public class ReadResourceListingTestCase extends TestCase {
 
     public void testOnlinePetStoreSwagger() throws Exception
     {
-//        ResourceListing rl = Swagger.createReader().readResourceListing(new URI("http://restapiv3-cur.alertsite.com/swag/api-docs"));
+        Swagger.createReader().readResourceListing(new URI("http://petstore.swagger.wordnik.com/api/api-docs"));
     }
+
+    public void testOnlineLuciernaSwagger() throws Exception
+    {
+        Swagger.createReader().readResourceListing(new URI("http://antorcha.smartp.qasoftwareplanner.com:8080/antorcha-restapi/doc/api-docs"));
+    }
+
 }

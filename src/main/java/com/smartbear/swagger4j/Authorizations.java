@@ -43,13 +43,11 @@ public interface Authorizations {
 
     public interface OAuth2Authorization extends Authorization
     {
-        public String [] getScopes();
+        public Scope addScope( String name, String description );
 
-        public void addScope( String scope );
+        public Scope [] getScopes();
 
-        public void removeScope( String scope );
-
-        public void setScopes( String [] scopes );
+        public void removeScope( Scope scope );
 
         public ImplicitGrant getImplicitGrant();
 
@@ -87,6 +85,19 @@ public interface Authorizations {
             String getTokenName();
 
             void setTokenName( String tokenName );
+        }
+
+        public interface Scope
+        {
+            String getName();
+
+            void setName( String name );
+
+            String getDescription();
+
+            void setDescription( String description );
+
+
         }
     }
 }

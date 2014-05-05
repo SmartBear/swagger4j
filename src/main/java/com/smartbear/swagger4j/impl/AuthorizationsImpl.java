@@ -13,7 +13,7 @@ public class AuthorizationsImpl implements Authorizations {
 
     @Override
     public List<Authorization> getAuthorizations() {
-        return Collections.unmodifiableList( authorizations );
+        return Collections.unmodifiableList(authorizations);
     }
 
     @Override
@@ -21,9 +21,9 @@ public class AuthorizationsImpl implements Authorizations {
 
         List<Authorization> result = new ArrayList<Authorization>();
 
-        for( Authorization a : authorizations )
-            if( a.getType() == type )
-                result.add( a );
+        for (Authorization a : authorizations)
+            if (a.getType() == type)
+                result.add(a);
 
         return result;
     }
@@ -36,26 +36,30 @@ public class AuthorizationsImpl implements Authorizations {
 
         Authorization authorization = null;
 
-        switch( type )
-        {
-            case API_KEY: authorization = new ApiKeyAuthorizationImpl( name ); break;
-            case BASIC: authorization = new BasicAuthenticationImpl( name ); break;
-            case OAUTH2: authorization = new OAuth2AuthenticationImpl( name ); break;
+        switch (type) {
+            case API_KEY:
+                authorization = new ApiKeyAuthorizationImpl(name);
+                break;
+            case BASIC:
+                authorization = new BasicAuthenticationImpl(name);
+                break;
+            case OAUTH2:
+                authorization = new OAuth2AuthenticationImpl(name);
+                break;
         }
 
-        if( authorization != null )
-            authorizations.add( authorization );
+        if (authorization != null)
+            authorizations.add(authorization);
 
         return authorization;
     }
 
     @Override
     public void removeAuthorization(Authorization authorization) {
-        authorizations.remove( authorization );
+        authorizations.remove(authorization);
     }
 
-    private static abstract class AbstractAuthorization implements Authorization
-    {
+    private static abstract class AbstractAuthorization implements Authorization {
         private AuthorizationType type;
         private String name;
 
@@ -70,15 +74,13 @@ public class AuthorizationsImpl implements Authorizations {
         }
 
         @Override
-        public String getName()
-        {
+        public String getName() {
             return name;
         }
     }
 
-    private static class OAuth2AuthenticationImpl extends AbstractAuthorization implements OAuth2Authorization
-    {
-        private List<String> scopes = new ArrayList<String>();
+    private static class OAuth2AuthenticationImpl extends AbstractAuthorization implements OAuth2Authorization {
+        private List<ScopeImpl> scopes = new ArrayList<ScopeImpl>();
         private ImplicitGrant implicitGrant = new ImplicitGrantImpl();
         private AuthorizationCodeGrant authorizationCodeGrant = new AuthorizationCodeGrantImpl();
 
@@ -87,25 +89,20 @@ public class AuthorizationsImpl implements Authorizations {
         }
 
         @Override
-        public String[] getScopes() {
-            return scopes.toArray( new String[scopes.size()]);
+        public Scope[] getScopes() {
+            return scopes.toArray(new Scope[scopes.size()]);
         }
 
         @Override
-        public void addScope(String scope) {
-            if( !scopes.contains( scope ))
-                scopes.add( scope );
+        public Scope addScope(String name, String description) {
+            ScopeImpl scope = new ScopeImpl(name, description);
+            scopes.add(scope);
+            return scope;
         }
 
         @Override
-        public void removeScope(String scope) {
-            scopes.remove( scope );
-        }
-
-        @Override
-        public void setScopes(String[] scopes) {
-            this.scopes.clear();
-            this.scopes.addAll(Arrays.asList( scopes));
+        public void removeScope(Scope scope) {
+            scopes.remove(scope);
         }
 
         @Override
@@ -118,8 +115,7 @@ public class AuthorizationsImpl implements Authorizations {
             return authorizationCodeGrant;
         }
 
-        private static class ImplicitGrantImpl implements ImplicitGrant
-        {
+        private static class ImplicitGrantImpl implements ImplicitGrant {
             private String loginEndpoint;
             private String tokenName;
 
@@ -140,8 +136,7 @@ public class AuthorizationsImpl implements Authorizations {
             }
         }
 
-        private static class AuthorizationCodeGrantImpl implements AuthorizationCodeGrant
-        {
+        private static class AuthorizationCodeGrantImpl implements AuthorizationCodeGrant {
             private String tokenRequestEndpoint;
             private String clientIdName;
             private String clientSecretName;
@@ -190,15 +185,39 @@ public class AuthorizationsImpl implements Authorizations {
         }
     }
 
-    private static class BasicAuthenticationImpl extends AbstractAuthorization implements BasicAuthorization
-    {
+    private static class BasicAuthenticationImpl extends AbstractAuthorization implements BasicAuthorization {
         private BasicAuthenticationImpl(String name) {
             super(AuthorizationType.BASIC, name);
         }
     }
 
-    private static class ApiKeyAuthorizationImpl extends AbstractAuthorization implements ApiKeyAuthorization
-    {
+    private static class ScopeImpl implements OAuth2Authorization.Scope {
+        private String name;
+        private String description;
+
+        public ScopeImpl(String name, String description) {
+            this.name = name;
+            this.description = description;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+    }
+
+    private static class ApiKeyAuthorizationImpl extends AbstractAuthorization implements ApiKeyAuthorization {
         private String keyName;
         private String passAs;
 

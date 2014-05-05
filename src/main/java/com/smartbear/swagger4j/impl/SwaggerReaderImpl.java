@@ -114,9 +114,15 @@ public class SwaggerReaderImpl implements SwaggerReader {
     private void readOAuth2Authorization(ResourceListingImpl resourceListing, String name, SwaggerParser auth) {
         Authorizations.OAuth2Authorization oauth = (Authorizations.OAuth2Authorization) resourceListing.getAuthorizations().addAuthorization( name, Authorizations.AuthorizationType.OAUTH2 );
 
-        List<String> scopes = auth.getArray(Constants.OUATH2_SCOPES);
+        List<SwaggerParser> scopes = auth.getChildren(Constants.OAUTH2_SCOPES);
         if( scopes != null && !scopes.isEmpty() )
-            oauth.setScopes( scopes.toArray( new String[scopes.size()]));
+        {
+            for( SwaggerParser p : scopes )
+            {
+                oauth.addScope( p.getString( Constants.OAUTH2_SCOPE ), p.getString( Constants.OAUTH2_SCOPE_DESCRIPTION ));
+            }
+        }
+
 
         SwaggerParser grants = auth.getChild(Constants.OAUTH2_GRANT_TYPES);
         if( grants != null )

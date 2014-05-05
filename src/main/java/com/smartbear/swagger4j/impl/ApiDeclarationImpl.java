@@ -38,8 +38,6 @@ public class ApiDeclarationImpl implements ApiDeclaration {
 
 
     ApiDeclarationImpl( String basePath, String resourcePath ) {
-        assert basePath != null && resourcePath != null : "basePath and resourcePath must not be null";
-
         this.basePath = basePath;
         this.resourcePath = resourcePath;
     }

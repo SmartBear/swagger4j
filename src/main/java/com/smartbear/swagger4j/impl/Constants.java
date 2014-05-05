@@ -17,7 +17,7 @@ public class Constants {
     public static final String API_KEY_KEY_NAME = "keyName";
     public static final String API_KEY_PASS_AS = "passAs";
     public static final String BASIC_AUTH_TYPE = "basicAuth";
-    public static final String OUATH2_SCOPES = "scopes";
+    public static final String OAUTH2_SCOPES = "scopes";
     public static final String OAUTH2_GRANT_TYPES = "grantTypes";
     public static final String OAUTH2_IMPLICIT_GRANT = "implicit";
     public static final String OAUTH2_IMPLICIT_LOGIN_ENDPOINT = "loginEndpoint";
@@ -63,6 +63,8 @@ public class Constants {
     public static final String INFO_TERMSOFSERVICEURL = "termsOfServiceUrl";
     public static final String INFO_TITLE = "title";
     public static final String RESPONSE_MODEL = "responseModel";
+    public static final String OAUTH2_SCOPE = "scope";
+    public static final String OAUTH2_SCOPE_DESCRIPTION = "description";
 
     public String METHOD = "method";
     public String TYPE = "type";

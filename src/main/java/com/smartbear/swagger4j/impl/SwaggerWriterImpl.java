@@ -163,7 +163,19 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                 if( oaa.getAuthorizationCodeGrant() != null || oaa.getImplicitGrant() != null)
                 {
                     sg = sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.API_KEY_TYPE );
-                    sg.addArray( constants.OUATH2_SCOPES, oaa.getScopes() );
+
+
+                    final Authorizations.OAuth2Authorization.Scope[] scopes = oaa.getScopes();
+                    if( scopes.length > 0 )
+                    {
+                        for( Authorizations.OAuth2Authorization.Scope s : scopes)
+                        {
+                            SwaggerGenerator so = sg.addArrayObject(constants.OAUTH2_SCOPES);
+                            so.addString( constants.OAUTH2_SCOPE, s.getName() );
+                            so.addString( constants.OAUTH2_SCOPE_DESCRIPTION, s.getDescription() );
+                        }
+                    }
+
                     sg = sg.addObject( Constants.OAUTH2_GRANT_TYPES );
                     Authorizations.OAuth2Authorization.ImplicitGrant ig = oaa.getImplicitGrant();
                     if( ig != null )

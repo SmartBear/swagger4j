@@ -203,14 +203,24 @@ public abstract class SwaggerParser {
 
         @Override
         public String getString(String name) {
-            return jsonObject.getString(name, null);
+            try
+            {
+                return jsonObject.getString(name, null);
+            }
+            catch( RuntimeException e )
+            {
+                SwaggerParserExceptionHandler.get().onParseError( e );
+                return null;
+            }
         }
 
         @Override
         public List<SwaggerParser> getChildren(String name) {
-            JsonArray jsonArray = jsonObject.getJsonArray(name);
             List<SwaggerParser> result = new ArrayList<SwaggerParser>();
+            if( !jsonObject.containsKey(name) || jsonObject.isNull(name))
+                return result;
 
+            JsonArray jsonArray = jsonObject.getJsonArray(name);
             for (int c = 0; jsonArray != null && c < jsonArray.size(); c++)
                 result.add(new SwaggerJsonParser(jsonArray.getJsonObject(c)));
 
@@ -242,8 +252,10 @@ public abstract class SwaggerParser {
 
         @Override
         public List<String> getArray(String name) {
-            JsonArray jsonArray = jsonObject.getJsonArray(name);
             List<String> result = new ArrayList<String>();
+            if( !jsonObject.containsKey(name) || jsonObject.isNull( name ))
+                return result;
+             JsonArray jsonArray = jsonObject.getJsonArray(name);
             if (jsonArray != null) {
                 for (int c = 0; c < jsonArray.size(); c++)
                     result.add(jsonArray.getString(c));

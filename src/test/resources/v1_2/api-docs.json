@@ -18,10 +18,12 @@
          "oauth2" :
             {
                "type" : "oauth2",
-               "scopes" :
-                  [
-                     "PUBLIC"
-                  ],
+               "scopes" :[
+                   {
+                       "scope": "user",
+                       "description": "Grants read-only access to public information (includes public user profile info, public repository info, and gists)"
+                   }
+               ],
                "grantTypes" :
                   {
                      "implicit" :
