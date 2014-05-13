@@ -123,7 +123,6 @@ public class SwaggerReaderImpl implements SwaggerReader {
             }
         }
 
-
         SwaggerParser grants = auth.getChild(Constants.OAUTH2_GRANT_TYPES);
         if( grants != null )
         {
@@ -237,21 +236,33 @@ public class SwaggerReaderImpl implements SwaggerReader {
     }
 
     private void readOperation(Constants constants, Api api, SwaggerParser opNode, String nickName) {
+
+        String method = opNode.getString( constants.METHOD );
+        if( method == null )
+            method = opNode.getString( constants.HTTP_METHOD ) ;
+
         Operation operation = api.addOperation(nickName,
-                Operation.Method.valueOf(opNode.getString(constants.METHOD).toUpperCase()));
+                Operation.Method.valueOf(method.toUpperCase()));
 
         operation.setSummary(opNode.getString(constants.SUMMARY));
         operation.setNotes(opNode.getString(constants.NOTES));
         operation.setResponseClass(opNode.getString(constants.OPERATION_TYPE));
 
         for (SwaggerParser parameterNode : opNode.getChildren(constants.PARAMETERS)) {
-            Parameter parameter = operation.addParameter(parameterNode.getString(constants.NAME),
-                    Parameter.ParamType.valueOf(parameterNode.getString(constants.PARAM_TYPE)));
 
-            parameter.setAllowMultiple(parameterNode.getBoolean(constants.ALLOW_MULTIPLE));
-            parameter.setDescription(parameterNode.getString(constants.DESCRIPTION));
-            parameter.setRequired(parameterNode.getBoolean(constants.REQUIRED));
-            parameter.setType(parameterNode.getString(constants.TYPE));
+            try {
+                Parameter parameter = operation.addParameter(parameterNode.getString(constants.NAME),
+                        Parameter.ParamType.valueOf(parameterNode.getString(constants.PARAM_TYPE)));
+
+                parameter.setAllowMultiple(parameterNode.getBoolean(constants.ALLOW_MULTIPLE));
+                parameter.setDescription(parameterNode.getString(constants.DESCRIPTION));
+                parameter.setRequired(parameterNode.getBoolean(constants.REQUIRED));
+                parameter.setType(parameterNode.getString(constants.TYPE));
+            }
+            catch( Exception e )
+            {
+                Swagger4jExceptionHandler.get().onException( e );
+            }
         }
 
         for (SwaggerParser responseMessage : opNode.getChildren(constants.RESPONSE_MESSAGES)) {

@@ -76,24 +76,30 @@ public class URISwaggerSource implements SwaggerSource {
         try {
             path = path.replaceAll("\\{format\\}", getFormat().getExtension());
 
-            if( basePath == null )
+            // absolute path?
+            if( path.toLowerCase().startsWith( "http://" ) || path.toLowerCase().startsWith( "https://") ||
+                    path.toLowerCase().startsWith( "file:" ))
             {
-               basePath = uri.toString();
+                basePath = "";
             }
-            else if( !basePath.toLowerCase().startsWith("file:") && !basePath.contains("://"))
-            {
-                String uriString = uri.toString();
-                if( basePath.equals("."))
-                    basePath = "";
+            else {
 
-                // find index to which the uriString should be used; depends on if the basePath is
-                // absolute or relative.
-                int ix = basePath.startsWith( "/" ) ?
-                        uriString.indexOf("/", uriString.indexOf(":")+
-                                (uriString.startsWith("file:") ? 1 : 4 )) :
-                                        uriString.lastIndexOf("/");
+                if (basePath == null) {
+                    basePath = uri.toString();
+                } else if (!basePath.toLowerCase().startsWith("file:") && !basePath.contains("://")) {
+                    String uriString = uri.toString();
+                    if (basePath.equals("."))
+                        basePath = "";
 
-                basePath = uriString.substring(0, ix) + basePath;
+                    // find index to which the uriString should be used; depends on if the basePath is
+                    // absolute or relative.
+                    int ix = basePath.startsWith("/") ?
+                            uriString.indexOf("/", uriString.indexOf(":") +
+                                    (uriString.startsWith("file:") ? 1 : 4)) :
+                            uriString.lastIndexOf("/");
+
+                    basePath = uriString.substring(0, ix) + basePath;
+                }
             }
 
             URI uri = new URI( basePath + path );

@@ -209,7 +209,7 @@ public abstract class SwaggerParser {
             }
             catch( RuntimeException e )
             {
-                SwaggerParserExceptionHandler.get().onParseError( e );
+                Swagger4jExceptionHandler.get().onException( e );
                 return null;
             }
         }

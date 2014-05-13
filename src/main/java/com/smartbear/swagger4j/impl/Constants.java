@@ -65,6 +65,7 @@ public class Constants {
     public static final String RESPONSE_MODEL = "responseModel";
     public static final String OAUTH2_SCOPE = "scope";
     public static final String OAUTH2_SCOPE_DESCRIPTION = "description";
+    public static final String HTTP_METHOD = "httpMethod";
 
     public String METHOD = "method";
     public String TYPE = "type";

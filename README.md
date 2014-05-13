@@ -104,3 +104,5 @@ URI.
 
 * 20130527 - Initial beta1 release
 * 20131119 - beta2 release, adds support for Swagger 1.2 and 1.0
+* 20140505 - beta3 bugfixes
+* 20140512 - beta4 more bugfixes
