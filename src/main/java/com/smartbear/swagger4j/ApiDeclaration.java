@@ -98,4 +98,10 @@ public interface ApiDeclaration {
 
     public void addConsumes(String consumes);
 
+    public Collection<Model> getModels();
+
+    public Model getModel(String id);
+
+    public void addModel(Model model);
+
 }

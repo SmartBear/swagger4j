@@ -16,15 +16,20 @@
 
 package com.smartbear.swagger4j.impl;
 
+import com.smartbear.swagger4j.PrimitiveType;
 import com.smartbear.swagger4j.*;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.smartbear.swagger4j.DataType;
+import com.smartbear.swagger4j.Model;
+import com.smartbear.swagger4j.Property;
 
 /**
  * Default SwaggerReader implementation
@@ -106,9 +111,9 @@ public class SwaggerReaderImpl implements SwaggerReader {
                 else if( type.equals(Constants.BASIC_AUTH_TYPE))
                 {
                     resourceListing.getAuthorizations().addAuthorization( name, Authorizations.AuthorizationType.BASIC );
-                }
             }
         }
+    }
     }
 
     private void readOAuth2Authorization(ResourceListingImpl resourceListing, String name, SwaggerParser auth) {
@@ -232,6 +237,18 @@ public class SwaggerReaderImpl implements SwaggerReader {
             }
         }
 
+        if (swaggerVersion == SwaggerVersion.V1_2) {
+            SwaggerParser modelsNode = parser.getChild(constants.MODELS);
+            if (modelsNode != null) {
+                for (String modelKey : modelsNode.getChildNames()) {
+                    SwaggerParser node = modelsNode.getChild(modelKey);
+                    apiDeclaration.addModel(readModel(constants, node));
+                }
+            }
+        } else {
+            logger.log(Level.INFO, "skipping models parsing, not supported for version {0}", swaggerVersion.getIdentifier());
+        }
+
         return apiDeclaration;
     }
 
@@ -242,7 +259,7 @@ public class SwaggerReaderImpl implements SwaggerReader {
             method = opNode.getString( constants.HTTP_METHOD ) ;
 
         Operation operation = api.addOperation(nickName,
-                Operation.Method.valueOf(method.toUpperCase()));
+            Operation.Method.valueOf(method.toUpperCase()));
 
         operation.setSummary(opNode.getString(constants.SUMMARY));
         operation.setNotes(opNode.getString(constants.NOTES));
@@ -252,7 +269,7 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
             try {
                 Parameter parameter = operation.addParameter(parameterNode.getString(constants.NAME),
-                        Parameter.ParamType.valueOf(parameterNode.getString(constants.PARAM_TYPE)));
+                    Parameter.ParamType.valueOf(parameterNode.getString(constants.PARAM_TYPE)));
 
                 parameter.setAllowMultiple(parameterNode.getBoolean(constants.ALLOW_MULTIPLE));
                 parameter.setDescription(parameterNode.getString(constants.DESCRIPTION));
@@ -262,12 +279,12 @@ public class SwaggerReaderImpl implements SwaggerReader {
             catch( Exception e )
             {
                 Swagger4jExceptionHandler.get().onException( e );
-            }
+        }
         }
 
         for (SwaggerParser responseMessage : opNode.getChildren(constants.RESPONSE_MESSAGES)) {
             operation.addResponseMessage(
-                    responseMessage.getInteger(constants.CODE), responseMessage.getString(constants.MESSAGE)
+                responseMessage.getInteger(constants.CODE), responseMessage.getString(constants.MESSAGE)
             ).setResponseModel(responseMessage.getString(constants.RESPONSE_MODEL));
         }
 
@@ -277,6 +294,96 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
         for (String consumes : opNode.getArray(constants.CONSUMES)) {
             operation.addConsumes(consumes);
+        }
+    }
+
+    private Model readModel(Constants constants, SwaggerParser modelNode) {
+        String id = modelNode.getString(constants.ID);
+        String modelDescription = modelNode.getString(constants.DESCRIPTION);
+        ModelImpl model = new ModelImpl(id, modelDescription);
+        List<String> requiredProperties = modelNode.getArray(constants.REQUIRED);
+        model.setRequiredProperties(requiredProperties);
+
+        SwaggerParser propertiesNode = modelNode.getChild(constants.PROPERTIES);
+        List<Property> properties = new ArrayList<Property>();
+        for (String propertyName : propertiesNode.getChildNames()) {
+            SwaggerParser propertyNode = propertiesNode.getChild(propertyName);
+
+            DataType dataType = readDataType(constants, propertyNode);
+            String propertyDescription = propertyNode.getString(constants.DESCRIPTION);
+            boolean required = requiredProperties.contains(propertyName);
+            PropertyImpl property = new PropertyImpl(propertyName, dataType, propertyDescription, required);
+
+            if (dataType.isPrimitive() && dataType.isArray() == false) {
+                PrimitiveType primitiveType = (PrimitiveType) dataType;
+                property.setDefaultValue(
+                    readDefaultValue(constants, propertyNode, primitiveType));
+                if (primitiveType.isString()) {
+                    property.setEnumValues(propertyNode.getArray(constants.ENUM));
+                }
+                if (primitiveType.isNumber()) {
+                    property.setMaximum(propertyNode.getNumber(constants.MAXIMUM));
+                    property.setMinimum(propertyNode.getNumber(constants.MINIMUM));
+                }
+            }
+            properties.add(property);
+        }
+        model.setProperties(properties);
+        return model;
+    }
+
+    private DataType readDataType(Constants constants, SwaggerParser node) {
+        String type = node.getString(constants.TYPE);
+        if (type == null) {
+            return new RefDataType(node.getString(constants.$REF));
+        }
+        if ("array".equals(type)) {
+            return readArrayDataType(constants, node.getChild(constants.ITEMS));
+        }
+        // TODO: handle complex data
+        try {
+            return PrimitiveType.get(type, node.getString(constants.FORMAT));
+        } catch (IllegalArgumentException ex) {
+            // not a primitive so a model's id
+            return new NamedDataType(type);
+        }
+    }
+
+    private DataType readArrayDataType(Constants constants, SwaggerParser itemsNode) {
+        String itemsType = itemsNode.getString(constants.TYPE);
+        if (itemsType == null) {
+            return new RefArrayType(itemsNode.getString(constants.$REF));
+        }
+        try {
+            return new PrimitiveArrayType(PrimitiveType.get(
+                itemsType,
+                itemsNode.getString(constants.FORMAT)));
+        } catch (IllegalArgumentException ex) {
+            // not a primitive so a model's id
+            return new NamedDataArrayType(itemsType);
+        }
+    }
+
+    private Object readDefaultValue(Constants constants, SwaggerParser node, PrimitiveType dataType) {
+        Utils.SwaggerDataParser dataParser = new Utils.SwaggerDataParser(node);
+        switch (dataType) {
+            case INTEGER:
+                return dataParser.getInteger(constants.DEFAULT_VALUE);
+            case LONG:
+                return dataParser.getLong(constants.DEFAULT_VALUE);
+            case FLOAT:
+                return dataParser.getFloat(constants.DEFAULT_VALUE);
+            case DOUBLE:
+                return dataParser.getDouble(constants.DEFAULT_VALUE);
+            case BOOLEAN:
+                return dataParser.getBoolean(constants.DEFAULT_VALUE);
+            case BYTE:      // FALL THROUGH
+            case DATE:      // FALL THROUGH
+            case DATE_TIME: // FALL THROUGH
+            case STRING:
+                return dataParser.getString(constants.DEFAULT_VALUE);
+            default:
+                throw new AssertionError();
         }
     }
 

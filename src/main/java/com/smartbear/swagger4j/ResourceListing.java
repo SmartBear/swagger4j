@@ -16,6 +16,7 @@
 
 package com.smartbear.swagger4j;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -43,6 +44,12 @@ public interface ResourceListing {
 
     public ResourceListingApi addApi(ApiDeclaration apiDeclaration, String path);
 
+    /**
+     * Concatenates then returns the models of all APIs.
+     * @return a Model collection.
+     */
+    public Collection<Model> getApisModels();
+    
     /**
      * A reference to a Swagger API-Declaration contained within a Resource-Listing
      */

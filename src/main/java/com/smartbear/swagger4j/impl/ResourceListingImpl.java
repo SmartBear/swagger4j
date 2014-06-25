@@ -19,6 +19,7 @@ package com.smartbear.swagger4j.impl;
 import com.smartbear.swagger4j.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -116,6 +117,14 @@ public class ResourceListingImpl implements ResourceListing {
 
             return null;
         }
+    }
+
+    public Collection<Model> getApisModels() {
+        List<Model> models = new ArrayList<Model>();
+        for (ResourceListingApi api : getApis()) {
+            models.addAll(api.getDeclaration().getModels());
+        }
+        return models;
     }
 
     public static class ResourceListingApiImpl implements ResourceListingApi {

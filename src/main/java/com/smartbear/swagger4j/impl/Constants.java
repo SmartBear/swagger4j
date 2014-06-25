@@ -66,7 +66,17 @@ public class Constants {
     public static final String OAUTH2_SCOPE = "scope";
     public static final String OAUTH2_SCOPE_DESCRIPTION = "description";
     public static final String HTTP_METHOD = "httpMethod";
-
+    public static final String MODELS = "models";
+    public static final String ID = "id";
+    public static final String PROPERTIES = "properties";
+    public static final String $REF = "$ref";
+    public static final String FORMAT = "format";
+    public static final String ITEMS = "items";
+    public static final String ENUM = "enum";
+    public static final String MINIMUM = "minimum";
+    public static final String MAXIMUM = "maximum";
+    public static final String DEFAULT_VALUE = "defaultValue";
+    
     public String METHOD = "method";
     public String TYPE = "type";
     public String MESSAGE = "message";
