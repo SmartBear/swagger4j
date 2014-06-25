@@ -265,7 +265,11 @@ public abstract class SwaggerParser {
 
         @Override
         public SwaggerParser getChild(String name) {
-            JsonObject child = jsonObject.getJsonObject(name);
+            JsonValue value = jsonObject.get(name);
+            if(value == JsonValue.NULL) {
+                return null;
+            }
+            JsonObject child = (JsonObject) value;
             return child == null ? null : new SwaggerJsonParser( child );
         }
 
