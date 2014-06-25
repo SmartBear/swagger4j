@@ -29,8 +29,11 @@ import javax.json.JsonValue;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.json.JsonNumber;
+import javax.json.JsonString;
 
 /**
  * Utility class for abstraction of reading actual format, since json and xml are read in the same way
@@ -50,6 +53,8 @@ public abstract class SwaggerParser {
 
     public abstract int getInteger(String name);
 
+    public abstract Number getNumber(String name);
+        
     public abstract List<String> getArray(String name);
 
     public abstract SwaggerParser getChild( String name );
@@ -151,6 +156,14 @@ public abstract class SwaggerParser {
         }
 
         @Override
+        public Number getNumber(String name) {
+            String stringValue = getString(name);
+            return stringValue == null || stringValue.isEmpty() 
+                ? null 
+                : new BigDecimal(stringValue);
+        }
+
+        @Override
         public List<String> getArray(String name) {
             List<String> result = new ArrayList<String>();
 
@@ -248,6 +261,19 @@ public abstract class SwaggerParser {
         public int getInteger(String name) {
             JsonValue value = jsonObject.get(name);
             return Integer.parseInt(value.toString());
+        }
+
+        @Override
+        public Number getNumber(String name) {
+            JsonValue value = jsonObject.get(name);
+            if(value == null) {
+                return null;
+            }
+            switch (value.getValueType()) {
+                case NUMBER: return ((JsonNumber) value).bigDecimalValue();
+                case STRING: return new BigDecimal(((JsonString) value).getString());
+                default: throw new IllegalArgumentException("not a number");
+            }
         }
 
         @Override
