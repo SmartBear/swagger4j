@@ -86,5 +86,48 @@ public class Utils {
             return new OutputStreamWriter(System.out);
         }
     }
+    
+    /**
+     * Utility class to get finer data type parsing.
+     */
+    public static class SwaggerDataParser {
 
+        private final SwaggerParser parser;
+
+        public SwaggerDataParser(SwaggerParser parser) {
+            this.parser = parser;
+        }
+
+        public SwaggerParser getParser() {
+            return parser;
+        }
+
+        public Boolean getBoolean(String name) {
+            return parser.getBoolean(name);
+        }
+        
+        public String getString(String name) {
+            return parser.getString(name);
+        }
+        
+        public Integer getInteger(String name) {
+            Number number = parser.getNumber(name);
+            return number != null ? number.intValue() : null;
+        }
+
+        public Long getLong(String name) {
+            Number number = parser.getNumber(name);
+            return number != null ? number.longValue() : null;
+        }
+
+        public Double getDouble(String name) {
+            Number number = parser.getNumber(name);
+            return number != null ? number.doubleValue() : null;
+        }
+
+        public Float getFloat(String name) {
+            Number number = parser.getNumber(name);
+            return number != null ? number.floatValue() : null;
+        }
+    }
 }
