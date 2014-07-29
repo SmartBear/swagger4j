@@ -16,8 +16,6 @@
 
 package com.smartbear.swagger4j.impl;
 
-import com.smartbear.swagger4j.*;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -25,6 +23,19 @@ import java.net.URI;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.smartbear.swagger4j.Api;
+import com.smartbear.swagger4j.ApiDeclaration;
+import com.smartbear.swagger4j.Authorizations;
+import com.smartbear.swagger4j.Info;
+import com.smartbear.swagger4j.Operation;
+import com.smartbear.swagger4j.Parameter;
+import com.smartbear.swagger4j.ResourceListing;
+import com.smartbear.swagger4j.SwaggerFormat;
+import com.smartbear.swagger4j.SwaggerReader;
+import com.smartbear.swagger4j.SwaggerSource;
+import com.smartbear.swagger4j.SwaggerVersion;
+import com.smartbear.swagger4j.URISwaggerSource;
 
 /**
  * Default SwaggerReader implementation
@@ -246,7 +257,7 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
         operation.setSummary(opNode.getString(constants.SUMMARY));
         operation.setNotes(opNode.getString(constants.NOTES));
-        operation.setResponseClass(opNode.getString(constants.OPERATION_TYPE));
+        operation.setType(opNode.getString(constants.OPERATION_TYPE));
 
         for (SwaggerParser parameterNode : opNode.getChildren(constants.PARAMETERS)) {
 

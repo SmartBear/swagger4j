@@ -16,12 +16,17 @@
 
 package com.smartbear.swagger4j.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.smartbear.swagger4j.Api;
 import com.smartbear.swagger4j.Operation;
 import com.smartbear.swagger4j.Parameter;
 import com.smartbear.swagger4j.ResponseMessage;
-
-import java.util.*;
 
 /**
  * Default implementation of the Operation interface
@@ -29,17 +34,17 @@ import java.util.*;
  * @see Operation
  */
 
-public class OperationImpl implements Operation {
+public class OperationImpl extends DataTypeImpl implements Operation {
     private String nickName;
     private Method method;
-    private String responseClass;
     private String summary;
     private String notes;
-    private final Set<String> produces = new HashSet<String>();
-    private final Set<String> consumes = new HashSet<String>();
+    private final Set<String> produces = new LinkedHashSet<String>();
+    private final Set<String> consumes = new LinkedHashSet<String>();
     private final List<Parameter> parameterList = new ArrayList<Parameter>();
     private final List<ResponseMessage> responseMessages = new ArrayList<ResponseMessage>();
     private Api api;
+    private boolean deprecated;
 
     OperationImpl(Api api, String nickName, Method method ) {
         this.api = api;
@@ -70,13 +75,8 @@ public class OperationImpl implements Operation {
     }
 
     @Override
-    public String getResponseClass() {
-        return responseClass == null ? "void" : responseClass;
-    }
-
-    @Override
-    public void setResponseClass(String responseClass) {
-        this.responseClass = responseClass;
+    public String getType() {
+        return super.getType() == null ? "void" : super.getType();
     }
 
     @Override
@@ -221,7 +221,18 @@ public class OperationImpl implements Operation {
         }
     }
 
-    public Api getApi() {
+    @Override
+	public Api getApi() {
         return api;
+    }
+
+    @Override
+	public void setDeprecated(boolean value) {
+    	this.deprecated = value;
+    }
+
+    @Override
+	public boolean isDeprecated() {
+    	return deprecated;
     }
 }

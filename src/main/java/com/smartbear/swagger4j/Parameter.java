@@ -21,7 +21,7 @@ package com.smartbear.swagger4j;
  * target="_new">https://github.com/wordnik/swagger-core/wiki/Parameters</a>
  */
 
-public interface Parameter {
+public interface Parameter extends Property {
     public ParamType getParamType();
 
     public void setParamType(ParamType paramType);
@@ -30,17 +30,9 @@ public interface Parameter {
 
     public void setName(String name);
 
-    public String getDescription();
-
-    public void setDescription(String description);
-
     public boolean isRequired();
 
     public void setRequired(boolean required);
-
-    public String getType();
-
-    public void setType(String type);
 
     public boolean isAllowMultiple();
 

@@ -24,12 +24,10 @@ import com.smartbear.swagger4j.Parameter;
  * @see Parameter
  */
 
-public class ParameterImpl implements Parameter {
+public class ParameterImpl extends PropertyImpl implements Parameter {
     private ParamType paramType;
     private String name;
-    private String description;
     private boolean required;
-    private String type;
     private boolean allowMultiple;
 
     ParameterImpl(String name, ParamType type) {
@@ -61,16 +59,6 @@ public class ParameterImpl implements Parameter {
     }
 
     @Override
-    public String getDescription() {
-        return description;
-    }
-
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
     public boolean isRequired() {
         return paramType == ParamType.path || required;
     }
@@ -78,16 +66,6 @@ public class ParameterImpl implements Parameter {
     @Override
     public void setRequired(boolean required) {
         this.required = required;
-    }
-
-    @Override
-    public String getType() {
-        return type;
-    }
-
-    @Override
-    public void setType(String type) {
-        this.type = type;
     }
 
     @Override
