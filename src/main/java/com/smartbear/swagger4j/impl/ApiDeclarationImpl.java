@@ -16,9 +16,19 @@
 
 package com.smartbear.swagger4j.impl;
 
-import com.smartbear.swagger4j.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.*;
+import com.smartbear.swagger4j.Api;
+import com.smartbear.swagger4j.ApiDeclaration;
+import com.smartbear.swagger4j.Model;
+import com.smartbear.swagger4j.SwaggerVersion;
 
 /**
  * Default implementation of the ApiDeclaration interface
@@ -33,8 +43,9 @@ public class ApiDeclarationImpl implements ApiDeclaration {
     private SwaggerVersion swaggerVersion = SwaggerVersion.DEFAULT_VERSION;
     private String resourcePath;
     private final List<Api> apiList = new ArrayList<Api>();
-    private final Set<String> produces = new HashSet<String>();
-    private final Set<String> consumes = new HashSet<String>();
+    private final Set<String> produces = new LinkedHashSet<String>();
+    private final Set<String> consumes = new LinkedHashSet<String>();
+    private final Map<String, Model> models = new HashMap<String, Model>();
 
 
     ApiDeclarationImpl( String basePath, String resourcePath ) {
@@ -158,5 +169,19 @@ public class ApiDeclarationImpl implements ApiDeclaration {
     public void addConsumes(String consumes) {
         assert consumes != null : "consumes can not be null";
         this.consumes.add(consumes);
+    }
+
+    @Override
+    public Model addModel(String id) {
+        assert id != null : "model id can not be null";
+        if (!models.containsKey(id)) {
+        	this.models.put(id, new Model(id));
+        }
+        return models.get(id);
+    }
+
+    @Override
+	public Collection<Model> getModels() {
+    	return Collections.unmodifiableCollection(models.values());
     }
 }

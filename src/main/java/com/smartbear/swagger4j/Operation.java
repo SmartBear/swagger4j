@@ -24,7 +24,7 @@ import java.util.List;
  * target="_new">https://github.com/wordnik/swagger-core/wiki/API-Declaration</a>
  */
 
-public interface Operation {
+public interface Operation extends DataType {
 
     public Api getApi();
 
@@ -35,10 +35,6 @@ public interface Operation {
     public String getNickName();
 
     public void setNickName(String nickName);
-
-    public String getResponseClass();
-
-    public void setResponseClass(String responseClass);
 
     public String getSummary();
 
@@ -75,6 +71,10 @@ public interface Operation {
     public void removeResponseMessage(ResponseMessage responseMessage);
 
     public ResponseMessage addResponseMessage(int code, String message);
+
+    public void setDeprecated(boolean value);
+
+    public boolean isDeprecated();
 
     /**
      * These are the methods supported by Swagger 1.2 - more to come
