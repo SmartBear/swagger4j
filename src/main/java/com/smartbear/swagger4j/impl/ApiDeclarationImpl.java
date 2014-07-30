@@ -36,6 +36,7 @@ public class ApiDeclarationImpl implements ApiDeclaration {
     private final Set<String> produces = new HashSet<String>();
     private final Set<String> consumes = new HashSet<String>();
 
+    private final Map<String, Model> models = new HashMap<String, Model>();
 
     ApiDeclarationImpl( String basePath, String resourcePath ) {
         this.basePath = basePath;
@@ -158,5 +159,17 @@ public class ApiDeclarationImpl implements ApiDeclaration {
     public void addConsumes(String consumes) {
         assert consumes != null : "consumes can not be null";
         this.consumes.add(consumes);
+    }
+
+    public Collection<Model> getModels() {
+        return models.values();
+    }
+
+    public Model getModel(String id) {
+        return models.get(id);
+    }
+
+    public void addModel(Model model) {
+        models.put(model.getId(), model);
     }
 }

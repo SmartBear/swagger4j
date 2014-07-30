@@ -29,8 +29,11 @@ import javax.json.JsonValue;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.json.JsonNumber;
+import javax.json.JsonString;
 
 /**
  * Utility class for abstraction of reading actual format, since json and xml are read in the same way
@@ -50,6 +53,8 @@ public abstract class SwaggerParser {
 
     public abstract int getInteger(String name);
 
+    public abstract Number getNumber(String name);
+        
     public abstract List<String> getArray(String name);
 
     public abstract SwaggerParser getChild( String name );
@@ -148,6 +153,14 @@ public abstract class SwaggerParser {
         @Override
         public int getInteger(String name) {
             return Integer.parseInt(getString(name));
+        }
+
+        @Override
+        public Number getNumber(String name) {
+            String stringValue = getString(name);
+            return stringValue == null || stringValue.isEmpty() 
+                ? null 
+                : new BigDecimal(stringValue);
         }
 
         @Override
@@ -251,6 +264,19 @@ public abstract class SwaggerParser {
         }
 
         @Override
+        public Number getNumber(String name) {
+            JsonValue value = jsonObject.get(name);
+            if(value == null) {
+                return null;
+            }
+            switch (value.getValueType()) {
+                case NUMBER: return ((JsonNumber) value).bigDecimalValue();
+                case STRING: return new BigDecimal(((JsonString) value).getString());
+                default: throw new IllegalArgumentException("not a number");
+            }
+        }
+
+        @Override
         public List<String> getArray(String name) {
             List<String> result = new ArrayList<String>();
             if( !jsonObject.containsKey(name) || jsonObject.isNull( name ))
@@ -265,7 +291,11 @@ public abstract class SwaggerParser {
 
         @Override
         public SwaggerParser getChild(String name) {
-            JsonObject child = jsonObject.getJsonObject(name);
+            JsonValue value = jsonObject.get(name);
+            if(value == JsonValue.NULL) {
+                return null;
+            }
+            JsonObject child = (JsonObject) value;
             return child == null ? null : new SwaggerJsonParser( child );
         }
 
