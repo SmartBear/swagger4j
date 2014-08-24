@@ -45,8 +45,6 @@ public class Utils {
 
         String name = path.replaceAll("\\{format\\}", format.getExtension());
 
-        if (name.indexOf('.') == -1)
-            name += "." + format.getExtension();
         return name;
     }
 

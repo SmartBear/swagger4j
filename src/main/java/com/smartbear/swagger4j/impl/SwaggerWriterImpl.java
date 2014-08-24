@@ -212,7 +212,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
 
     @Override
     public void writeSwagger(SwaggerStore store, ResourceListing resourceListing) throws IOException {
-        Writer writer = store.createResource("api-docs." + format.getExtension());
+        Writer writer = store.createResource("api-docs");
         writeResourceListing(resourceListing, writer);
 
         for (ResourceListing.ResourceListingApi api : resourceListing.getApis()) {

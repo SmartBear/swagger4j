@@ -17,11 +17,14 @@
 package com.smartbear.swagger4j.impl;
 
 import com.smartbear.swagger4j.SwaggerFormat;
+import com.smartbear.swagger4j.impl.Utils.MapSwaggerStore;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.json.*;
+import javax.json.stream.JsonGenerator;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -31,9 +34,12 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static javax.json.stream.JsonGenerator.PRETTY_PRINTING;
 
 /**
  * Utility class for abstraction of writing an actual format, since json and xml are read in the same way
@@ -156,7 +162,9 @@ public abstract class SwaggerGenerator {
 
             if (writer != null) {
                 JsonObject jsonObject = builder.build();
-                javax.json.JsonWriter jsonWriter = Json.createWriter(writer);
+                JsonWriterFactory factory = Json.createWriterFactory(
+                    Collections.singletonMap(PRETTY_PRINTING, "true"));
+                javax.json.JsonWriter jsonWriter = factory.createWriter(writer);
                 jsonWriter.writeObject(jsonObject);
                 jsonWriter.close();
             }
