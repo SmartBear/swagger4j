@@ -16,6 +16,9 @@
 
 package com.smartbear.swagger4j;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Holds a Swagger parameter defined for an API Operation - see <a href="https://github.com/wordnik/swagger-core/wiki/Parameters"
  * target="_new">https://github.com/wordnik/swagger-core/wiki/Parameters</a>
@@ -45,6 +48,17 @@ public interface Parameter {
     public boolean isAllowMultiple();
 
     public void setAllowMultiple(boolean multiple);
+    
+    /**
+     * @return a fixed list of possible values.
+     */
+    Collection<String> getEnumValues();
+    
+    void setEnumValues(Collection<String> enumValues);
+    
+    void setDefaultValue(String defaultValue);
+    
+    String getDefaultValue();
 
     /**
      * Parameter type - see <a href="https://github.com/wordnik/swagger-core/wiki/Parameters"

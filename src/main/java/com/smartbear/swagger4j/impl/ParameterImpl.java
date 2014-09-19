@@ -16,6 +16,9 @@
 
 package com.smartbear.swagger4j.impl;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.smartbear.swagger4j.Parameter;
 
 /**
@@ -31,6 +34,8 @@ public class ParameterImpl implements Parameter {
     private boolean required;
     private String type;
     private boolean allowMultiple;
+    private Collection<String> enumValues;
+    private String defaultValue;
 
     ParameterImpl(String name, ParamType type) {
         this.name = name;
@@ -98,5 +103,29 @@ public class ParameterImpl implements Parameter {
     @Override
     public void setAllowMultiple(boolean multiple) {
         this.allowMultiple = multiple;
+    }
+
+    @Override
+    public Collection<String> getEnumValues()
+    {
+        return enumValues;
+    }
+
+    @Override
+    public void setEnumValues(Collection<String> enumValues)
+    {
+        this.enumValues = enumValues;
+    }
+
+    @Override
+    public String getDefaultValue()
+    {
+        return defaultValue;
+    }
+
+    @Override
+    public void setDefaultValue(String defaultValue)
+    {
+        this.defaultValue = defaultValue;
     }
 }

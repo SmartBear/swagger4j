@@ -82,6 +82,12 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                     pw.addString(constants.DESCRIPTION, parameter.getDescription());
                     pw.addBoolean(constants.REQUIRED, parameter.isRequired());
                     pw.addString(constants.TYPE, parameter.getType());
+                    if (parameter.getEnumValues() != null) {
+                        pw.addArray(constants.ENUM, parameter.getEnumValues().toArray(new String[parameter.getEnumValues().size()]));
+                    }
+                    if (parameter.getDefaultValue() != null) {
+                        pw.addString(constants.DEFAULT_VALUE, parameter.getDefaultValue());
+                    }
                 }
 
                 for (ResponseMessage responseMessage : operation.getResponseMessages()) {
