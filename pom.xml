@@ -9,7 +9,7 @@
 
     <groupId>com.smartbear</groupId>
     <artifactId>swagger4j</artifactId>
-    <version>1.0-beta5-SNAPSHOT</version>
+    <version>1.0-beta5</version>
 
     <dependencies>
 
