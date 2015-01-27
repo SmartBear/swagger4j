@@ -73,7 +73,11 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                 ow.addString(constants.SUMMARY, operation.getSummary());
                 ow.addString(constants.NOTES, operation.getNotes());
                 ow.addString(constants.OPERATION_TYPE, operation.getResponseClass());
-
+                Authorizations authorizations = operation.getAuthorizations();
+                if( authorizations != null && authorizations.getAuthorizations() != null && !authorizations.getAuthorizations().isEmpty())
+                {
+                    writeAuthorizations(ow, constants, authorizations);
+                }
                 for (Parameter parameter : operation.getParameters()) {
                     SwaggerGenerator pw = ow.addArrayObject(constants.PARAMETERS);
                     pw.addString(constants.NAME, parameter.getName());
@@ -82,6 +86,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                     pw.addString(constants.DESCRIPTION, parameter.getDescription());
                     pw.addBoolean(constants.REQUIRED, parameter.isRequired());
                     pw.addString(constants.TYPE, parameter.getType());
+
                 }
 
                 for (ResponseMessage responseMessage : operation.getResponseMessages()) {

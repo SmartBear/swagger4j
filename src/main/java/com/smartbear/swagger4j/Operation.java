@@ -41,6 +41,8 @@ public interface Operation {
     public void setResponseClass(String responseClass);
 
     public String getSummary();
+    
+    public Authorizations getAuthorizations();
 
     public void setSummary(String summary);
 

@@ -17,6 +17,7 @@
 package com.smartbear.swagger4j.impl;
 
 import com.smartbear.swagger4j.Api;
+import com.smartbear.swagger4j.Authorizations;
 import com.smartbear.swagger4j.Operation;
 import com.smartbear.swagger4j.Parameter;
 import com.smartbear.swagger4j.ResponseMessage;
@@ -39,6 +40,7 @@ public class OperationImpl implements Operation {
     private final Set<String> consumes = new HashSet<String>();
     private final List<Parameter> parameterList = new ArrayList<Parameter>();
     private final List<ResponseMessage> responseMessages = new ArrayList<ResponseMessage>();
+    private AuthorizationsImpl authorizations;
     private Api api;
 
     OperationImpl(Api api, String nickName, Method method ) {
@@ -223,5 +225,14 @@ public class OperationImpl implements Operation {
 
     public Api getApi() {
         return api;
+    }
+
+    @Override
+    public Authorizations getAuthorizations()
+    {
+        if( authorizations == null )
+            authorizations = new AuthorizationsImpl();
+
+        return authorizations;
     }
 }
