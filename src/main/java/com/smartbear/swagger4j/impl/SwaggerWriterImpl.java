@@ -20,9 +20,7 @@ import com.smartbear.swagger4j.*;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -76,7 +74,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                 Authorizations authorizations = operation.getAuthorizations();
                 if( authorizations != null && authorizations.getAuthorizations() != null && !authorizations.getAuthorizations().isEmpty())
                 {
-                    writeAuthorizations(ow, constants, authorizations);
+                	writeOperationAuthorizations(ow, constants, authorizations);
                 }
                 for (Parameter parameter : operation.getParameters()) {
                     SwaggerGenerator pw = ow.addArrayObject(constants.PARAMETERS);
@@ -250,7 +248,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                 Authorizations.OAuth2Authorization oaa = (Authorizations.OAuth2Authorization) aut;
                 if( oaa.getAuthorizationCodeGrant() != null || oaa.getImplicitGrant() != null)
                 {
-                    sg = sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.API_KEY_TYPE );
+                    sg = sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.OAUTH_2_TYPE );
 
 
                     final Authorizations.OAuth2Authorization.Scope[] scopes = oaa.getScopes();
@@ -287,6 +285,38 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                         sg.addObject( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT ).
                                 addString( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_URL, acg.getTokenEndpointUrl() ).
                                 addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_TOKEN_NAME, acg.getTokenName());
+                    }
+                }
+            }
+        }
+    }
+
+    private void writeOperationAuthorizations(SwaggerGenerator w, Constants constants, Authorizations authorizations) {
+        SwaggerGenerator sg = w.addObject(constants.AUTHORIZATIONS);
+        for( Authorizations.Authorization aut : authorizations.getAuthorizations())
+        {
+            if( aut.getType() == Authorizations.AuthorizationType.BASIC )
+            {
+            	sg.addArrayObject(aut.getName());
+            }
+            else if( aut.getType() == Authorizations.AuthorizationType.API_KEY )
+            {
+                sg.addArrayObject(aut.getName());
+            }
+            else if( aut.getType() == Authorizations.AuthorizationType.OAUTH2 )
+            {
+                Authorizations.OAuth2Authorization oaa = (Authorizations.OAuth2Authorization) aut;
+                if( oaa.getAuthorizationCodeGrant() != null || oaa.getImplicitGrant() != null)
+                {
+                    final Authorizations.OAuth2Authorization.Scope[] scopes = oaa.getScopes();
+                    if( scopes.length > 0 )
+                    {
+                        for( Authorizations.OAuth2Authorization.Scope s : scopes)
+                        {
+                        	SwaggerGenerator so=sg.addArrayObject(aut.getName());
+                            so.addString( constants.OAUTH2_SCOPE, s.getName() );
+                            so.addString( constants.OAUTH2_SCOPE_DESCRIPTION, s.getDescription() );
+                        }
                     }
                 }
             }

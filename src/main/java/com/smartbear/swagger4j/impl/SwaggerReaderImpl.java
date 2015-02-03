@@ -115,6 +115,25 @@ public class SwaggerReaderImpl implements SwaggerReader {
         }
     }
     }
+    
+    private void readAuthorizations(Operation operation, SwaggerParser child) {
+        String [] names = child.getChildNames();
+        if( names!= null)
+        {
+            for( String name : names )
+            {
+                List<SwaggerParser> scopes = child.getChildren(name);
+                if(scopes.size()>0){
+                	Authorizations.OAuth2Authorization oauth = (Authorizations.OAuth2Authorization) operation.getAuthorizations().addAuthorization( name, Authorizations.AuthorizationType.OAUTH2 );
+                	 for(SwaggerParser scope:scopes){
+                    	 oauth.addScope(scope.getString( Constants.OAUTH2_SCOPE ), scope.getString( Constants.OAUTH2_SCOPE_DESCRIPTION ));
+                    }
+                }else{
+                	operation.getAuthorizations().addAuthorization( name, Authorizations.AuthorizationType.BASIC);
+                }              
+        }
+    }
+    }
 
     private void readOAuth2Authorization(ResourceListingImpl resourceListing, String name, SwaggerParser auth) {
         Authorizations.OAuth2Authorization oauth = (Authorizations.OAuth2Authorization) resourceListing.getAuthorizations().addAuthorization( name, Authorizations.AuthorizationType.OAUTH2 );
@@ -164,8 +183,8 @@ public class SwaggerReaderImpl implements SwaggerReader {
             }
         }
     }
-
-    private void readResourceListingInfo(Constants constants, ResourceListingImpl resourceListing, SwaggerParser child) {
+    
+ private void readResourceListingInfo(Constants constants, ResourceListingImpl resourceListing, SwaggerParser child) {
         Info info = resourceListing.getInfo();
         info.setContact( child.getString( constants.INFO_CONTACT));
         info.setDescription( child.getString( constants.INFO_DESCRIPTION ));
@@ -279,8 +298,14 @@ public class SwaggerReaderImpl implements SwaggerReader {
             catch( Exception e )
             {
                 Swagger4jExceptionHandler.get().onException( e );
+            }
         }
-        }
+        
+        SwaggerParser child = opNode.getChild( constants.AUTHORIZATIONS);
+        	if( child != null )
+        		{
+        			readAuthorizations(operation, child);
+        		}
 
         for (SwaggerParser responseMessage : opNode.getChildren(constants.RESPONSE_MESSAGES)) {
             operation.addResponseMessage(

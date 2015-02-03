@@ -3,7 +3,6 @@ package com.smartbear.swagger4j.impl;
 import com.smartbear.swagger4j.Authorizations;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
