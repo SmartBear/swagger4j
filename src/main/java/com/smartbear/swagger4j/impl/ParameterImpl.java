@@ -16,6 +16,7 @@
 
 package com.smartbear.swagger4j.impl;
 
+import com.smartbear.swagger4j.DataType;
 import com.smartbear.swagger4j.Parameter;
 
 /**
@@ -31,6 +32,7 @@ public class ParameterImpl implements Parameter {
     private boolean required;
     private String type;
     private boolean allowMultiple;
+    private DataType dataType;
 
     ParameterImpl(String name, ParamType type) {
         this.name = name;
@@ -99,4 +101,18 @@ public class ParameterImpl implements Parameter {
     public void setAllowMultiple(boolean multiple) {
         this.allowMultiple = multiple;
     }
+
+	@Override
+	public void setDataType(DataType dataType) {
+		this.dataType = dataType;
+	}
+
+	@Override
+	public DataType getDataType() {
+		if(this.dataType == null){
+			return DataType.VOID;
+		}else{
+			return this.dataType;
+		}
+	}
 }

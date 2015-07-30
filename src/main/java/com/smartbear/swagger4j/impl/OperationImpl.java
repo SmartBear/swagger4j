@@ -18,6 +18,7 @@ package com.smartbear.swagger4j.impl;
 
 import com.smartbear.swagger4j.Api;
 import com.smartbear.swagger4j.Authorizations;
+import com.smartbear.swagger4j.DataType;
 import com.smartbear.swagger4j.Operation;
 import com.smartbear.swagger4j.Parameter;
 import com.smartbear.swagger4j.ResponseMessage;
@@ -42,6 +43,7 @@ public class OperationImpl implements Operation {
     private final List<ResponseMessage> responseMessages = new ArrayList<ResponseMessage>();
     private AuthorizationsImpl authorizations;
     private Api api;
+    private DataType dataType;
 
     OperationImpl(Api api, String nickName, Method method ) {
         this.api = api;
@@ -235,4 +237,19 @@ public class OperationImpl implements Operation {
 
         return authorizations;
     }
+
+	@Override
+	public void setDataType(DataType dataType) {
+		this.dataType = dataType;
+		
+	}
+
+	@Override
+	public DataType getDataType() {
+		if(this.dataType == null){
+			return DataType.VOID;
+		}else{
+			return this.dataType;
+		}
+	}
 }

@@ -56,7 +56,7 @@ public class Constants {
     public static final String PRODUCES = "produces";
     public static final String CONSUMES = "consumes";
     public static final String INFO = "info";
-    public static final String INFO_CONTACT = "title";
+    public static final String INFO_CONTACT = "contact";
     public static final String INFO_DESCRIPTION = "description";
     public static final String INFO_LICENSE = "license";
     public static final String INFO_LICENSE_URL = "licenseUrl";

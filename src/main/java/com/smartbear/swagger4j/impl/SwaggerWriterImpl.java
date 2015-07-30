@@ -71,6 +71,14 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                 ow.addString(constants.SUMMARY, operation.getSummary());
                 ow.addString(constants.NOTES, operation.getNotes());
                 ow.addString(constants.OPERATION_TYPE, operation.getResponseClass());
+                if(operation.getDataType().isArray()){
+                	SwaggerGenerator owg=ow.addObject(constants.ITEMS);
+                	if (operation.getDataType().isRef()) {                        	
+                		owg.addString("$ref", operation.getDataType().getRef());
+                	} else {
+                		owg.addString(constants.TYPE, operation.getDataType().getType());
+                	}
+                }
                 Authorizations authorizations = operation.getAuthorizations();
                 if( authorizations != null && authorizations.getAuthorizations() != null && !authorizations.getAuthorizations().isEmpty())
                 {
@@ -84,6 +92,14 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                     pw.addString(constants.DESCRIPTION, parameter.getDescription());
                     pw.addBoolean(constants.REQUIRED, parameter.isRequired());
                     pw.addString(constants.TYPE, parameter.getType());
+                    if(parameter.getDataType().isArray()){
+                    	SwaggerGenerator pwg=pw.addObject(constants.ITEMS);
+                    	if (parameter.getDataType().isRef()) {                        	
+                    		pwg.addString("$ref", parameter.getDataType().getRef());
+                    	} else {
+                    		pwg.addString(constants.TYPE, parameter.getDataType().getType());
+                    	}
+                    }
 
                 }
 

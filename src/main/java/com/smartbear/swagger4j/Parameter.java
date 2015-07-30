@@ -16,6 +16,7 @@
 
 package com.smartbear.swagger4j;
 
+
 /**
  * Holds a Swagger parameter defined for an API Operation - see <a href="https://github.com/wordnik/swagger-core/wiki/Parameters"
  * target="_new">https://github.com/wordnik/swagger-core/wiki/Parameters</a>
@@ -45,6 +46,10 @@ public interface Parameter {
     public boolean isAllowMultiple();
 
     public void setAllowMultiple(boolean multiple);
+    
+    public void setDataType(DataType dataType);
+    
+    public DataType getDataType();
 
     /**
      * Parameter type - see <a href="https://github.com/wordnik/swagger-core/wiki/Parameters"

@@ -77,6 +77,10 @@ public interface Operation {
     public void removeResponseMessage(ResponseMessage responseMessage);
 
     public ResponseMessage addResponseMessage(int code, String message);
+    
+    public void setDataType(DataType dataType);
+    
+    public DataType getDataType();
 
     /**
      * These are the methods supported by Swagger 1.2 - more to come
