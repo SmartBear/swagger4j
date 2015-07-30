@@ -77,6 +77,9 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                 		owg.addString("$ref", operation.getDataType().getRef());
                 	} else {
                 		owg.addString(constants.TYPE, operation.getDataType().getType());
+                		if(operation.getDataType().getFormat()!=null){
+                			owg.addString(constants.FORMAT, operation.getDataType().getFormat());
+                		}
                 	}
                 }
                 Authorizations authorizations = operation.getAuthorizations();
@@ -98,6 +101,9 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                     		pwg.addString("$ref", parameter.getDataType().getRef());
                     	} else {
                     		pwg.addString(constants.TYPE, parameter.getDataType().getType());
+                    		if(parameter.getDataType().getFormat()!=null){
+                    			pwg.addString(constants.FORMAT, parameter.getDataType().getFormat());
+                    		}
                     	}
                     }
 
