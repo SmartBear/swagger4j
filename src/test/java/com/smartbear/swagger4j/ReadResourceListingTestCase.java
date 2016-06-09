@@ -18,6 +18,9 @@ package com.smartbear.swagger4j;
 
 import com.smartbear.swagger4j.impl.Constants;
 import junit.framework.TestCase;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 
 import java.io.File;
 import java.net.URI;
@@ -92,12 +95,21 @@ public class ReadResourceListingTestCase extends TestCase {
 
     public void testOnlinePetStoreSwagger() throws Exception
     {
-        Swagger.createReader().readResourceListing(new URI("http://petstore.swagger.wordnik.com/api/api-docs"));
+        Swagger.createReader().readResourceListing(new URI("http://petstore.swagger.io/v2/swagger.json"));
     }
 
-    public void testOnlineLuciernaSwagger() throws Exception
+    public void testExtendedSwaggerDefinition() throws Exception
     {
-        Swagger.createReader().readResourceListing(new URI("http://antorcha.smartp.qasoftwareplanner.com:8080/antorcha-restapi/doc/api-docs"));
+        Server server = new Server(8080);
+
+        ResourceHandler handler = new ResourceHandler();
+        handler.setResourceBase("src/test/resources/v1_2/swaggerDefinition");
+
+        server.setHandler( handler );
+        server.start();
+
+        String url = "http://localhost:8080/resourceList.json";
+        Swagger.createReader().readResourceListing( URI.create( url ));
     }
 
 }

@@ -9,7 +9,7 @@
 
     <groupId>com.smartbear</groupId>
     <artifactId>swagger4j</artifactId>
-    <version>1.0-beta5</version>
+    <version>1.0-beta6</version>
 
     <dependencies>
 
@@ -23,6 +23,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.2.10.v20150310</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

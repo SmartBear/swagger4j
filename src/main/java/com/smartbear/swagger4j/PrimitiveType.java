@@ -27,6 +27,7 @@ public enum PrimitiveType implements DataType {
     LONG(Type.INTEGER, Format.INT64),
     FLOAT(Type.NUMBER, Format.FLOAT),
     DOUBLE(Type.NUMBER, Format.DOUBLE),
+    NUMBER( Type.NUMBER, Format.UNDEFINED),
     STRING(Type.STRING, Format.UNDEFINED),
     BYTE(Type.STRING, Format.BYTE),
     BOOLEAN(Type.BOOLEAN, Format.UNDEFINED),

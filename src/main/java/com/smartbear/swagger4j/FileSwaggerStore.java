@@ -39,7 +39,6 @@ public class FileSwaggerStore implements SwaggerStore {
                 throw new IOException( "Failed to create path [" + path + "] for file storage");
     }
 
-    @Override
     public Writer createResource(String path) throws IOException {
 
         // make sure directory exists
@@ -52,7 +51,7 @@ public class FileSwaggerStore implements SwaggerStore {
         }
 
         File file = new File(this.path, path);
-        if( path.contains( "/api-docs.") || path.startsWith( "api-docs."))
+        if( path.equals( "/api-docs") || path.equals( "api-docs"))
             apiDocsPath = file.getAbsolutePath();
 
         return new FileWriter(file);

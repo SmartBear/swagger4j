@@ -41,19 +41,21 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
     private final static Logger logger = Logger.getLogger( SwaggerReaderImpl.class.getName() );
 
-    @Override
     public ResourceListing readResourceListing(URI uri) throws IOException {
         assert uri != null;
-
         return readResourceListing(new URISwaggerSource(uri));
     }
 
-    @Override
     public ResourceListing readResourceListing(SwaggerSource source) throws IOException {
         assert source != null;
 
         SwaggerParser parser = SwaggerParser.newParser(source.readResourceListing(), source.getFormat());
-        SwaggerVersion swaggerVersion = SwaggerVersion.fromIdentifier(parser.getString(Constants.SWAGGER_VERSION));
+        String versionString = parser.getString(Constants.SWAGGER_VERSION);
+        if( versionString == null ){
+            versionString = parser.getString(Constants.SWAGGER_V2_VERSION);
+        }
+
+        SwaggerVersion swaggerVersion = SwaggerVersion.fromIdentifier(versionString);
         Constants constants = Constants.get(swaggerVersion);
 
         // basePath was mandatory in V1.1
@@ -175,7 +177,6 @@ public class SwaggerReaderImpl implements SwaggerReader {
         info.setTitle( child.getString( constants.INFO_TITLE));
     }
 
-    @Override
     public ApiDeclaration readApiDeclaration(URI uri) throws IOException {
 
         assert uri != null : "uri can not be null";
@@ -389,11 +390,11 @@ public class SwaggerReaderImpl implements SwaggerReader {
             case BYTE:      // FALL THROUGH
             case DATE:      // FALL THROUGH
             case DATE_TIME: // FALL THROUGH
+            case NUMBER:
             case STRING:
                 return dataParser.getString(constants.DEFAULT_VALUE);
             default:
                 throw new AssertionError();
         }
     }
-
 }
