@@ -15,10 +15,7 @@
  */
 package com.smartbear.swagger4j;
 
-import com.smartbear.swagger4j.DataType;
-
 /**
- *
  * @author Yann D'Isanto
  */
 public enum PrimitiveType implements DataType {
@@ -167,27 +164,27 @@ public enum PrimitiveType implements DataType {
 
     public boolean isNumber() {
         // according to swagger specs byte is not a number but a string
-        return this == INTEGER 
-            || this == DOUBLE 
-            || this == LONG 
+        return this == INTEGER
+            || this == DOUBLE
+            || this == LONG
             || this == FLOAT;
     }
-    
+
     public boolean isTemporal() {
-        return this == DATE 
+        return this == DATE
             || this == DATE_TIME;
     }
-    
+
     /**
      * Gets the primitive type for the given type and format.
      *
-     * @param type the type
+     * @param type   the type
      * @param format the format
      * @return a PrimitiveType instance.
-     * @throws IllegalArgumentException if the specified type or format is
-     * invalid
+     * @throws IllegalArgumentException      if the specified type or format is
+     *                                       invalid
      * @throws UnsupportedOperationException if the type/format association is
-     * not supported
+     *                                       not supported
      */
     public static PrimitiveType get(String type, String format) throws IllegalArgumentException, UnsupportedOperationException {
         return get(Type.parse(type), Format.parse(format));
@@ -196,11 +193,11 @@ public enum PrimitiveType implements DataType {
     /**
      * Gets the primitive type for the given type and format.
      *
-     * @param type the type
+     * @param type   the type
      * @param format the format
      * @return a PrimitiveType instance.
      * @throws UnsupportedOperationException if the type/format association is
-     * not supported
+     *                                       not supported
      */
     public static PrimitiveType get(Type type, Format format) throws UnsupportedOperationException {
         for (PrimitiveType primitive : values()) {

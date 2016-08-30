@@ -8,7 +8,6 @@ import com.smartbear.swagger4j.Info;
  * @see com.smartbear.swagger4j.Info
  */
 
-
 public class InfoImpl implements Info {
     private String title;
     private String description;

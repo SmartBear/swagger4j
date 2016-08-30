@@ -18,7 +18,6 @@ package com.smartbear.swagger4j.impl;
 import com.smartbear.swagger4j.DataType;
 
 /**
- *
  * @author Yann D'Isanto
  */
 public final class ModelDataType implements DataType {
@@ -40,7 +39,7 @@ public final class ModelDataType implements DataType {
     public String getFormat() {
         return null;
     }
-    
+
     @Override
     public String toString() {
         return name;

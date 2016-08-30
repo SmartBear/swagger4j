@@ -1,22 +1,33 @@
 /**
- *  Copyright 2013 SmartBear Software, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright 2013 SmartBear Software, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.smartbear.swagger4j.impl;
 
-import com.smartbear.swagger4j.*;
+import com.smartbear.swagger4j.Api;
+import com.smartbear.swagger4j.ApiDeclaration;
+import com.smartbear.swagger4j.Authorizations;
+import com.smartbear.swagger4j.Info;
+import com.smartbear.swagger4j.Operation;
+import com.smartbear.swagger4j.Parameter;
+import com.smartbear.swagger4j.ResourceListing;
+import com.smartbear.swagger4j.ResponseMessage;
+import com.smartbear.swagger4j.SwaggerFormat;
+import com.smartbear.swagger4j.SwaggerStore;
+import com.smartbear.swagger4j.SwaggerVersion;
+import com.smartbear.swagger4j.SwaggerWriter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -38,7 +49,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
 
     @Override
     public void writeApiDeclaration(ApiDeclaration declaration, Writer writer) throws IOException {
-        SwaggerGenerator w = SwaggerGenerator.newGenerator( writer, format );
+        SwaggerGenerator w = SwaggerGenerator.newGenerator(writer, format);
 
         SwaggerVersion swaggerVersion = declaration.getSwaggerVersion();
         Constants constants = Constants.get(swaggerVersion);
@@ -47,15 +58,16 @@ public class SwaggerWriterImpl implements SwaggerWriter {
         w.addString(constants.BASE_PATH, declaration.getBasePath());
         w.addString(constants.RESOURCE_PATH, declaration.getResourcePath());
 
-        if( swaggerVersion.isGreaterThan( SwaggerVersion.V1_1 ) )
-        {
+        if (swaggerVersion.isGreaterThan(SwaggerVersion.V1_1)) {
             Collection<String> produces = declaration.getProduces();
-            if( !produces.isEmpty())
+            if (!produces.isEmpty()) {
                 w.addArray(constants.PRODUCES, produces.toArray(new String[produces.size()]));
+            }
 
             Collection<String> consumes = declaration.getConsumes();
-            if( !consumes.isEmpty())
+            if (!consumes.isEmpty()) {
                 w.addArray(constants.CONSUMES, consumes.toArray(new String[consumes.size()]));
+            }
         }
 
         for (Api api : declaration.getApis()) {
@@ -86,17 +98,20 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                     ew.addInt(constants.CODE, responseMessage.getCode());
                     ew.addString(constants.MESSAGE, responseMessage.getMessage());
 
-                    if( swaggerVersion.isGreaterThan( SwaggerVersion.V1_1 ))
-                        ew.addString( constants.RESPONSE_MODEL, responseMessage.getResponseModel() );
+                    if (swaggerVersion.isGreaterThan(SwaggerVersion.V1_1)) {
+                        ew.addString(constants.RESPONSE_MODEL, responseMessage.getResponseModel());
+                    }
                 }
 
                 Collection<String> produces = operation.getProduces();
-                if( !produces.isEmpty())
+                if (!produces.isEmpty()) {
                     ow.addArray(constants.PRODUCES, produces.toArray(new String[produces.size()]));
+                }
 
                 Collection<String> consumes = operation.getConsumes();
-                if( !consumes.isEmpty())
+                if (!consumes.isEmpty()) {
                     ow.addArray(constants.CONSUMES, consumes.toArray(new String[consumes.size()]));
+                }
             }
         }
 
@@ -105,7 +120,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
 
     @Override
     public void writeResourceListing(ResourceListing listing, Writer writer) throws IOException {
-        SwaggerGenerator w = SwaggerGenerator.newGenerator( writer, format );
+        SwaggerGenerator w = SwaggerGenerator.newGenerator(writer, format);
 
         Constants constants = Constants.get(listing.getSwaggerVersion());
         w.addString(constants.API_VERSION, listing.getApiVersion());
@@ -118,20 +133,18 @@ public class SwaggerWriterImpl implements SwaggerWriter {
             sw.addString(constants.PATH, api.getPath());
         }
 
-        if( listing.getSwaggerVersion().isGreaterThan( SwaggerVersion.V1_1 ))
-        {
+        if (listing.getSwaggerVersion().isGreaterThan(SwaggerVersion.V1_1)) {
             Info info = listing.getInfo();
             SwaggerGenerator sw = w.addObject(constants.INFO);
-            sw.addString( constants.INFO_TITLE, info.getTitle() );
-            sw.addString( constants.INFO_DESCRIPTION, info.getDescription() );
-            sw.addString( constants.INFO_TERMSOFSERVICEURL, info.getTermsOfServiceUrl() );
-            sw.addString( constants.INFO_CONTACT, info.getContact() );
-            sw.addString( constants.INFO_LICENSE, info.getLicense() );
-            sw.addString( constants.INFO_LICENSE_URL, info.getLicenseUrl() );
+            sw.addString(constants.INFO_TITLE, info.getTitle());
+            sw.addString(constants.INFO_DESCRIPTION, info.getDescription());
+            sw.addString(constants.INFO_TERMSOFSERVICEURL, info.getTermsOfServiceUrl());
+            sw.addString(constants.INFO_CONTACT, info.getContact());
+            sw.addString(constants.INFO_LICENSE, info.getLicense());
+            sw.addString(constants.INFO_LICENSE_URL, info.getLicenseUrl());
 
             Authorizations authorizations = listing.getAuthorizations();
-            if( authorizations != null && authorizations.getAuthorizations() != null && !authorizations.getAuthorizations().isEmpty())
-            {
+            if (authorizations != null && authorizations.getAuthorizations() != null && !authorizations.getAuthorizations().isEmpty()) {
                 writeAuthorizations(w, constants, authorizations);
             }
         }
@@ -141,64 +154,51 @@ public class SwaggerWriterImpl implements SwaggerWriter {
 
     private void writeAuthorizations(SwaggerGenerator w, Constants constants, Authorizations authorizations) {
         SwaggerGenerator sg = w.addObject(constants.AUTHORIZATIONS);
-        for( Authorizations.Authorization aut : authorizations.getAuthorizations())
-        {
-            if( aut.getType() == Authorizations.AuthorizationType.BASIC )
-            {
-                sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.BASIC_AUTH_TYPE );
-            }
-            else if( aut.getType() == Authorizations.AuthorizationType.API_KEY )
-            {
+        for (Authorizations.Authorization aut : authorizations.getAuthorizations()) {
+            if (aut.getType() == Authorizations.AuthorizationType.BASIC) {
+                sg.addObject(aut.getName()).addString(constants.AUTHORIZATION_TYPE, constants.BASIC_AUTH_TYPE);
+            } else if (aut.getType() == Authorizations.AuthorizationType.API_KEY) {
                 Authorizations.ApiKeyAuthorization aka = (Authorizations.ApiKeyAuthorization) aut;
-                if( hasContent( aka.getKeyName() ) && hasContent( aka.getPassAs() ))
-                {
-                    sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.API_KEY_TYPE ).
-                            addString(constants.API_KEY_KEY_NAME, aka.getKeyName()).
-                            addString( constants.API_KEY_PASS_AS, aka.getPassAs() );
+                if (hasContent(aka.getKeyName()) && hasContent(aka.getPassAs())) {
+                    sg.addObject(aut.getName()).addString(constants.AUTHORIZATION_TYPE, constants.API_KEY_TYPE).
+                        addString(constants.API_KEY_KEY_NAME, aka.getKeyName()).
+                        addString(constants.API_KEY_PASS_AS, aka.getPassAs());
                 }
-            }
-            else if( aut.getType() == Authorizations.AuthorizationType.OAUTH2 )
-            {
+            } else if (aut.getType() == Authorizations.AuthorizationType.OAUTH2) {
                 Authorizations.OAuth2Authorization oaa = (Authorizations.OAuth2Authorization) aut;
-                if( oaa.getAuthorizationCodeGrant() != null || oaa.getImplicitGrant() != null)
-                {
-                    sg = sg.addObject( aut.getName() ).addString( constants.AUTHORIZATION_TYPE, constants.API_KEY_TYPE );
-
+                if (oaa.getAuthorizationCodeGrant() != null || oaa.getImplicitGrant() != null) {
+                    sg = sg.addObject(aut.getName()).addString(constants.AUTHORIZATION_TYPE, constants.API_KEY_TYPE);
 
                     final Authorizations.OAuth2Authorization.Scope[] scopes = oaa.getScopes();
-                    if( scopes.length > 0 )
-                    {
-                        for( Authorizations.OAuth2Authorization.Scope s : scopes)
-                        {
+                    if (scopes.length > 0) {
+                        for (Authorizations.OAuth2Authorization.Scope s : scopes) {
                             SwaggerGenerator so = sg.addArrayObject(constants.OAUTH2_SCOPES);
-                            so.addString( constants.OAUTH2_SCOPE, s.getName() );
-                            so.addString( constants.OAUTH2_SCOPE_DESCRIPTION, s.getDescription() );
+                            so.addString(constants.OAUTH2_SCOPE, s.getName());
+                            so.addString(constants.OAUTH2_SCOPE_DESCRIPTION, s.getDescription());
                         }
                     }
 
-                    sg = sg.addObject( Constants.OAUTH2_GRANT_TYPES );
+                    sg = sg.addObject(Constants.OAUTH2_GRANT_TYPES);
                     Authorizations.OAuth2Authorization.ImplicitGrant ig = oaa.getImplicitGrant();
-                    if( ig != null )
-                    {
-                        sg.addObject( Constants.OAUTH2_IMPLICIT_GRANT ).
-                                addString( Constants.OAUTH2_IMPLICIT_TOKEN_NAME, ig.getTokenName() ).
-                                addObject( Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT ).
-                                    addString(Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT_URL, ig.getLoginEndpointUrl());
+                    if (ig != null) {
+                        sg.addObject(Constants.OAUTH2_IMPLICIT_GRANT).
+                            addString(Constants.OAUTH2_IMPLICIT_TOKEN_NAME, ig.getTokenName()).
+                            addObject(Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT).
+                            addString(Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT_URL, ig.getLoginEndpointUrl());
                     }
 
                     Authorizations.OAuth2Authorization.AuthorizationCodeGrant acg = oaa.getAuthorizationCodeGrant();
-                    if( acg != null )
-                    {
-                        sg = sg.addObject( Constants.OAUTH2_AUTHORIZATION_CODE_GRANT );
+                    if (acg != null) {
+                        sg = sg.addObject(Constants.OAUTH2_AUTHORIZATION_CODE_GRANT);
 
-                        sg.addObject( Constants.OAUTH2_AUTHORIZATION_GRANT_TOKEN_REQUEST_ENDPOINT ).
-                                addString( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_URL, acg.getTokenRequestEndpointUrl() ).
-                                addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_ID_NAME, acg.getClientIdName()).
-                                addString( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_SECRET_NAME, acg.getClientSecretName() );
+                        sg.addObject(Constants.OAUTH2_AUTHORIZATION_GRANT_TOKEN_REQUEST_ENDPOINT).
+                            addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_URL, acg.getTokenRequestEndpointUrl()).
+                            addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_ID_NAME, acg.getClientIdName()).
+                            addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_SECRET_NAME, acg.getClientSecretName());
 
-                        sg.addObject( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT ).
-                                addString( Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_URL, acg.getTokenEndpointUrl() ).
-                                addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_TOKEN_NAME, acg.getTokenName());
+                        sg.addObject(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT).
+                            addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_URL, acg.getTokenEndpointUrl()).
+                            addString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_TOKEN_NAME, acg.getTokenName());
                     }
                 }
             }
@@ -224,8 +224,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
         }
     }
 
-    private static boolean hasContent( String str )
-    {
-        return str != null && str.trim().length() > 0 ;
+    private static boolean hasContent(String str) {
+        return str != null && str.trim().length() > 0;
     }
 }

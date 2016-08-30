@@ -1,17 +1,17 @@
 /**
- *  Copyright 2013 SmartBear Software, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright 2013 SmartBear Software, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.smartbear.swagger4j.impl;
@@ -21,7 +21,12 @@ import com.smartbear.swagger4j.Operation;
 import com.smartbear.swagger4j.Parameter;
 import com.smartbear.swagger4j.ResponseMessage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Default implementation of the Operation interface
@@ -41,7 +46,7 @@ public class OperationImpl implements Operation {
     private final List<ResponseMessage> responseMessages = new ArrayList<ResponseMessage>();
     private Api api;
 
-    OperationImpl(Api api, String nickName, Method method ) {
+    OperationImpl(Api api, String nickName, Method method) {
         this.api = api;
         this.nickName = nickName;
         this.method = method;
@@ -101,8 +106,9 @@ public class OperationImpl implements Operation {
 
     @Override
     public Collection<String> getProduces() {
-        if (produces.isEmpty() && getApi() != null && getApi().getApiDeclaration() != null )
+        if (produces.isEmpty() && getApi() != null && getApi().getApiDeclaration() != null) {
             return getApi().getApiDeclaration().getProduces();
+        }
 
         return Collections.unmodifiableCollection(produces);
     }
@@ -121,8 +127,9 @@ public class OperationImpl implements Operation {
 
     @Override
     public Collection<String> getConsumes() {
-        if( consumes.isEmpty() && getApi() != null && getApi().getApiDeclaration() != null )
+        if (consumes.isEmpty() && getApi() != null && getApi().getApiDeclaration() != null) {
             return getApi().getApiDeclaration().getConsumes();
+        }
 
         return Collections.unmodifiableCollection(consumes);
     }
@@ -148,9 +155,11 @@ public class OperationImpl implements Operation {
         assert name != null : "parameter name can not be null";
 
         synchronized (parameterList) {
-            for (Parameter parameter : parameterList)
-                if (parameter.getName().equals(name))
+            for (Parameter parameter : parameterList) {
+                if (parameter.getName().equals(name)) {
                     return parameter;
+                }
+            }
 
             return null;
         }
@@ -192,9 +201,11 @@ public class OperationImpl implements Operation {
         assert code > 0 : "code can not be 0";
 
         synchronized (responseMessages) {
-            for (ResponseMessage responseMessage : responseMessages)
-                if (responseMessage.getCode() == code)
+            for (ResponseMessage responseMessage : responseMessages) {
+                if (responseMessage.getCode() == code) {
                     return responseMessage;
+                }
+            }
 
             return null;
         }

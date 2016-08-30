@@ -1,24 +1,34 @@
 /**
- *  Copyright 2013 SmartBear Software, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright 2013 SmartBear Software, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.smartbear.swagger4j.impl;
 
-import com.smartbear.swagger4j.*;
+import com.smartbear.swagger4j.Api;
+import com.smartbear.swagger4j.ApiDeclaration;
+import com.smartbear.swagger4j.Model;
+import com.smartbear.swagger4j.SwaggerVersion;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Default implementation of the ApiDeclaration interface
@@ -38,7 +48,7 @@ public class ApiDeclarationImpl implements ApiDeclaration {
 
     private final Map<String, Model> models = new HashMap<String, Model>();
 
-    ApiDeclarationImpl( String basePath, String resourcePath ) {
+    ApiDeclarationImpl(String basePath, String resourcePath) {
         this.basePath = basePath;
         this.resourcePath = resourcePath;
     }
@@ -109,7 +119,7 @@ public class ApiDeclarationImpl implements ApiDeclaration {
         assert getApi(path) == null : "Api already exists at path [" + path + "]";
 
         synchronized (apiList) {
-            ApiImpl api = new ApiImpl(this,path);
+            ApiImpl api = new ApiImpl(this, path);
             apiList.add(api);
             return api;
         }
@@ -120,9 +130,11 @@ public class ApiDeclarationImpl implements ApiDeclaration {
         assert path != null : "api path can not be null";
 
         synchronized (apiList) {
-            for (Api api : apiList)
-                if (api.getPath().equals(path))
+            for (Api api : apiList) {
+                if (api.getPath().equals(path)) {
                     return api;
+                }
+            }
 
             return null;
         }

@@ -3,7 +3,6 @@ package com.smartbear.swagger4j.impl;
 import com.smartbear.swagger4j.Authorizations;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,9 +20,11 @@ public class AuthorizationsImpl implements Authorizations {
 
         List<Authorization> result = new ArrayList<Authorization>();
 
-        for (Authorization a : authorizations)
-            if (a.getType() == type)
+        for (Authorization a : authorizations) {
+            if (a.getType() == type) {
                 result.add(a);
+            }
+        }
 
         return result;
     }
@@ -48,8 +49,9 @@ public class AuthorizationsImpl implements Authorizations {
                 break;
         }
 
-        if (authorization != null)
+        if (authorization != null) {
             authorizations.add(authorization);
+        }
 
         return authorization;
     }

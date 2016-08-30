@@ -16,7 +16,6 @@
 package com.smartbear.swagger4j.impl;
 
 /**
- *
  * @author Yann D'Isanto
  */
 public final class NamedDataArrayType extends ArrayType {

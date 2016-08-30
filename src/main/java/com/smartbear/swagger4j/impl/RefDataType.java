@@ -18,7 +18,6 @@ package com.smartbear.swagger4j.impl;
 import com.smartbear.swagger4j.DataType;
 
 /**
- *
  * @author Yann D'Isanto
  */
 public final class RefDataType implements DataType {

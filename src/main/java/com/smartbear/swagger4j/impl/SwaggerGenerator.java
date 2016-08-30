@@ -1,30 +1,31 @@
 /**
- *  Copyright 2013 SmartBear Software, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright 2013 SmartBear Software, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.smartbear.swagger4j.impl;
 
 import com.smartbear.swagger4j.SwaggerFormat;
-import com.smartbear.swagger4j.impl.Utils.MapSwaggerStore;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javax.json.*;
-import javax.json.stream.JsonGenerator;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonWriterFactory;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -105,8 +106,8 @@ public abstract class SwaggerGenerator {
     public static class SwaggerJsonGenerator extends SwaggerGenerator {
         private final JsonObjectBuilder builder;
         private Writer writer;
-        private Map<String,SwaggerJsonGenerator> objects;
-        private Map<String,List<SwaggerJsonGenerator>> arrayObjects;
+        private Map<String, SwaggerJsonGenerator> objects;
+        private Map<String, List<SwaggerJsonGenerator>> arrayObjects;
 
         public SwaggerJsonGenerator(Writer writer) {
             this.writer = writer;
@@ -121,42 +122,37 @@ public abstract class SwaggerGenerator {
         public SwaggerGenerator addString(String name, String value) {
             assert name != null;
 
-            if (value != null)
+            if (value != null) {
                 builder.add(name, value);
+            }
 
             return this;
         }
 
-        JsonObjectBuilder getObjectBuilder()
-        {
+        JsonObjectBuilder getObjectBuilder() {
             return builder;
         }
 
         @Override
         public void finish() throws IOException {
-            if( arrayObjects != null )
-            {
-                for( String name : arrayObjects.keySet() )
-                {
+            if (arrayObjects != null) {
+                for (String name : arrayObjects.keySet()) {
                     JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
-                    for( SwaggerJsonGenerator w : arrayObjects.get(name))
-                    {
+                    for (SwaggerJsonGenerator w : arrayObjects.get(name)) {
                         w.finish();
-                        arrayBuilder.add( w.getObjectBuilder() );
+                        arrayBuilder.add(w.getObjectBuilder());
                     }
 
-                    builder.add( name, arrayBuilder );
+                    builder.add(name, arrayBuilder);
                 }
             }
 
-            if( objects != null )
-            {
-                for( String name : objects.keySet())
-                {
+            if (objects != null) {
+                for (String name : objects.keySet()) {
                     SwaggerJsonGenerator w = objects.get(name);
                     w.finish();
-                    builder.add( name, w.getObjectBuilder());
+                    builder.add(name, w.getObjectBuilder());
                 }
             }
 
@@ -172,10 +168,11 @@ public abstract class SwaggerGenerator {
 
         @Override
         public SwaggerGenerator addObject(String name) {
-            if( objects == null )
+            if (objects == null) {
                 objects = new HashMap<String, SwaggerJsonGenerator>();
+            }
 
-            SwaggerJsonGenerator result = new SwaggerJsonGenerator( Json.createObjectBuilder());
+            SwaggerJsonGenerator result = new SwaggerJsonGenerator(Json.createObjectBuilder());
             objects.put(name, result);
 
             return result;
@@ -185,14 +182,12 @@ public abstract class SwaggerGenerator {
         public SwaggerGenerator addArrayObject(String name) {
             assert name != null;
 
-            if( arrayObjects == null )
-            {
+            if (arrayObjects == null) {
                 arrayObjects = new HashMap<String, List<SwaggerJsonGenerator>>();
             }
 
-            if( !arrayObjects.containsKey(name))
-            {
-                arrayObjects.put( name, new ArrayList<SwaggerJsonGenerator>());
+            if (!arrayObjects.containsKey(name)) {
+                arrayObjects.put(name, new ArrayList<SwaggerJsonGenerator>());
             }
 
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
@@ -219,8 +214,9 @@ public abstract class SwaggerGenerator {
             assert name != null && values != null;
 
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-            for (String v : values)
+            for (String v : values) {
                 arrayBuilder.add(v);
+            }
             builder.add(name, arrayBuilder);
 
             return this;
@@ -264,8 +260,9 @@ public abstract class SwaggerGenerator {
 
         @Override
         public void finish() throws IOException {
-            if (writer == null)
+            if (writer == null) {
                 throw new RuntimeException("finish can only be called on root writer");
+            }
 
             try {
                 Document document = elm.getOwnerDocument();
@@ -281,7 +278,7 @@ public abstract class SwaggerGenerator {
 
         @Override
         public SwaggerGenerator addObject(String name) {
-            return addArrayObject( name );
+            return addArrayObject(name);
         }
 
         @Override
@@ -306,8 +303,9 @@ public abstract class SwaggerGenerator {
 
         @Override
         public SwaggerGenerator addArray(String name, String[] values) {
-            for (String v : values)
+            for (String v : values) {
                 addString(name, v);
+            }
 
             return this;
         }

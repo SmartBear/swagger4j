@@ -1,17 +1,17 @@
 /**
- *  Copyright 2013 SmartBear Software, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright 2013 SmartBear Software, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.smartbear.swagger4j.impl;
@@ -20,7 +20,9 @@ import com.smartbear.swagger4j.Api;
 import com.smartbear.swagger4j.ApiDeclaration;
 import com.smartbear.swagger4j.Operation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Default implementation of the Api interface
@@ -36,7 +38,7 @@ public class ApiImpl implements Api {
 
     ApiImpl(ApiDeclaration apiDeclaration, String path) {
         this.apiDeclaration = apiDeclaration;
-        setPath( path );
+        setPath(path);
     }
 
     @Override
@@ -64,11 +66,12 @@ public class ApiImpl implements Api {
     public Operation getOperation(String nickName) {
         assert nickName != null : "nickName can not be null";
 
-        synchronized (operations)
-        {
-            for( Operation operation : operations )
-                if( operation.getNickName().equals(nickName))
+        synchronized (operations) {
+            for (Operation operation : operations) {
+                if (operation.getNickName().equals(nickName)) {
                     return operation;
+                }
+            }
         }
 
         return null;
@@ -90,17 +93,16 @@ public class ApiImpl implements Api {
     @Override
     public Operation addOperation(String nickName, Operation.Method method) {
         assert nickName != null && method != null : "operation can not be null and must have a nickname";
-        assert getOperation(nickName ) == null : "operation with nickName [" + nickName + "] already exists";
+        assert getOperation(nickName) == null : "operation with nickName [" + nickName + "] already exists";
 
         synchronized (operations) {
             OperationImpl result = new OperationImpl(this, nickName, method);
-            operations.add( result );
+            operations.add(result);
             return result;
         }
     }
 
-    public ApiDeclaration getApiDeclaration()
-    {
+    public ApiDeclaration getApiDeclaration() {
         return apiDeclaration;
     }
 }

@@ -1,7 +1,6 @@
 package com.smartbear.swagger4j;
 
-public enum SwaggerFormat
-{
+public enum SwaggerFormat {
     xml, json;
 
     public String getExtension() {

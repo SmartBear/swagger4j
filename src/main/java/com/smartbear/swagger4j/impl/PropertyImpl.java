@@ -17,10 +17,10 @@ package com.smartbear.swagger4j.impl;
 
 import com.smartbear.swagger4j.DataType;
 import com.smartbear.swagger4j.Property;
+
 import java.util.List;
 
 /**
- *
  * @author Yann D'Isanto
  */
 public final class PropertyImpl implements Property {

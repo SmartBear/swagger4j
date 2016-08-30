@@ -18,11 +18,10 @@ package com.smartbear.swagger4j.impl;
 import com.smartbear.swagger4j.DataType;
 
 /**
- *
  * @author Yann D'Isanto
  */
 public abstract class ArrayType implements DataType {
-    
+
     @Override
     public final boolean isArray() {
         return true;

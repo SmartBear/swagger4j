@@ -15,14 +15,14 @@
  */
 package com.smartbear.swagger4j.impl;
 
-import java.util.Collections;
+import com.smartbear.swagger4j.DataType;
 import com.smartbear.swagger4j.Model;
 import com.smartbear.swagger4j.Property;
+
+import java.util.Collections;
 import java.util.List;
-import com.smartbear.swagger4j.DataType;
 
 /**
- *
  * @author Yann D'Isanto
  */
 public class ModelImpl implements Model {
@@ -30,7 +30,7 @@ public class ModelImpl implements Model {
     private String id;
 
     private final DataType dataType;
-    
+
     private String description;
 
     private List<String> requiredProperties;
@@ -95,7 +95,6 @@ public class ModelImpl implements Model {
         return null;
     }
 
-    
     public Number getMinimum() {
         return null;
     }

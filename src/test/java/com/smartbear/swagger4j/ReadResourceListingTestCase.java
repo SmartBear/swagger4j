@@ -16,10 +16,8 @@
 
 package com.smartbear.swagger4j;
 
-import com.smartbear.swagger4j.impl.Constants;
 import junit.framework.TestCase;
 
-import java.io.File;
 import java.net.URI;
 import java.util.List;
 
@@ -92,12 +90,6 @@ public class ReadResourceListingTestCase extends TestCase {
 
     public void testOnlinePetStoreSwagger() throws Exception
     {
-        Swagger.createReader().readResourceListing(new URI("http://petstore.swagger.wordnik.com/api/api-docs"));
+        Swagger.createReader().readResourceListing(new URI("http://petstore.swagger.io/v2/swagger.json"));
     }
-
-    public void testOnlineLuciernaSwagger() throws Exception
-    {
-        Swagger.createReader().readResourceListing(new URI("http://antorcha.smartp.qasoftwareplanner.com:8080/antorcha-restapi/doc/api-docs"));
-    }
-
 }

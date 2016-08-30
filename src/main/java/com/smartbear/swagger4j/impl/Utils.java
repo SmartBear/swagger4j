@@ -1,17 +1,17 @@
 /**
- *  Copyright 2013 SmartBear Software, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright 2013 SmartBear Software, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.smartbear.swagger4j.impl;
@@ -54,9 +54,8 @@ public class Utils {
      * @see SwaggerStore
      */
 
-    public static class MapSwaggerStore implements SwaggerStore
-    {
-        final Map<String,StringWriter> files = new HashMap<String, StringWriter>();
+    public static class MapSwaggerStore implements SwaggerStore {
+        final Map<String, StringWriter> files = new HashMap<String, StringWriter>();
 
         @Override
         public Writer createResource(String path) throws IOException {
@@ -65,7 +64,7 @@ public class Utils {
             return writer;
         }
 
-        public Map<String,StringWriter> getFileMap() {
+        public Map<String, StringWriter> getFileMap() {
             return files;
         }
     }
@@ -76,15 +75,14 @@ public class Utils {
      * @see SwaggerStore
      */
 
-    public static class ConsoleSwaggerStore implements SwaggerStore
-    {
+    public static class ConsoleSwaggerStore implements SwaggerStore {
         @Override
         public Writer createResource(String path) {
-            System.out.println( "\nCreating file [" + path + "]");
+            System.out.println("\nCreating file [" + path + "]");
             return new OutputStreamWriter(System.out);
         }
     }
-    
+
     /**
      * Utility class to get finer data type parsing.
      */
@@ -103,11 +101,11 @@ public class Utils {
         public Boolean getBoolean(String name) {
             return parser.getBoolean(name);
         }
-        
+
         public String getString(String name) {
             return parser.getString(name);
         }
-        
+
         public Integer getInteger(String name) {
             Number number = parser.getNumber(name);
             return number != null ? number.intValue() : null;

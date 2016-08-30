@@ -18,7 +18,6 @@ package com.smartbear.swagger4j.impl;
 import com.smartbear.swagger4j.PrimitiveType;
 
 /**
- *
  * @author Yann D'Isanto
  */
 public final class PrimitiveArrayType extends ArrayType {
@@ -48,7 +47,7 @@ public final class PrimitiveArrayType extends ArrayType {
             .append(']')
             .toString();
     }
-    
+
     @Override
     public boolean isPrimitive() {
         return true;
@@ -58,7 +57,7 @@ public final class PrimitiveArrayType extends ArrayType {
     public boolean isRef() {
         return false;
     }
-    
+
     public boolean isInteger() {
         return itemsType.isInteger();
     }
@@ -94,5 +93,5 @@ public final class PrimitiveArrayType extends ArrayType {
     public boolean isDateTime() {
         return itemsType.isDateTime();
     }
-    
+
 }

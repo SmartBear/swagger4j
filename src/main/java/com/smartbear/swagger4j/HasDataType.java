@@ -3,7 +3,6 @@ package com.smartbear.swagger4j;
 import java.util.List;
 
 /**
- *
  * @author Yann D'Isanto
  */
 public interface HasDataType {
@@ -13,7 +12,7 @@ public interface HasDataType {
     DataType getDataType();
 
     Object getDefaultValue();
-    
+
     /**
      * @return a fixed list of possible values.
      */

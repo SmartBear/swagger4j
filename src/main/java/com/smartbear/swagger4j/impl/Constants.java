@@ -76,7 +76,7 @@ public class Constants {
     public static final String MINIMUM = "minimum";
     public static final String MAXIMUM = "maximum";
     public static final String DEFAULT_VALUE = "defaultValue";
-    
+
     public String METHOD = "method";
     public String TYPE = "type";
     public String MESSAGE = "message";
@@ -86,22 +86,21 @@ public class Constants {
     public static final Constants V1_1 = new V1_1Constants();
     public static final Constants V1_2 = new Constants();
 
-    public static Constants get(SwaggerVersion version)
-    {
-        switch (version)
-        {
-            case V1_0: return V1_1;
-            case V1_1: return V1_1;
-            case V1_2: return V1_2;
+    public static Constants get(SwaggerVersion version) {
+        switch (version) {
+            case V1_0:
+                return V1_1;
+            case V1_1:
+                return V1_1;
+            case V1_2:
+                return V1_2;
         }
 
-        throw new RuntimeException( "Unknown Swagger version: " + version );
+        throw new RuntimeException("Unknown Swagger version: " + version);
     }
 
-    private static class V1_1Constants extends Constants
-    {
-        public V1_1Constants()
-        {
+    private static class V1_1Constants extends Constants {
+        public V1_1Constants() {
             METHOD = "httpMethod";
             MESSAGE = "reason";
             RESPONSE_MESSAGES = "errorResponses";

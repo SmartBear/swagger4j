@@ -1,17 +1,17 @@
 /**
- *  Copyright 2013 SmartBear Software, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright 2013 SmartBear Software, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.smartbear.swagger4j;
@@ -34,9 +34,11 @@ public class FileSwaggerStore implements SwaggerStore {
         this.path = path;
 
         File file = new File(path);
-        if (!file.exists())
-            if( !file.mkdirs())
-                throw new IOException( "Failed to create path [" + path + "] for file storage");
+        if (!file.exists()) {
+            if (!file.mkdirs()) {
+                throw new IOException("Failed to create path [" + path + "] for file storage");
+            }
+        }
     }
 
     @Override
@@ -46,14 +48,17 @@ public class FileSwaggerStore implements SwaggerStore {
         if (path.indexOf('/') > 0) {
             String nm = path.substring(0, path.lastIndexOf('/'));
             File f = new File(nm, this.path);
-            if (!f.exists() || !f.isDirectory())
-                if( !f.mkdirs())
-                    throw new IOException( "Failed to create path [" + path + "] for file storage");
+            if (!f.exists() || !f.isDirectory()) {
+                if (!f.mkdirs()) {
+                    throw new IOException("Failed to create path [" + path + "] for file storage");
+                }
+            }
         }
 
         File file = new File(this.path, path);
-        if( path.contains( "/api-docs.") || path.startsWith( "api-docs."))
+        if (path.contains("/api-docs.") || path.startsWith("api-docs.")) {
             apiDocsPath = file.getAbsolutePath();
+        }
 
         return new FileWriter(file);
     }
@@ -68,9 +73,9 @@ public class FileSwaggerStore implements SwaggerStore {
         return apiDocsPath;
     }
 
-    public static String writeSwagger( String path, ResourceListing resourceListing, SwaggerFormat format ) throws IOException {
+    public static String writeSwagger(String path, ResourceListing resourceListing, SwaggerFormat format) throws IOException {
         FileSwaggerStore store = new FileSwaggerStore(path);
-        Swagger.createWriter( format ).writeSwagger( store, resourceListing );
+        Swagger.createWriter(format).writeSwagger(store, resourceListing);
         return store.getApiDocsPath();
     }
 }

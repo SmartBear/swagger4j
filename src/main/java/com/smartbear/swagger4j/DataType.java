@@ -1,7 +1,6 @@
 package com.smartbear.swagger4j;
 
 /**
- *
  * @author Yann D'Isanto
  */
 public interface DataType {

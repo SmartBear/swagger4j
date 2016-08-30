@@ -1,22 +1,27 @@
 /**
- *  Copyright 2013 SmartBear Software, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright 2013 SmartBear Software, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.smartbear.swagger4j.impl;
 
-import com.smartbear.swagger4j.*;
+import com.smartbear.swagger4j.ApiDeclaration;
+import com.smartbear.swagger4j.Authorizations;
+import com.smartbear.swagger4j.Info;
+import com.smartbear.swagger4j.Model;
+import com.smartbear.swagger4j.ResourceListing;
+import com.smartbear.swagger4j.SwaggerVersion;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -94,16 +99,17 @@ public class ResourceListingImpl implements ResourceListing {
 
     @Override
     public Info getInfo() {
-        if( info == null )
+        if (info == null) {
             info = new InfoImpl();
+        }
 
         return info;
     }
 
-    public Authorizations getAuthorizations()
-    {
-        if( authorizations == null )
+    public Authorizations getAuthorizations() {
+        if (authorizations == null) {
             authorizations = new AuthorizationsImpl();
+        }
 
         return authorizations;
     }
@@ -111,8 +117,9 @@ public class ResourceListingImpl implements ResourceListing {
     private ResourceListingApi getApi(String path) {
         synchronized (apiList) {
             for (ResourceListingApi api : apiList) {
-                if (api.getPath().equals(path))
+                if (api.getPath().equals(path)) {
                     return api;
+                }
             }
 
             return null;

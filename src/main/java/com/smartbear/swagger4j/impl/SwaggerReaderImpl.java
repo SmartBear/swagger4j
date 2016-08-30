@@ -1,23 +1,37 @@
 /**
- *  Copyright 2013 SmartBear Software, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright 2013 SmartBear Software, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.smartbear.swagger4j.impl;
 
+import com.smartbear.swagger4j.Api;
+import com.smartbear.swagger4j.ApiDeclaration;
+import com.smartbear.swagger4j.Authorizations;
+import com.smartbear.swagger4j.DataType;
+import com.smartbear.swagger4j.Info;
+import com.smartbear.swagger4j.Model;
+import com.smartbear.swagger4j.Operation;
+import com.smartbear.swagger4j.Parameter;
 import com.smartbear.swagger4j.PrimitiveType;
-import com.smartbear.swagger4j.*;
+import com.smartbear.swagger4j.Property;
+import com.smartbear.swagger4j.ResourceListing;
+import com.smartbear.swagger4j.SwaggerFormat;
+import com.smartbear.swagger4j.SwaggerReader;
+import com.smartbear.swagger4j.SwaggerSource;
+import com.smartbear.swagger4j.SwaggerVersion;
+import com.smartbear.swagger4j.URISwaggerSource;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,9 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.smartbear.swagger4j.DataType;
-import com.smartbear.swagger4j.Model;
-import com.smartbear.swagger4j.Property;
 
 /**
  * Default SwaggerReader implementation
@@ -39,16 +50,14 @@ import com.smartbear.swagger4j.Property;
 
 public class SwaggerReaderImpl implements SwaggerReader {
 
-    private final static Logger logger = Logger.getLogger( SwaggerReaderImpl.class.getName() );
+    private final static Logger logger = Logger.getLogger(SwaggerReaderImpl.class.getName());
 
-    @Override
     public ResourceListing readResourceListing(URI uri) throws IOException {
         assert uri != null;
 
         return readResourceListing(new URISwaggerSource(uri));
     }
 
-    @Override
     public ResourceListing readResourceListing(SwaggerSource source) throws IOException {
         assert source != null;
 
@@ -60,29 +69,29 @@ public class SwaggerReaderImpl implements SwaggerReader {
         String basePath = parser.getString(constants.BASE_PATH);
 
         ResourceListingImpl resourceListing = new ResourceListingImpl(swaggerVersion);
-        resourceListing.setBasePath( basePath );
-        resourceListing.setApiVersion(parser.getString(constants.API_VERSION));
+        resourceListing.setBasePath(basePath);
+        String apiVersion = parser.getString(constants.API_VERSION);
+        if (apiVersion != null) {
+            resourceListing.setApiVersion(apiVersion);
+        }
         resourceListing.setSwaggerVersion(swaggerVersion);
 
-        for (SwaggerParser node  :parser.getChildren(constants.APIS))
-        {
+        for (SwaggerParser node : parser.getChildren(constants.APIS)) {
             String path = node.getString(constants.PATH);
-            Reader reader = source.readApiDeclaration( basePath, path);
+            Reader reader = source.readApiDeclaration(basePath, path);
 
             ApiDeclaration apiDeclaration = readApiDeclaration(reader, source.getFormat());
             ResourceListing.ResourceListingApi api = resourceListing.addApi(apiDeclaration, path);
             api.setDescription(node.getString(constants.DESCRIPTION));
         }
 
-        SwaggerParser child = parser.getChild( constants.INFO);
-        if( child != null )
-        {
+        SwaggerParser child = parser.getChild(constants.INFO);
+        if (child != null) {
             readResourceListingInfo(constants, resourceListing, child);
         }
 
-        child = parser.getChild( constants.AUTHORIZATIONS);
-        if( child != null )
-        {
+        child = parser.getChild(constants.AUTHORIZATIONS);
+        if (child != null) {
             readAuthorizations(resourceListing, child);
         }
 
@@ -90,76 +99,63 @@ public class SwaggerReaderImpl implements SwaggerReader {
     }
 
     private void readAuthorizations(ResourceListingImpl resourceListing, SwaggerParser child) {
-        String [] names = child.getChildNames();
-        if( names!= null)
-        {
-            for( String name : names )
-            {
+        String[] names = child.getChildNames();
+        if (names != null) {
+            for (String name : names) {
                 SwaggerParser auth = child.getChild(name);
                 String type = auth.getString(Constants.AUTHORIZATION_TYPE);
-                if( type.equals(Constants.OAUTH_2_TYPE))
-                {
+                if (type.equals(Constants.OAUTH_2_TYPE)) {
                     readOAuth2Authorization(resourceListing, name, auth);
-                }
-                else if( type.equals(Constants.API_KEY_TYPE))
-                {
-                    Authorizations.ApiKeyAuthorization apiKey = (Authorizations.ApiKeyAuthorization) resourceListing.getAuthorizations().addAuthorization( name, Authorizations.AuthorizationType.API_KEY );
-                    apiKey.setKeyName( auth.getString(Constants.API_KEY_KEY_NAME));
-                    apiKey.setPassAs( auth.getString(Constants.API_KEY_PASS_AS));
+                } else if (type.equals(Constants.API_KEY_TYPE)) {
+                    Authorizations.ApiKeyAuthorization apiKey = (Authorizations.ApiKeyAuthorization) resourceListing.getAuthorizations().addAuthorization(name, Authorizations.AuthorizationType.API_KEY);
+                    apiKey.setKeyName(auth.getString(Constants.API_KEY_KEY_NAME));
+                    apiKey.setPassAs(auth.getString(Constants.API_KEY_PASS_AS));
 
+                } else if (type.equals(Constants.BASIC_AUTH_TYPE)) {
+                    resourceListing.getAuthorizations().addAuthorization(name, Authorizations.AuthorizationType.BASIC);
                 }
-                else if( type.equals(Constants.BASIC_AUTH_TYPE))
-                {
-                    resourceListing.getAuthorizations().addAuthorization( name, Authorizations.AuthorizationType.BASIC );
             }
         }
     }
-    }
 
     private void readOAuth2Authorization(ResourceListingImpl resourceListing, String name, SwaggerParser auth) {
-        Authorizations.OAuth2Authorization oauth = (Authorizations.OAuth2Authorization) resourceListing.getAuthorizations().addAuthorization( name, Authorizations.AuthorizationType.OAUTH2 );
+        Authorizations.OAuth2Authorization oauth = (Authorizations.OAuth2Authorization) resourceListing.getAuthorizations().addAuthorization(name, Authorizations.AuthorizationType.OAUTH2);
 
         List<SwaggerParser> scopes = auth.getChildren(Constants.OAUTH2_SCOPES);
-        if( scopes != null && !scopes.isEmpty() )
-        {
-            for( SwaggerParser p : scopes )
-            {
-                oauth.addScope( p.getString( Constants.OAUTH2_SCOPE ), p.getString( Constants.OAUTH2_SCOPE_DESCRIPTION ));
+        if (scopes != null && !scopes.isEmpty()) {
+            for (SwaggerParser p : scopes) {
+                oauth.addScope(p.getString(Constants.OAUTH2_SCOPE), p.getString(Constants.OAUTH2_SCOPE_DESCRIPTION));
             }
         }
 
         SwaggerParser grants = auth.getChild(Constants.OAUTH2_GRANT_TYPES);
-        if( grants != null )
-        {
+        if (grants != null) {
             SwaggerParser implicitGrant = grants.getChild(Constants.OAUTH2_IMPLICIT_GRANT);
-            if( implicitGrant != null )
-            {
+            if (implicitGrant != null) {
                 Authorizations.OAuth2Authorization.ImplicitGrant ig = oauth.getImplicitGrant();
-                if( implicitGrant.getChild(Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT) != null )
-                    ig.setLoginEndpoint( implicitGrant.getChild(Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT).getString(Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT_URL));
+                if (implicitGrant.getChild(Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT) != null) {
+                    ig.setLoginEndpoint(implicitGrant.getChild(Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT).getString(Constants.OAUTH2_IMPLICIT_LOGIN_ENDPOINT_URL));
+                }
 
-                ig.setTokenName( implicitGrant.getString(Constants.OAUTH2_IMPLICIT_TOKEN_NAME));
+                ig.setTokenName(implicitGrant.getString(Constants.OAUTH2_IMPLICIT_TOKEN_NAME));
             }
 
             SwaggerParser ac = grants.getChild(Constants.OAUTH2_AUTHORIZATION_CODE_GRANT);
-            if( ac != null )
-            {
+            if (ac != null) {
                 Authorizations.OAuth2Authorization.AuthorizationCodeGrant acg = oauth.getAuthorizationCodeGrant();
                 SwaggerParser tre = ac.getChild(Constants.OAUTH2_AUTHORIZATION_GRANT_TOKEN_REQUEST_ENDPOINT);
 
-                if( tre != null )
-                {
-                    acg.setTokenRequestEndpoint( tre.getString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_URL));
+                if (tre != null) {
+                    acg.setTokenRequestEndpoint(tre.getString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_URL));
                     acg.setClientIdName(tre.getString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_ID_NAME));
-                    acg.setClientSecretName( tre.getString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_SECRET_NAME));
+                    acg.setClientSecretName(tre.getString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_REQUEST_ENDPOINT_CLIENT_SECRET_NAME));
 
                 }
 
                 SwaggerParser te = ac.getChild(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT);
-                if( te != null )
-                {
-                    acg.setTokenEndpoint( te.getString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_URL));
-                    acg.setTokenName( te.getString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_TOKEN_NAME));
+                if (te != null) {
+                    acg.setTokenEndpoint(te.getString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_URL));
+                    acg.setTokenName(te.getString(Constants.OAUTH2_AUTHORIZATION_CODE_TOKEN_ENDPOINT_TOKEN_NAME));
                 }
             }
         }
@@ -167,15 +163,14 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
     private void readResourceListingInfo(Constants constants, ResourceListingImpl resourceListing, SwaggerParser child) {
         Info info = resourceListing.getInfo();
-        info.setContact( child.getString( constants.INFO_CONTACT));
-        info.setDescription( child.getString( constants.INFO_DESCRIPTION ));
-        info.setLicense( child.getString( constants.INFO_LICENSE ));
-        info.setLicenseUrl( child.getString( constants.INFO_LICENSE_URL ));
-        info.setTermsOfServiceUrl( child.getString(constants.INFO_TERMSOFSERVICEURL));
-        info.setTitle( child.getString( constants.INFO_TITLE));
+        info.setContact(child.getString(constants.INFO_CONTACT));
+        info.setDescription(child.getString(constants.INFO_DESCRIPTION));
+        info.setLicense(child.getString(constants.INFO_LICENSE));
+        info.setLicenseUrl(child.getString(constants.INFO_LICENSE_URL));
+        info.setTermsOfServiceUrl(child.getString(constants.INFO_TERMSOFSERVICEURL));
+        info.setTitle(child.getString(constants.INFO_TITLE));
     }
 
-    @Override
     public ApiDeclaration readApiDeclaration(URI uri) throws IOException {
 
         assert uri != null : "uri can not be null";
@@ -197,7 +192,10 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
         ApiDeclaration apiDeclaration = new ApiDeclarationImpl(basePath, resourcePath);
         apiDeclaration.setSwaggerVersion(swaggerVersion);
-        apiDeclaration.setApiVersion(parser.getString(constants.API_VERSION));
+        String apiVersion = parser.getString(constants.API_VERSION);
+        if (apiVersion != null) {
+            apiDeclaration.setApiVersion(apiVersion);
+        }
 
         for (String produces : parser.getArray(constants.PRODUCES)) {
             apiDeclaration.addProduces(produces);
@@ -210,27 +208,20 @@ public class SwaggerReaderImpl implements SwaggerReader {
         for (SwaggerParser apiNode : parser.getChildren(constants.APIS)) {
             String apiPath = apiNode.getString(constants.PATH);
 
-            if( apiDeclaration.getApi( apiPath ) != null )
-            {
-                logger.log( Level.INFO, "Skipping duplicate API at path [" + apiPath +
-                        "] in ApiDeclaration at [" + basePath + resourcePath + "]");
-            }
-            else
-            {
+            if (apiDeclaration.getApi(apiPath) != null) {
+                logger.log(Level.INFO, "Skipping duplicate API at path [" + apiPath +
+                    "] in ApiDeclaration at [" + basePath + resourcePath + "]");
+            } else {
                 Api api = apiDeclaration.addApi(apiPath);
                 api.setDescription(apiNode.getString(constants.DESCRIPTION));
 
-                for( SwaggerParser opNode : apiNode.getChildren( constants.OPERATIONS ))
-                {
+                for (SwaggerParser opNode : apiNode.getChildren(constants.OPERATIONS)) {
                     String nickName = opNode.getString(constants.NICKNAME);
-                    if( api.getOperation(nickName ) != null )
-                    {
-                        logger.log( Level.INFO, "Skipping duplicate Operation with nickName [" +
-                                nickName + "] in API at path [" + apiPath +
-                                "] in ApiDeclaration at [" + basePath + resourcePath + "]");
-                    }
-                    else
-                    {
+                    if (api.getOperation(nickName) != null) {
+                        logger.log(Level.INFO, "Skipping duplicate Operation with nickName [" +
+                            nickName + "] in API at path [" + apiPath +
+                            "] in ApiDeclaration at [" + basePath + resourcePath + "]");
+                    } else {
                         readOperation(constants, api, opNode, nickName);
                     }
                 }
@@ -254,9 +245,10 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
     private void readOperation(Constants constants, Api api, SwaggerParser opNode, String nickName) {
 
-        String method = opNode.getString( constants.METHOD );
-        if( method == null )
-            method = opNode.getString( constants.HTTP_METHOD ) ;
+        String method = opNode.getString(constants.METHOD);
+        if (method == null) {
+            method = opNode.getString(constants.HTTP_METHOD);
+        }
 
         Operation operation = api.addOperation(nickName,
             Operation.Method.valueOf(method.toUpperCase()));
@@ -275,11 +267,9 @@ public class SwaggerReaderImpl implements SwaggerReader {
                 parameter.setDescription(parameterNode.getString(constants.DESCRIPTION));
                 parameter.setRequired(parameterNode.getBoolean(constants.REQUIRED));
                 parameter.setType(parameterNode.getString(constants.TYPE));
+            } catch (Exception e) {
+                Swagger4jExceptionHandler.get().onException(e);
             }
-            catch( Exception e )
-            {
-                Swagger4jExceptionHandler.get().onException( e );
-        }
         }
 
         for (SwaggerParser responseMessage : opNode.getChildren(constants.RESPONSE_MESSAGES)) {

@@ -1,17 +1,17 @@
 /**
- *  Copyright 2013 SmartBear Software, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright 2013 SmartBear Software, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.smartbear.swagger4j;
@@ -39,12 +39,12 @@ public class URISwaggerSource implements SwaggerSource {
         assert uri != null && path != null && format != null;
 
         String base = uri.toString();
-        if (base.contains("?"))
+        if (base.contains("?")) {
             base = base.substring(0, base.indexOf('?'));
+        }
 
         path = path.replaceAll("\\{format\\}", format.getExtension());
-        if (path.startsWith("/"))
-        {
+        if (path.startsWith("/")) {
             base = base.substring(0, base.lastIndexOf('/'));
         }
 
@@ -55,12 +55,13 @@ public class URISwaggerSource implements SwaggerSource {
         String path = uri.getPath() == null ? uri.toString() : uri.getPath().toLowerCase();
         SwaggerFormat format = SwaggerFormat.json;
 
-        if (path.endsWith(".xml"))
+        if (path.endsWith(".xml")) {
             format = SwaggerFormat.xml;
-        else if (path.endsWith(".json"))
+        } else if (path.endsWith(".json")) {
             format = SwaggerFormat.json;
-        else if (path.contains(".xml/"))
+        } else if (path.contains(".xml/")) {
             format = SwaggerFormat.xml;
+        }
 
         return format;
     }
@@ -77,36 +78,35 @@ public class URISwaggerSource implements SwaggerSource {
             path = path.replaceAll("\\{format\\}", getFormat().getExtension());
 
             // absolute path?
-            if( path.toLowerCase().startsWith( "http://" ) || path.toLowerCase().startsWith( "https://") ||
-                    path.toLowerCase().startsWith( "file:" ))
-            {
+            if (path.toLowerCase().startsWith("http://") || path.toLowerCase().startsWith("https://") ||
+                path.toLowerCase().startsWith("file:")) {
                 basePath = "";
-            }
-            else {
+            } else {
 
                 if (basePath == null) {
                     basePath = uri.toString();
                 } else if (!basePath.toLowerCase().startsWith("file:") && !basePath.contains("://")) {
                     String uriString = uri.toString();
-                    if (basePath.equals("."))
+                    if (basePath.equals(".")) {
                         basePath = "";
+                    }
 
                     // find index to which the uriString should be used; depends on if the basePath is
                     // absolute or relative.
                     int ix = basePath.startsWith("/") ?
-                            uriString.indexOf("/", uriString.indexOf(":") +
-                                    (uriString.startsWith("file:") ? 1 : 4)) :
-                            uriString.lastIndexOf("/");
+                        uriString.indexOf("/", uriString.indexOf(":") +
+                            (uriString.startsWith("file:") ? 1 : 4)) :
+                        uriString.lastIndexOf("/");
 
                     basePath = uriString.substring(0, ix) + basePath;
                 }
             }
 
-            URI uri = new URI( basePath + path );
+            URI uri = new URI(basePath + path);
 
-            return new InputStreamReader( uri.toURL().openStream());
+            return new InputStreamReader(uri.toURL().openStream());
         } catch (URISyntaxException e) {
-            throw new IOException( e );
+            throw new IOException(e);
         }
     }
 
