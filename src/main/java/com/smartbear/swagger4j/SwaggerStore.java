@@ -28,6 +28,7 @@ public interface SwaggerStore {
 
     /**
      * Create a resource with the specified path
+     *
      * @param path the path of the resource to create
      * @return a Writer to which the resource can be written
      * @throws IOException

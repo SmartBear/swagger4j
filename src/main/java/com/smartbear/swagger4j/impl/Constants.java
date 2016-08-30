@@ -89,14 +89,16 @@ public class Constants {
     public static final Constants V1_2 = new Constants();
     public static final Constants V2_0 = new Constants();
 
-    public static Constants get(SwaggerVersion version)
-    {
-        switch (version)
-        {
-            case V1_0: return V1_1;
-            case V1_1: return V1_1;
-            case V1_2: return V1_2;
-            case V2_0: return V2_0;
+    public static Constants get(SwaggerVersion version) {
+        switch (version) {
+            case V1_0:
+                return V1_1;
+            case V1_1:
+                return V1_1;
+            case V1_2:
+                return V1_2;
+            case V2_0:
+                return V2_0;
         }
 
         throw new RuntimeException("Unknown Swagger version: " + version);

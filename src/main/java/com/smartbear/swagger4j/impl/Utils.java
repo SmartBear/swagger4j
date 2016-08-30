@@ -35,7 +35,7 @@ public class Utils {
     /**
      * Method for creating a filename from a path - replaces format references and adds the extension.
      *
-     * @param path the path to fix
+     * @param path   the path to fix
      * @param format the format to use
      * @return the created fileName
      */

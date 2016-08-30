@@ -35,7 +35,7 @@ public interface SwaggerFactory {
     /**
      * Creates an empty ApiDeclaration with the specified basePath and resourcePath
      *
-     * @param basePath used to resolve API paths defined in this declaration
+     * @param basePath     used to resolve API paths defined in this declaration
      * @param resourcePath path to the actual resource described in the declaration
      * @return an empty ApiDeclaration
      */
@@ -52,6 +52,7 @@ public interface SwaggerFactory {
 
     /**
      * Creates a SwaggerWriter for the specified format
+     *
      * @param format the format to use when writing, either json or xml
      * @return a SwaggerWriter
      */

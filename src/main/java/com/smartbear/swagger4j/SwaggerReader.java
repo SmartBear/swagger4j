@@ -32,7 +32,6 @@ public interface SwaggerReader {
      *
      * @param uri the URI of the starting api-docs document (with either json or xml extension)
      * @return the created ResourceListing
-     *
      * @throws IOException
      */
 

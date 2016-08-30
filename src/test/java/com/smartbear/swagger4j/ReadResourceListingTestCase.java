@@ -16,13 +16,10 @@
 
 package com.smartbear.swagger4j;
 
-import com.smartbear.swagger4j.impl.Constants;
 import junit.framework.TestCase;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 
-import java.io.File;
 import java.net.URI;
 import java.util.List;
 
@@ -98,18 +95,17 @@ public class ReadResourceListingTestCase extends TestCase {
         Swagger.createReader().readResourceListing(new URI("http://petstore.swagger.io/v2/swagger.json"));
     }
 
-    public void testExtendedSwaggerDefinition() throws Exception
-    {
+    public void testExtendedSwaggerDefinition() throws Exception {
         Server server = new Server(8080);
 
         ResourceHandler handler = new ResourceHandler();
         handler.setResourceBase("src/test/resources/v1_2/swaggerDefinition");
 
-        server.setHandler( handler );
+        server.setHandler(handler);
         server.start();
 
         String url = "http://localhost:8080/resourceList.json";
-        Swagger.createReader().readResourceListing( URI.create( url ));
+        Swagger.createReader().readResourceListing(URI.create(url));
     }
 
 }

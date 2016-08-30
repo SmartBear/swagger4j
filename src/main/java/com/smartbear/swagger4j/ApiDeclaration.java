@@ -47,9 +47,8 @@ public interface ApiDeclaration {
     /**
      * Gets a list of APIs for this ApiDeclarations
      *
-     * @see Api
-     *
      * @return a list of Api objects
+     * @see Api
      */
 
     public List<Api> getApis();
@@ -57,9 +56,8 @@ public interface ApiDeclaration {
     /**
      * Removes the specified Api from this ApiDeclaration
      *
-     * @see Api
-     *
      * @param api the Api to remove
+     * @see Api
      */
 
     public void removeApi(Api api);
@@ -67,10 +65,9 @@ public interface ApiDeclaration {
     /**
      * Adds a new API to this ApiDeclaration with the specified path
      *
-     * @see Api
-     *
      * @param path the path for the API to add
      * @return the created API
+     * @see Api
      */
 
     public Api addApi(String path);
@@ -78,10 +75,9 @@ public interface ApiDeclaration {
     /**
      * Gets the API at the specified path
      *
-     * @see Api
-     *
      * @param path the path to the API
      * @return the API at that path, null if none available
+     * @see Api
      */
 
     public Api getApi(String path);

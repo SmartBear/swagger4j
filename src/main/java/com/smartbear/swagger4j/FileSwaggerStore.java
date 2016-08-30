@@ -55,8 +55,9 @@ public class FileSwaggerStore implements SwaggerStore {
         }
 
         File file = new File(this.path, path);
-        if( path.equals( "/api-docs") || path.equals( "api-docs"))
+        if (path.equals("/api-docs") || path.equals("api-docs")) {
             apiDocsPath = file.getAbsolutePath();
+        }
 
         return new FileWriter(file);
     }

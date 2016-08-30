@@ -46,6 +46,7 @@ public interface ResourceListing {
 
     /**
      * Concatenates then returns the models of all APIs.
+     *
      * @return a Model collection.
      */
     public Collection<Model> getApisModels();

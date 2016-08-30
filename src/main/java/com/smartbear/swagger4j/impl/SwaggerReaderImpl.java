@@ -62,7 +62,7 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
         SwaggerParser parser = SwaggerParser.newParser(source.readResourceListing(), source.getFormat());
         String versionString = parser.getString(Constants.SWAGGER_VERSION);
-        if( versionString == null ){
+        if (versionString == null) {
             versionString = parser.getString(Constants.SWAGGER_V2_VERSION);
         }
 
@@ -221,6 +221,11 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
                 for (SwaggerParser opNode : apiNode.getChildren(constants.OPERATIONS)) {
                     String nickName = opNode.getString(constants.NICKNAME);
+                    if (nickName == null) {
+                        logger.log(Level.INFO, "Missing nickname in operation - using method instead");
+                        nickName = getOperationMethod(constants, opNode);
+                    }
+
                     if (api.getOperation(nickName) != null) {
                         logger.log(Level.INFO, "Skipping duplicate Operation with nickName [" +
                             nickName + "] in API at path [" + apiPath +
@@ -228,23 +233,6 @@ public class SwaggerReaderImpl implements SwaggerReader {
                     } else {
                         readOperation(constants, api, opNode, nickName);
                     }
-            for( SwaggerParser opNode : apiNode.getChildren( constants.OPERATIONS ))
-            {
-                String nickName = opNode.getString(constants.NICKNAME);
-                if( nickName == null ){
-                    logger.log( Level.INFO, "Missing nickname in operation - using method instead");
-                    nickName = getOperationMethod( constants, opNode );
-                }
-
-                if( api.getOperation(nickName ) != null )
-                {
-                    logger.log( Level.INFO, "Skipping duplicate Operation with nickName [" +
-                            nickName + "] in API at path [" + apiPath +
-                            "] in ApiDeclaration at [" + basePath + resourcePath + "]");
-                }
-                else
-                {
-                    readOperation(constants, api, opNode, nickName);
                 }
             }
         }
@@ -306,9 +294,10 @@ public class SwaggerReaderImpl implements SwaggerReader {
     }
 
     private String getOperationMethod(Constants constants, SwaggerParser opNode) {
-        String method = opNode.getString( constants.METHOD );
-        if( method == null )
-            method = opNode.getString( constants.HTTP_METHOD ) ;
+        String method = opNode.getString(constants.METHOD);
+        if (method == null) {
+            method = opNode.getString(constants.HTTP_METHOD);
+        }
         return method;
     }
 

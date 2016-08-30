@@ -51,7 +51,7 @@ public class Swagger {
     /**
      * Creates an empty ApiDeclaration with the specified basePath and resourcePath
      *
-     * @param basePath used to resolve API paths defined in this declaration
+     * @param basePath     used to resolve API paths defined in this declaration
      * @param resourcePath path to the actual resource described in the declaration
      * @return an empty ApiDeclaration
      */
@@ -85,7 +85,7 @@ public class Swagger {
      * Writes the specified Swagger ResourceListing to the specified local path in json format. Uses the default SwaggerWriter
      *
      * @param resourceListing the resourceListing to write
-     * @param path path to an existing folder where the api-docs and api declarations will be written
+     * @param path            path to an existing folder where the api-docs and api declarations will be written
      * @throws IOException
      */
 
@@ -98,8 +98,8 @@ public class Swagger {
      * Uses the default SwaggerWriter
      *
      * @param resourceListing the resourceListing to write
-     * @param path path to an existing folder where the api-docs and api declarations will be written
-     * @param format the format to use; either json or xml
+     * @param path            path to an existing folder where the api-docs and api declarations will be written
+     * @param format          the format to use; either json or xml
      * @throws IOException
      */
 

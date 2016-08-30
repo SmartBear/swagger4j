@@ -39,10 +39,8 @@ public interface SwaggerSource {
      * Gets a Reader for an API Declaration with the specified path. Generally this path will be taken from
      * the path of containing Resource Listings API
      *
-     *
-     *
      * @param basePath
-     * @param path the path of the API Declaration
+     * @param path     the path of the API Declaration
      * @return a Reader for the API Declaration
      * @throws IOException
      */

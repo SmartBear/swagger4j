@@ -29,7 +29,7 @@ public interface SwaggerWriter {
      * Writes the specified ApiDeclaration to the specified Writer in the configured format
      *
      * @param declaration the declaration to write
-     * @param writer the writer to write to
+     * @param writer      the writer to write to
      * @throws IOException
      */
 
@@ -39,7 +39,7 @@ public interface SwaggerWriter {
      * Writes the specified ResourceListing to the specified Writer in the configured format
      *
      * @param listing the listing to write
-     * @param writer the writer to write to
+     * @param writer  the writer to write to
      * @throws IOException
      */
 
@@ -57,7 +57,7 @@ public interface SwaggerWriter {
      * Writes an entire Swagger definition (both ResourceListing and referred ApiDeclarations) to a generic
      * SwaggerStore
      *
-     * @param store the SwaggerStore to write to
+     * @param store           the SwaggerStore to write to
      * @param resourceListing the ResourceListing to write
      * @throws IOException
      */
