@@ -99,12 +99,12 @@ public class ReadResourceListingTestCase extends TestCase {
         Server server = new Server(8080);
 
         ResourceHandler handler = new ResourceHandler();
-        handler.setResourceBase("src/test/resources/v1_2/swaggerDefinition");
+        handler.setResourceBase("src/test/resources/v1_2");
 
         server.setHandler(handler);
         server.start();
 
-        String url = "http://localhost:8080/resourceList.json";
+        String url = "http://localhost:8080/api-docs.json";
         Swagger.createReader().readResourceListing(URI.create(url));
     }
 

@@ -19,9 +19,12 @@ package com.smartbear.swagger4j.impl;
 import com.smartbear.swagger4j.Api;
 import com.smartbear.swagger4j.ApiDeclaration;
 import com.smartbear.swagger4j.Authorizations;
+import com.smartbear.swagger4j.DataType;
 import com.smartbear.swagger4j.Info;
+import com.smartbear.swagger4j.Model;
 import com.smartbear.swagger4j.Operation;
 import com.smartbear.swagger4j.Parameter;
+import com.smartbear.swagger4j.Property;
 import com.smartbear.swagger4j.ResourceListing;
 import com.smartbear.swagger4j.ResponseMessage;
 import com.smartbear.swagger4j.SwaggerFormat;
@@ -48,7 +51,6 @@ public class SwaggerWriterImpl implements SwaggerWriter {
         this.format = format;
     }
 
-    @Override
     public void writeApiDeclaration(ApiDeclaration declaration, Writer writer) throws IOException {
         SwaggerGenerator w = SwaggerGenerator.newGenerator(writer, format);
 
@@ -144,8 +146,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                 for (Property property : properties) {
                     SwaggerGenerator prop = props.addObject(property.getName());
 
-                    if (property.getDescription() != null && !property.getDescription()
-                        .isEmpty()) {
+                    if (property.getDescription() != null && property.getDescription().trim().length() > 0) {
                         prop.addString(constants.DESCRIPTION,
                             property.getDescription());
                     }
@@ -168,7 +169,7 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                         prop.addString(constants.TYPE, dataType.getType());
                     }
 
-                    if (dataType.getFormat() != null && !dataType.getFormat().isEmpty()) {
+                    if (dataType.getFormat() != null && dataType.getFormat().trim().length() > 0) {
                         prop.addString(constants.FORMAT, dataType.getFormat());
                     }
 
@@ -199,7 +200,6 @@ public class SwaggerWriterImpl implements SwaggerWriter {
         w.finish();
     }
 
-    @Override
     public void writeResourceListing(ResourceListing listing, Writer writer) throws IOException {
         SwaggerGenerator w = SwaggerGenerator.newGenerator(writer, format);
 
@@ -286,12 +286,10 @@ public class SwaggerWriterImpl implements SwaggerWriter {
         }
     }
 
-    @Override
     public SwaggerFormat getFormat() {
         return format;
     }
 
-    @Override
     public void writeSwagger(SwaggerStore store, ResourceListing resourceListing) throws IOException {
         Writer writer = store.createResource("api-docs");
         writeResourceListing(resourceListing, writer);
