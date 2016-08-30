@@ -9,6 +9,8 @@ import com.smartbear.swagger4j.SwaggerVersion;
 public class Constants {
 
     public static final String SWAGGER_VERSION = "swaggerVersion";
+    public static final String SWAGGER_V2_VERSION = "swagger";
+
     public static final String API_DOCUMENTATION = "ApiDocumentation";
     public static final String AUTHORIZATIONS = "authorizations";
     public static final String AUTHORIZATION_TYPE = "type";
@@ -85,15 +87,16 @@ public class Constants {
 
     public static final Constants V1_1 = new V1_1Constants();
     public static final Constants V1_2 = new Constants();
+    public static final Constants V2_0 = new Constants();
 
-    public static Constants get(SwaggerVersion version) {
-        switch (version) {
-            case V1_0:
-                return V1_1;
-            case V1_1:
-                return V1_1;
-            case V1_2:
-                return V1_2;
+    public static Constants get(SwaggerVersion version)
+    {
+        switch (version)
+        {
+            case V1_0: return V1_1;
+            case V1_1: return V1_1;
+            case V1_2: return V1_2;
+            case V2_0: return V2_0;
         }
 
         throw new RuntimeException("Unknown Swagger version: " + version);

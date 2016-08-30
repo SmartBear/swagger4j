@@ -1,12 +1,13 @@
 ## swagger4j
 
-A simple java library for reading and writing [Swagger definitions](https://github.com/wordnik/swagger-core/wiki). Supports both JSON and XML formats. The current version is
+A simple java library for reading and writing [Swagger 1.X definitions](https://swagger.io). Supports both JSON and XML formats. The current version is
 reasonably in line with the latest swagger core release except that it doesn't support any of the JSON Schema/Data Model constructs yet. Apache 2.0 licensed.
+
+If you're interested in reading Swagger 2.0 definitions you're better off using the official [swagger-parser](https://github.com/swagger-api/swagger-parser)
 
 ### Getting started
 
-Download the prebuilt jar of the latest version from sourceforge ([https://sourceforge.net/projects/swagger4j/files](https://sourceforge.net/projects/swagger4j/files))
-or check it out from GitHub and build it yourself with maven (with "mvn install"). 
+Clone this repo from GitHub and build it yourself with maven (with "mvn install"). 
 
 The latest version is also available in the SmartBear maven repository at soapui.org, add this to your pom with
 
@@ -25,7 +26,7 @@ and add the corresponding dependency:
 <dependency>
     <groupId>com.smartbear</groupId>
     <artifactId>swagger4j</artifactId>
-    <version>1.0-beta2</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -95,10 +96,7 @@ URI.
 
 ### Future improvements
 
-* Support for DataModels / DataTypes
-* Support for sending API requests based on Swagger Operations
-* Format detection based on file content instead of extension
-* Anything else you might come up with!
+* None planned at this point!
 
 ### Release History
 
@@ -106,3 +104,4 @@ URI.
 * 20131119 - beta2 release, adds support for Swagger 1.2 and 1.0
 * 20140505 - beta3 bugfixes
 * 20140512 - beta4 more bugfixes
+* 20151029 - 1.0.0 release - more bugfixes

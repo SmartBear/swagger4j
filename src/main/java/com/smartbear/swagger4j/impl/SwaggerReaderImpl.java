@@ -54,7 +54,6 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
     public ResourceListing readResourceListing(URI uri) throws IOException {
         assert uri != null;
-
         return readResourceListing(new URISwaggerSource(uri));
     }
 
@@ -62,7 +61,12 @@ public class SwaggerReaderImpl implements SwaggerReader {
         assert source != null;
 
         SwaggerParser parser = SwaggerParser.newParser(source.readResourceListing(), source.getFormat());
-        SwaggerVersion swaggerVersion = SwaggerVersion.fromIdentifier(parser.getString(Constants.SWAGGER_VERSION));
+        String versionString = parser.getString(Constants.SWAGGER_VERSION);
+        if( versionString == null ){
+            versionString = parser.getString(Constants.SWAGGER_V2_VERSION);
+        }
+
+        SwaggerVersion swaggerVersion = SwaggerVersion.fromIdentifier(versionString);
         Constants constants = Constants.get(swaggerVersion);
 
         // basePath was mandatory in V1.1
@@ -224,6 +228,23 @@ public class SwaggerReaderImpl implements SwaggerReader {
                     } else {
                         readOperation(constants, api, opNode, nickName);
                     }
+            for( SwaggerParser opNode : apiNode.getChildren( constants.OPERATIONS ))
+            {
+                String nickName = opNode.getString(constants.NICKNAME);
+                if( nickName == null ){
+                    logger.log( Level.INFO, "Missing nickname in operation - using method instead");
+                    nickName = getOperationMethod( constants, opNode );
+                }
+
+                if( api.getOperation(nickName ) != null )
+                {
+                    logger.log( Level.INFO, "Skipping duplicate Operation with nickName [" +
+                            nickName + "] in API at path [" + apiPath +
+                            "] in ApiDeclaration at [" + basePath + resourcePath + "]");
+                }
+                else
+                {
+                    readOperation(constants, api, opNode, nickName);
                 }
             }
         }
@@ -245,10 +266,7 @@ public class SwaggerReaderImpl implements SwaggerReader {
 
     private void readOperation(Constants constants, Api api, SwaggerParser opNode, String nickName) {
 
-        String method = opNode.getString(constants.METHOD);
-        if (method == null) {
-            method = opNode.getString(constants.HTTP_METHOD);
-        }
+        String method = getOperationMethod(constants, opNode);
 
         Operation operation = api.addOperation(nickName,
             Operation.Method.valueOf(method.toUpperCase()));
@@ -285,6 +303,13 @@ public class SwaggerReaderImpl implements SwaggerReader {
         for (String consumes : opNode.getArray(constants.CONSUMES)) {
             operation.addConsumes(consumes);
         }
+    }
+
+    private String getOperationMethod(Constants constants, SwaggerParser opNode) {
+        String method = opNode.getString( constants.METHOD );
+        if( method == null )
+            method = opNode.getString( constants.HTTP_METHOD ) ;
+        return method;
     }
 
     private Model readModel(Constants constants, SwaggerParser modelNode) {
@@ -370,11 +395,11 @@ public class SwaggerReaderImpl implements SwaggerReader {
             case BYTE:      // FALL THROUGH
             case DATE:      // FALL THROUGH
             case DATE_TIME: // FALL THROUGH
+            case NUMBER:
             case STRING:
                 return dataParser.getString(constants.DEFAULT_VALUE);
             default:
                 throw new AssertionError();
         }
     }
-
 }

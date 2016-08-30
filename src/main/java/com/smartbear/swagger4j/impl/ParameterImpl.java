@@ -37,65 +37,53 @@ public class ParameterImpl implements Parameter {
         this.paramType = type;
     }
 
-    @Override
     public ParamType getParamType() {
         return paramType;
     }
 
-    @Override
     public void setParamType(ParamType paramType) {
         assert paramType != null : "paramType can not be null";
 
         this.paramType = paramType;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public void setName(String name) {
         assert name != null : "parameter name can not be null";
         this.name = name;
     }
 
-    @Override
     public String getDescription() {
         return description;
     }
 
-    @Override
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @Override
     public boolean isRequired() {
         return paramType == ParamType.path || required;
     }
 
-    @Override
     public void setRequired(boolean required) {
         this.required = required;
     }
 
-    @Override
     public String getType() {
         return type;
     }
 
-    @Override
     public void setType(String type) {
         this.type = type;
     }
 
-    @Override
     public boolean isAllowMultiple() {
         return allowMultiple;
     }
 
-    @Override
     public void setAllowMultiple(boolean multiple) {
         this.allowMultiple = multiple;
     }

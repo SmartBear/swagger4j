@@ -31,7 +31,10 @@ import com.smartbear.swagger4j.SwaggerWriter;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Default implementation of the SwaggerWriter interface
@@ -111,6 +114,86 @@ public class SwaggerWriterImpl implements SwaggerWriter {
                 Collection<String> consumes = operation.getConsumes();
                 if (!consumes.isEmpty()) {
                     ow.addArray(constants.CONSUMES, consumes.toArray(new String[consumes.size()]));
+                }
+            }
+        }
+
+        SwaggerGenerator models = w.addObject(Constants.MODELS);
+        
+        for (Model model : declaration.getModels()) {
+            SwaggerGenerator mw = models.addObject(model.getName());
+            
+            mw.addString(constants.ID, model.getId());
+            mw.addString(constants.DESCRIPTION, model.getDescription());
+            
+            List<String> requiredProperties = model.getRequiredProperties();
+            
+            if (requiredProperties != null) {
+                mw.addArray(constants.REQUIRED, requiredProperties.toArray(
+                    new String[]{}));
+            }
+            
+            if (model.getRequiredProperties() != null) {
+                mw.addArray(constants.REQUIRED, 
+                            model.getRequiredProperties().toArray(new String[model.getRequiredProperties().size()]));
+            }
+
+            List<Property> properties = model.getProperties();
+
+            if (properties != null) {
+                SwaggerGenerator props = mw.addObject(constants.PROPERTIES);
+
+                for (Property property : properties) {
+                    SwaggerGenerator prop = props.addObject(property.getName());
+
+                    if (property.getDescription() != null && !property.getDescription()
+                                                                      .isEmpty()) {
+                        prop.addString(constants.DESCRIPTION,
+                            property.getDescription());
+                    }
+                    
+                    DataType dataType = property.getDataType();
+
+                    if (dataType == null) {
+                        continue;
+                    }
+                    
+                    if (dataType.isArray()) {
+                        prop.addString(constants.TYPE, "array");
+                        prop =  prop.addObject(constants.ITEMS);
+                        
+                    } 
+
+                    if (dataType.isRef()) {
+                        prop.addString("$ref", dataType.getRef());
+                    } else {
+                        prop.addString(constants.TYPE, dataType.getType());
+                    }
+                    
+                    if (dataType.getFormat() != null && !dataType.getFormat().isEmpty()) {
+                        prop.addString(constants.FORMAT, dataType.getFormat());
+                    }
+                    
+                    if (property.getMinimum() != null) {
+                        prop.addString(constants.MINIMUM, property.getMinimum()
+                                                                .toString());
+                    }
+                    
+                    if (property.getMaximum() != null) {
+                        prop.addString(constants.MAXIMUM, property.getMaximum()
+                                                                .toString());
+                    }
+                    
+                    if (property.getEnumValues() != null && !property.getEnumValues().isEmpty()) {
+                        prop.addArray(constants.ENUM, property.getEnumValues()
+                                                            .toArray(
+                                                                new String[property.getEnumValues()
+                                                                                   .size()]));
+                    }
+                    
+                    if (property.getDefaultValue() != null) {
+                        prop.addString(constants.DEFAULT_VALUE, property.getDefaultValue() .toString());
+                    }
                 }
             }
         }

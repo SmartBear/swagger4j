@@ -57,7 +57,7 @@ public class SwaggerWriterTestCase extends TestCase {
         MapSwaggerStore store = new MapSwaggerStore();
         ResourceListing resourceListing = createResourceListingForCreationTesting(store, SwaggerFormat.json);
 
-        String json = store.getFileMap().get("api-docs.json").toString();
+        String json = store.getFileMap().get("api-docs").toString();
         assertTrue(json.length() > 0);
 
         JsonReader reader = Json.createReader(new StringReader(json));
@@ -118,7 +118,7 @@ public class SwaggerWriterTestCase extends TestCase {
         MapSwaggerStore store = new MapSwaggerStore();
         ResourceListing resourceListing = createResourceListingForCreationTesting(store, SwaggerFormat.xml);
 
-        String xml = store.getFileMap().get("api-docs.xml").toString();
+        String xml = store.getFileMap().get("api-docs").toString();
         assertTrue(xml.length() > 0);
 
         Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource( new StringReader(xml)));
@@ -154,13 +154,13 @@ public class SwaggerWriterTestCase extends TestCase {
         swaggerWriter.writeSwagger(store, resourceListing);
 
         assertEquals(3, store.getFileMap().size());
-        assertTrue(store.getFileMap().containsKey("api-docs.xml"));
+        assertTrue(store.getFileMap().containsKey("api-docs"));
 
         swaggerWriter = factory.createSwaggerWriter(SwaggerFormat.json);
         swaggerWriter.writeSwagger(store, resourceListing);
 
-        assertEquals(6, store.getFileMap().size());
-        assertTrue(store.getFileMap().containsKey("api-docs.json"));
+        assertEquals(5, store.getFileMap().size());
+        assertTrue(store.getFileMap().containsKey("api-docs"));
 
         return store;
     }
