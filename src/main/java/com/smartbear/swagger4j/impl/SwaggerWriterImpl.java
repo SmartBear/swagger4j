@@ -206,7 +206,6 @@ public class SwaggerWriterImpl implements SwaggerWriter {
         Constants constants = Constants.get(listing.getSwaggerVersion());
         w.addString(constants.API_VERSION, listing.getApiVersion());
         w.addString(Constants.SWAGGER_VERSION, listing.getSwaggerVersion().getIdentifier());
-        w.addString(constants.BASE_PATH, listing.getBasePath());
 
         for (ResourceListing.ResourceListingApi api : listing.getApis()) {
             SwaggerGenerator sw = w.addArrayObject(constants.APIS);
