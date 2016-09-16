@@ -44,4 +44,8 @@ public enum SwaggerVersion {
     public boolean isGreaterThan(SwaggerVersion version) {
         return version.getIdentifier().compareTo(getIdentifier()) < 0;
     }
+
+    public boolean isLessThan(SwaggerVersion version) {
+        return version.getIdentifier().compareTo(getIdentifier()) > 0;
+    }
 }
