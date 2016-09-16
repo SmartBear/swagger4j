@@ -57,7 +57,7 @@ public class SwaggerWriterTestCase extends TestCase {
         MapSwaggerStore store = new MapSwaggerStore();
         ResourceListing resourceListing = createResourceListingForCreationTesting(store, SwaggerFormat.json);
 
-        String json = store.getFileMap().get("api-docs").toString();
+        String json = store.getFileMap().get("api-docs.json").toString();
         assertTrue(json.length() > 0);
 
         JsonReader reader = Json.createReader(new StringReader(json));
@@ -66,7 +66,7 @@ public class SwaggerWriterTestCase extends TestCase {
 
         System.out.println( json );
 
-        json = store.getFileMap().get("/user.json").toString();
+        json = store.getFileMap().get("api-docs/user.json").toString();
         System.out.println("Created: " + json);
         reader = Json.createReader(new StringReader(json));
         JsonObject object = reader.readObject();
@@ -118,7 +118,7 @@ public class SwaggerWriterTestCase extends TestCase {
         MapSwaggerStore store = new MapSwaggerStore();
         ResourceListing resourceListing = createResourceListingForCreationTesting(store, SwaggerFormat.xml);
 
-        String xml = store.getFileMap().get("api-docs").toString();
+        String xml = store.getFileMap().get("api-docs.xml").toString();
         assertTrue(xml.length() > 0);
 
         Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource( new StringReader(xml)));
@@ -128,7 +128,7 @@ public class SwaggerWriterTestCase extends TestCase {
         SwaggerVersion swaggerVersion = resourceListing.getSwaggerVersion();
         assertEquals(swaggerVersion.getIdentifier(), elm.getTextContent());
 
-        xml = store.getFileMap().get("/user.xml").toString();
+        xml = store.getFileMap().get("api-docs/user.xml").toString();
         document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(xml)));
         documentElement = document.getDocumentElement();
         assertEquals(Constants.API_DOCUMENTATION, documentElement.getNodeName());
@@ -154,13 +154,13 @@ public class SwaggerWriterTestCase extends TestCase {
         swaggerWriter.writeSwagger(store, resourceListing);
 
         assertEquals(3, store.getFileMap().size());
-        assertTrue(store.getFileMap().containsKey("api-docs"));
+        assertTrue(store.getFileMap().containsKey("api-docs.xml"));
 
         swaggerWriter = factory.createSwaggerWriter(SwaggerFormat.json);
         swaggerWriter.writeSwagger(store, resourceListing);
 
-        assertEquals(5, store.getFileMap().size());
-        assertTrue(store.getFileMap().containsKey("api-docs"));
+        assertEquals(6, store.getFileMap().size());
+        assertTrue(store.getFileMap().containsKey("api-docs.json"));
 
         return store;
     }

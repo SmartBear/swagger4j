@@ -46,7 +46,7 @@ public class FileSwaggerStore implements SwaggerStore {
         // make sure directory exists
         if (path.indexOf('/') > 0) {
             String nm = path.substring(0, path.lastIndexOf('/'));
-            File f = new File(nm, this.path);
+            File f = new File(this.path, nm);
             if (!f.exists() || !f.isDirectory()) {
                 if (!f.mkdirs()) {
                     throw new IOException("Failed to create path [" + path + "] for file storage");
@@ -55,7 +55,7 @@ public class FileSwaggerStore implements SwaggerStore {
         }
 
         File file = new File(this.path, path);
-        if (path.equals("/api-docs") || path.equals("api-docs")) {
+        if (path.startsWith("/api-docs.") || path.startsWith("api-docs.")) {
             apiDocsPath = file.getAbsolutePath();
         }
 

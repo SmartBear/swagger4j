@@ -293,12 +293,12 @@ public class SwaggerWriterImpl implements SwaggerWriter {
     }
 
     public void writeSwagger(SwaggerStore store, ResourceListing resourceListing) throws IOException {
-        Writer writer = store.createResource("api-docs");
+        Writer writer = store.createResource("api-docs." + format.getExtension());
         writeResourceListing(resourceListing, writer);
 
         for (ResourceListing.ResourceListingApi api : resourceListing.getApis()) {
             ApiDeclaration declaration = api.getDeclaration();
-            String path = Utils.createFileNameFromPath(api.getPath(), format);
+            String path = Utils.createFileNameFromPath("api-docs" + api.getPath(), format);
 
             writer = store.createResource(path);
             writeApiDeclaration(declaration, writer);

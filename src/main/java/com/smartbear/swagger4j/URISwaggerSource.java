@@ -85,6 +85,12 @@ public class URISwaggerSource implements SwaggerSource {
 
                 if (basePath == null) {
                     basePath = uri.toString();
+
+                    int ix = basePath.lastIndexOf("/api-docs.");
+                    if (ix != -1) {
+                        basePath = basePath.substring(0, ix + 9);
+                    }
+
                 } else if (!basePath.toLowerCase().startsWith("file:") && !basePath.contains("://")) {
                     String uriString = uri.toString();
                     if (basePath.equals(".")) {
